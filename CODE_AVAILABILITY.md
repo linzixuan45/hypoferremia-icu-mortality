@@ -1,5 +1,7 @@
 # Code Availability
 
+Repository positioning: **auditable analysis source code** — pipeline logic, inference, model card, and locked reference metrics are public; patient-level data are not redistributed. See [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for publication-day steps.
+
 ## Research demonstration calculator
 
 - URL: https://k.mixaihub.top
