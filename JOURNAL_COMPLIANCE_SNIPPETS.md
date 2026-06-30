@@ -8,7 +8,7 @@ Replace Zenodo placeholders after GitHub release and Zenodo DOI assignment.
 ## 1. Code Availability (Methods or dedicated section)
 
 ```text
-An HTTPS research demonstration calculator for the 8-feature model is available at https://k.mixaihub.top (not for clinical use). The underlying code and the released research model bundle are available at https://github.com/linzixuan45/hypoferremia-icu-mortality and will be archived with a DOI at Zenodo upon release. The repository includes the analysis pipeline, SQL extraction scripts, inference code, model card, and data dictionary. Raw patient-level data are not redistributed because access to MIMIC and local validation data is restricted.
+An HTTPS research demonstration calculator for the 8-feature model is available at https://fe.mixaihub.top (not for clinical use). The underlying code and the released research model bundle are available at https://github.com/linzixuan45/hypoferremia-icu-mortality and will be archived with a DOI at Zenodo upon release. The repository includes the analysis pipeline, SQL extraction scripts, inference code, model card, and data dictionary. Raw patient-level data are not redistributed because access to MIMIC and local validation data is restricted.
 ```
 
 ---
@@ -30,7 +30,7 @@ The study was approved by the relevant institutional review board, and all metho
 **Response:**
 
 ```text
-We thank the editor for this reminder. We have deployed an HTTPS research demonstration calculator at https://k.mixaihub.top (not for clinical use) and deposited the underlying analysis code, SQL extraction scripts, inference code, model card, data dictionary, and the released 8-feature research model bundle in a public GitHub repository (https://github.com/linzixuan45/hypoferremia-icu-mortality), to be archived with a Zenodo DOI upon release. The Code Availability statement in the revised manuscript now provides these links. Raw patient-level data were not redistributed because MIMIC and local validation cohorts are access-restricted.
+We thank the editor for this reminder. We have deployed an HTTPS research demonstration calculator at https://fe.mixaihub.top (not for clinical use) and deposited the underlying analysis code, SQL extraction scripts, inference code, model card, data dictionary, and the released 8-feature research model bundle in a public GitHub repository (https://github.com/linzixuan45/hypoferremia-icu-mortality), to be archived with a Zenodo DOI upon release. The Code Availability statement in the revised manuscript now provides these links. Raw patient-level data were not redistributed because MIMIC and local validation cohorts are access-restricted.
 ```
 
 ---
@@ -51,7 +51,7 @@ We have added an explicit statement to the Methods section confirming that all m
 
 | Item | Status | Value |
 |------|--------|-------|
-| Research demo URL | Done | https://k.mixaihub.top |
+| Research demo URL | Done | https://fe.mixaihub.top |
 | GitHub URL | Done | https://github.com/linzixuan45/hypoferremia-icu-mortality |
 | Zenodo concept DOI | Pending | |
 | Zenodo version DOI | Pending | |

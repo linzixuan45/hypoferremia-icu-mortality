@@ -79,10 +79,10 @@ def load_evaluation_cohorts(model_tag: str = "8_features"):
     else:
         feats = FEAT8
 
-    from train_models import prep_frame
+    from train_models import prep_eval_rows
 
-    test_raw = prep_frame(test_df, feats, label_col="outcome_28d_t0")
-    ext_raw = prep_frame(ext_df, feats, label_col="outcome_28d_t0")
+    test_raw = prep_eval_rows(test_df, feats, label_col="outcome_28d_t0")
+    ext_raw = prep_eval_rows(ext_df, feats, label_col="outcome_28d_t0")
     return test_raw, ext_raw
 
 

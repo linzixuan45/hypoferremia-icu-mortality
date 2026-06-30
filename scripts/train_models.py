@@ -152,6 +152,7 @@ def build_soft_voting():
                 learning_rate=0.08,
                 random_state=RANDOM_STATE,
                 eval_metric="logloss",
+                scale_pos_weight=1.0,
             ),
         ),
     ]
@@ -188,27 +189,40 @@ def load_cohort_frames(t0_source: str = "excel_proxy") -> tuple[pd.DataFrame, pd
     return train_df, test_df, ext_df
 
 
+def prep_eval_rows(
+    df: pd.DataFrame,
+    features: list[str],
+    label_col: str = LABEL,
+) -> pd.DataFrame:
+    """Outcome-complete rows used for evaluation (predictors may be imputed later)."""
+    sub = _binarize_vent(df.copy())
+    if "admission_age" in sub.columns:
+        sub["admission_age"] = pd.to_numeric(sub["admission_age"], errors="coerce").clip(18, 100)
+    if "race" in sub.columns:
+        sub = encoder_race(sub)
+    if "gender" in sub.columns:
+        sub = encoder_gender(sub)
+    if label_col not in sub.columns and "hospital_expire_flag" in sub.columns:
+        label_col = "hospital_expire_flag"
+    return sub.dropna(subset=[label_col]).reset_index(drop=True)
+
+
 def prep_subset(
     df: pd.DataFrame, features: list[str], label_col: str = LABEL
 ) -> tuple[pd.DataFrame, pd.Series]:
-    sub = prep_frame(df, features, label_col=label_col)
+    """Outcome-complete rows only; missing predictors are handled by KNN imputation."""
+    sub = prep_eval_rows(df, features, label_col=label_col)
+    use = [c for c in features if c in sub.columns]
     ycol = label_col if label_col in sub.columns else "hospital_expire_flag"
-    return sub[features], sub[ycol].astype(int)
+    return sub[use], sub[ycol].astype(int)
 
 
 def train_and_predict(features: list[str], tag: str):
     train_df, test_df, ext_df = load_cohort_frames("excel_proxy")
 
-    train_p = prep_frame(train_df, features)
-    test_p = prep_frame(test_df, features)
-    ext_p = prep_frame(ext_df, features)
-
-    X_train = train_p[features]
-    y_train = train_p["hospital_expire_flag"].astype(int)
-    X_test = test_p[features]
-    y_test = test_p["hospital_expire_flag"].astype(int)
-    X_ext = ext_p[features]
-    y_ext = ext_p["hospital_expire_flag"].astype(int)
+    X_train, y_train = prep_subset(train_df, features)
+    X_test, y_test = prep_subset(test_df, features)
+    X_ext, y_ext = prep_subset(ext_df, features)
 
     _, X_train_s, _, [X_test_s, X_ext_s], imp, scaler = impute_scale(X_train, [X_test, X_ext])
 

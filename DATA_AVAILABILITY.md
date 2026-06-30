@@ -42,7 +42,7 @@ These files are not included in the public repository.
 
 ## What we do publish
 
-- HTTPS research demonstration calculator: https://k.mixaihub.top (not for clinical use)
+- HTTPS research demonstration calculator: https://fe.mixaihub.top (not for clinical use)
 - Code: https://github.com/linzixuan45/hypoferremia-icu-mortality
 - SQL scripts, model card, methods documentation
 - Released 8-feature model weights for research inference (`model_weights/8_features_model.pkl`)
@@ -52,5 +52,5 @@ These files are not included in the public repository.
 ## Manuscript text (optional Data Availability paragraph)
 
 ```text
-MIMIC-III and MIMIC-IV data are available from PhysioNet to credentialed researchers. Chinese validation cohorts are not publicly redistributed. An HTTPS research demonstration calculator is available at https://k.mixaihub.top. The analysis code, SQL scripts, and released model bundle are available at https://github.com/linzixuan45/hypoferremia-icu-mortality and will be archived with a DOI at Zenodo upon release.
+MIMIC-III and MIMIC-IV data are available from PhysioNet to credentialed researchers. Chinese validation cohorts are not publicly redistributed. An HTTPS research demonstration calculator is available at https://fe.mixaihub.top. The analysis code, SQL scripts, and released model bundle are available at https://github.com/linzixuan45/hypoferremia-icu-mortality and will be archived with a DOI at Zenodo upon release.
 ```

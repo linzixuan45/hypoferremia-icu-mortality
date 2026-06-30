@@ -38,7 +38,7 @@ python inference.py --csv your_features.csv
 
 ### Track B — SHAP audit
 
-- **Online (recommended):** https://k.mixaihub.top — interactive probability + SHAP exploration.
+- **Online (recommended):** https://fe.mixaihub.top — interactive probability + SHAP exploration.
 - **Local Figure 7 (optional):** requires your own `data/mimic_dataset.xlsx` and:
 
 ```bash
@@ -122,7 +122,7 @@ Your Excel build, t₀ proxy, or MIMIC version may differ. This repository docum
 It stores locked aggregate metrics from the authors' release run (no patient IDs). Use `verify_reproduction.py` after your own pipeline run.
 
 **Where is SHAP?**  
-The online calculator at https://k.mixaihub.top provides SHAP audit. Locally, install `requirements-optional.txt` and run the full pipeline with MIMIC data.
+The online calculator at https://fe.mixaihub.top provides SHAP audit. Locally, install `requirements-optional.txt` and run the full pipeline with MIMIC data.
 
 **What can I do without MIMIC access?**  
 Run `python inference.py` with the released weights, read the source code and methods docs, and use the online calculator.

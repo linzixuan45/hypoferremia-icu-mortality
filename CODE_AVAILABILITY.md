@@ -4,7 +4,7 @@ Repository positioning: **auditable analysis source code** — pipeline logic, i
 
 ## Research demonstration calculator
 
-- URL: https://k.mixaihub.top
+- URL: https://fe.mixaihub.top
 - Purpose: 8-feature research probability calculator with SHAP audit (not for clinical use)
 
 ## GitHub
@@ -34,7 +34,7 @@ Raw patient-level data, cohort ID lists, and summary result tables are **not** r
 ## Manuscript text (paste into Methods or Code Availability)
 
 ```text
-An HTTPS research demonstration calculator for the 8-feature model is available at https://k.mixaihub.top (not for clinical use). The underlying code and released research model bundle are available at https://github.com/linzixuan45/hypoferremia-icu-mortality and will be archived with a DOI at Zenodo upon release. The repository includes the analysis pipeline, SQL extraction scripts, inference code, model card, and data dictionary. Raw patient-level data are not redistributed because access to MIMIC and local validation data is restricted.
+An HTTPS research demonstration calculator for the 8-feature model is available at https://fe.mixaihub.top (not for clinical use). The underlying code and released research model bundle are available at https://github.com/linzixuan45/hypoferremia-icu-mortality and will be archived with a DOI at Zenodo upon release. The repository includes the analysis pipeline, SQL extraction scripts, inference code, model card, and data dictionary. Raw patient-level data are not redistributed because access to MIMIC and local validation data is restricted.
 ```
 
 ## Zenodo release checklist

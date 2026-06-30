@@ -9,7 +9,7 @@ Code repository for the manuscript:
 This repository is deposited as **auditable analysis source code**: the pipeline, inference code, model card, data dictionary, locked reference metrics, and a released 8-feature research model bundle. **Raw patient-level data are not redistributed.**
 
 - **Repository:** https://github.com/linzixuan45/hypoferremia-icu-mortality  
-- **Research calculator:** https://k.mixaihub.top (not for clinical use)
+- **Research calculator:** https://fe.mixaihub.top (not for clinical use)
 
 To learn more about the underlying critical care databases, see [MIMIC](https://mimic.mit.edu) and the community [MIMIC Code Repository](https://github.com/MIT-LCP/mimic-code).
 
@@ -114,7 +114,7 @@ Outputs a 28-day mortality probability for the built-in demo case. Use `python i
 
 ### Track B — SHAP audit
 
-- **Online (recommended):** https://k.mixaihub.top — interactive probability + SHAP exploration.
+- **Online (recommended):** https://fe.mixaihub.top — interactive probability + SHAP exploration.
 - **Local Figure 7 (optional):** requires your own `data/mimic_dataset.xlsx`:
 
 ```bash
@@ -228,7 +228,7 @@ Additional availability text: [CODE_AVAILABILITY.md](CODE_AVAILABILITY.md).
 |----------|------|
 | GitHub | https://github.com/linzixuan45/hypoferremia-icu-mortality |
 | Zenodo DOI | `[fill after release]` — see [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) |
-| Research demo | https://k.mixaihub.top |
+| Research demo | https://fe.mixaihub.top |
 
 Recommended release tag: `v1.0.0`
 

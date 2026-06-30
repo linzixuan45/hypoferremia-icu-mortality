@@ -139,7 +139,7 @@ Patient flow 计数 → **Supp Table S8**。
 
 ## 11. 部署与可复现（R2-m5 / R2-m6）
 
-- Web：https://k.mixaihub.top（SHAP audit；非临床用途）
+- Web：https://fe.mixaihub.top（SHAP audit；非临床用途）
 - 本地：`inference.py`（概率输出）+ `model_weights/8_features_model.pkl`
 - TRIPOD+AI checklist 作为补充材料
 - 锁定基准：[`reference/manifest.json`](../reference/manifest.json)
