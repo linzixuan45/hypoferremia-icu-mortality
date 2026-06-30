@@ -1,0 +1,75 @@
+{
+  "pipeline": "hypoferremia_mortality",
+  "fe1_version": "fe1_v1_2026-06-18",
+  "fe1_spec_status": "finalized_2026-06-18",
+  "created_utc": "2026-06-30T03:56:17.233495+00:00",
+  "git_commit": "7027cc7e6dbfdd9a53524fd948cc49aeeeb631b8",
+  "random_state": 42,
+  "los_icu_min_days": 2.0,
+  "downsample_ratio": 0,
+  "imbalance_primary": "class_weight_balanced",
+  "imbalance_sensitivity": "random_undersample_x5_seeds",
+  "t0_source": "parquet",
+  "outcome": "death_within_28d_from_t0",
+  "primary_features": [
+    "mch_min",
+    "ph_max",
+    "mcv_1st",
+    "bun_min",
+    "pco2_max",
+    "creatinine_min",
+    "is_noninvasive_ventilator",
+    "temperature_max",
+    "spo2_min",
+    "baseexcess_mean",
+    "aniongap_max",
+    "platelet_1st",
+    "admission_age",
+    "dbp_ni_max",
+    "dbp_min",
+    "wbc_min",
+    "los_icu_to_t0",
+    "mchc_min"
+  ],
+  "feat8": [
+    "platelet_mean",
+    "wbc_min",
+    "bun_min",
+    "pco2_max",
+    "creatinine_min",
+    "is_noninvasive_ventilator",
+    "spo2_min",
+    "platelet_1st"
+  ],
+  "china_cohorts": "option_beta_no_reanchor",
+  "cohort_counts": {
+    "mimic4_train": 1075,
+    "mimic4_internal_test": 269,
+    "mimic3_external": 1046
+  },
+  "severity_source": "excel_proxy_sofa_only",
+  "training": {
+    "model": "Ensemble_Voting_soft",
+    "imbalance": "class_weight_balanced_primary",
+    "imputer": "KNN_k5_train_fit"
+  },
+  "metrics": {
+    "mimic4_test_8f_auroc": 0.7962882096069869,
+    "mimic3_external_8f_auroc": 0.7116549087063144,
+    "mimic4_test_events": 40,
+    "mimic3_external_events": 139,
+    "mimic4_test_20f_auroc": 0.8400655021834061,
+    "mimic3_external_20f_auroc": 0.6988644948338583,
+    "F3_auroc": 0.7764102564102564,
+    "NH_auroc": 0.844040762073549,
+    "F3_events": 26,
+    "NH_events": 37
+  },
+  "external_cohorts_evaluated": true,
+  "artifacts": {
+    "table_s6a_lasso20_missingness": "result/analysis/tables/table_s6a_lasso20_missingness.csv",
+    "table_s7_missingness": "result/analysis/tables/table_s7_missingness.csv",
+    "table_s9_imbalance": "result/analysis/tables/table_s9_imbalance_sensitivity.csv",
+    "table_s10_legacy": "result/analysis/tables/table_s10_legacy_window.csv"
+  }
+}

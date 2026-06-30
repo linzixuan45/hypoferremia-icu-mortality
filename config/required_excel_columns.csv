@@ -1,0 +1,28 @@
+group,column,sheets,required,notes
+identifier,subject_id,"mimic3_low_fe;mimic4_low_fe",yes,
+identifier,icustay_id,mimic3_low_fe,yes,preferred join key for MIMIC-III
+outcome,hospital_expire_flag,"mimic3_low_fe;mimic4_low_fe",yes,in-hospital death indicator
+outcome,hosp_survival_days,"mimic3_low_fe;mimic4_low_fe",one_of,used to derive outcome_28d_t0
+outcome,icu_survival_days,"mimic3_low_fe;mimic4_low_fe",one_of,used to derive outcome_28d_t0
+cohort,admission_age,"mimic3_low_fe;mimic4_low_fe",yes,clipped to 18-100 years
+cohort,los_icu,"mimic3_low_fe;mimic4_low_fe",yes,primary analysis requires >= 2 days
+t0_proxy,iron_1st,"mimic3_low_fe;mimic4_low_fe",yes,admission-stratum proxy (< 60 ug/dL)
+t0_proxy,iron_min,"mimic3_low_fe;mimic4_low_fe",yes,acquired-hypoferremia proxy
+feat8,platelet_mean,"mimic3_low_fe;mimic4_low_fe",yes,8-feature model
+feat8,wbc_min,"mimic3_low_fe;mimic4_low_fe",yes,8-feature model
+feat8,bun_min,"mimic3_low_fe;mimic4_low_fe",yes,8-feature model
+feat8,pco2_max,"mimic3_low_fe;mimic4_low_fe",yes,8-feature model
+feat8,creatinine_min,"mimic3_low_fe;mimic4_low_fe",yes,8-feature model
+feat8,is_noninvasive_ventilator,"mimic3_low_fe;mimic4_low_fe",yes,8-feature model (0/1)
+feat8,spo2_min,"mimic3_low_fe;mimic4_low_fe",yes,8-feature model
+feat8,platelet_1st,"mimic3_low_fe;mimic4_low_fe",yes,8-feature model
+severity,sofa_score,"mimic3_low_fe;mimic4_low_fe",optional,Table 5 SOFA comparator (Excel proxy)
+feat20,mch_min,"mimic3_low_fe;mimic4_low_fe",optional,20-feature LASSO panel (see config/low_fe_lasso_feature.csv)
+feat20,ph_max,"mimic3_low_fe;mimic4_low_fe",optional,20-feature LASSO panel
+feat20,mcv_1st,"mimic3_low_fe;mimic4_low_fe",optional,20-feature LASSO panel
+feat20,temperature_max,"mimic3_low_fe;mimic4_low_fe",optional,20-feature LASSO panel
+feat20,baseexcess_mean,"mimic3_low_fe;mimic4_low_fe",optional,20-feature LASSO panel
+feat20,aniongap_max,"mimic3_low_fe;mimic4_low_fe",optional,20-feature LASSO panel
+feat20,dbp_ni_max,"mimic3_low_fe;mimic4_low_fe",optional,20-feature LASSO panel
+feat20,dbp_min,"mimic3_low_fe;mimic4_low_fe",optional,20-feature LASSO panel
+feat20,mchc_min,"mimic3_low_fe;mimic4_low_fe",optional,20-feature LASSO panel
