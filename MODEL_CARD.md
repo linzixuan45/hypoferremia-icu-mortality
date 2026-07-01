@@ -55,9 +55,10 @@ The LASSO panel retained 20 candidate predictors; the locked benchmark modeling 
 | Channel | Capability |
 |---------|------------|
 | **Local CLI** (`python inference.py`) | 28-day mortality **probability only** — `--demo`, `--json`, or `--csv` |
-| **Web calculator** (https://fe.mixaihub.top) | Probability + **SHAP audit** (research use only) |
+| **Local web** (`./start.sh` or `python webui.py`) | Probability + **SHAP audit** (research use only) |
+| **Web calculator** (https://fe.mixaihub.top) | Same as local web demo (production deployment) |
 
-SHAP explanations are available on the web demo only; the local CLI does not compute SHAP.
+SHAP explanations require `requirements-web.txt` (Gradio + SHAP). The base `requirements.txt` covers CLI inference only.
 
 ## Citation
 

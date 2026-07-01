@@ -11,6 +11,11 @@ __pycache__/
 .venv/
 venv/
 
+# Web demo runtime cache
+.shap_cache/
+.webui.pid
+webui.log
+
 # Editor / OS
 .DS_Store
 .idea/

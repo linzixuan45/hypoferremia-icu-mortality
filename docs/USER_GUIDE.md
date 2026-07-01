@@ -13,8 +13,9 @@ This repository is deposited as **auditable analysis source code**: reviewers an
 | Full analysis scripts (`scripts/`) and optional SQL (`sql/`) | MIMIC raw tables or patient identifiers |
 | Released 8-feature model weights (`model_weights/`) | Pre-built `mimic_dataset.xlsx` |
 | Local inference CLI (`inference.py`) | ETL from raw MIMIC to Excel |
-| Model card, data dictionary, methods specs | Bit-exact guarantee of manuscript AUROC/tables |
-| Locked aggregate reference metrics (`reference/`) | Chinese validation cohort files |
+| Local Gradio web demo (`webui.py`) | Bit-exact guarantee of manuscript AUROC/tables |
+| Model card, data dictionary, methods specs | Chinese validation cohort files |
+| Locked aggregate reference metrics (`reference/`) | |
 | Reviewer verification (`verify_reproduction.py`) | |
 | Online SHAP research calculator (see Track B) | |
 
@@ -38,7 +39,16 @@ python inference.py --csv your_features.csv
 
 ### Track B — SHAP audit
 
-- **Online (recommended):** https://fe.mixaihub.top — interactive probability + SHAP exploration.
+- **Online:** https://fe.mixaihub.top — interactive probability + SHAP exploration.
+- **Local web demo** (no MIMIC data required):
+
+```bash
+pip install -r requirements-web.txt
+./start.sh
+```
+
+Default listen: `0.0.0.0:7788`. Environment: `SERVER_PORT`, `SERVER_NAME`, `ROOT_PATH`, `HYPOFERRREMIA_PYTHON`.
+
 - **Local Figure 7 (optional):** requires your own `data/mimic_dataset.xlsx` and:
 
 ```bash

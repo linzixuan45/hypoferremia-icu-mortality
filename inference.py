@@ -4,58 +4,14 @@ from __future__ import annotations
 
 import argparse
 import json
-import pickle
 import sys
 from pathlib import Path
 
 import pandas as pd
 
-FEATURES = [
-    "platelet_mean",
-    "wbc_min",
-    "bun_min",
-    "pco2_max",
-    "creatinine_min",
-    "is_noninvasive_ventilator",
-    "spo2_min",
-    "platelet_1st",
-]
+from src.inference import FEATURES, predict_proba
 
 ROOT = Path(__file__).resolve().parent
-WEIGHTS_PATH = ROOT / "model_weights" / "8_features_model.pkl"
-
-_BUNDLE = None
-
-
-def load_bundle():
-    global _BUNDLE
-    if _BUNDLE is not None:
-        return _BUNDLE
-    if not WEIGHTS_PATH.exists():
-        raise FileNotFoundError(
-            f"Model weights not found: {WEIGHTS_PATH}\n"
-            "This repository ships 8_features_model.pkl for Quick Start. "
-            "If missing, re-export with: python scripts/export_github_weights.py "
-            "(after running the analysis pipeline). See README.md."
-        )
-    with open(WEIGHTS_PATH, "rb") as f:
-        _BUNDLE = pickle.load(f)
-    return _BUNDLE
-
-
-def predict_proba(row: dict) -> float:
-    bundle = load_bundle()
-    model = bundle["model"]
-    imp = bundle["imputer"]
-    scaler = bundle["scaler"]
-    missing = [k for k in FEATURES if k not in row]
-    if missing:
-        raise KeyError(f"Missing feature keys: {missing}")
-    df = pd.DataFrame([{k: row[k] for k in FEATURES}])
-    df["is_noninvasive_ventilator"] = int(float(row["is_noninvasive_ventilator"]) >= 0.5)
-    X = pd.DataFrame(imp.transform(df[FEATURES]), columns=FEATURES)
-    Xs = pd.DataFrame(scaler.transform(X), columns=FEATURES)
-    return float(model.predict_proba(Xs)[0, 1])
 
 
 def _demo_row() -> dict:

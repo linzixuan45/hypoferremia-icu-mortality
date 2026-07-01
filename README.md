@@ -24,8 +24,9 @@ To learn more about the underlying critical care databases, see [MIMIC](https://
 | Full analysis scripts (`scripts/`) and optional SQL (`sql/`) | MIMIC raw tables or patient identifiers |
 | Released 8-feature model weights (`model_weights/`) | Pre-built `mimic_dataset.xlsx` |
 | Local inference CLI (`inference.py`) | ETL from raw MIMIC to Excel |
-| Model card, data dictionary, methods specs | Bit-exact guarantee of manuscript AUROC/tables |
-| Locked aggregate reference metrics (`reference/`) | Chinese validation cohort files |
+| Local Gradio web demo (`webui.py`, `start.sh`) | Bit-exact guarantee of manuscript AUROC/tables |
+| Model card, data dictionary, methods specs | Chinese validation cohort files |
+| Locked aggregate reference metrics (`reference/`) | |
 | Reviewer verification script (`verify_reproduction.py`) | |
 | Online SHAP research calculator (Track B below) | |
 
@@ -51,6 +52,9 @@ Access requires completion of required training and a data-use agreement. Place 
 | Path | Contents |
 |------|----------|
 | [`inference.py`](inference.py) | Single-patient / batch 28-day mortality probability (CLI) |
+| [`webui.py`](webui.py) | Gradio research calculator with SHAP audit (local) |
+| [`start.sh`](start.sh) | Launch local web demo (port 7788 by default) |
+| [`src/inference.py`](src/inference.py) | Shared inference module for CLI and web |
 | [`model_weights/`](model_weights/) | Released 8-feature ensemble + imputer + scaler |
 | [`reference/`](reference/) | Locked AUROC / cohort-count benchmark (no patient IDs) |
 | [`scripts/`](scripts/) | End-to-end analysis pipeline (Python) |
@@ -114,7 +118,17 @@ Outputs a 28-day mortality probability for the built-in demo case. Use `python i
 
 ### Track B — SHAP audit
 
-- **Online (recommended):** https://fe.mixaihub.top — interactive probability + SHAP exploration.
+- **Online:** https://fe.mixaihub.top — interactive probability + SHAP exploration.
+- **Local web demo** (no MIMIC data required):
+
+```bash
+pip install -r requirements-web.txt
+./start.sh
+# or: python webui.py
+```
+
+Default: `http://0.0.0.0:7788`. Override with env vars `SERVER_PORT`, `SERVER_NAME`, `ROOT_PATH` (set empty to disable reverse-proxy prefix).
+
 - **Local Figure 7 (optional):** requires your own `data/mimic_dataset.xlsx`:
 
 ```bash
