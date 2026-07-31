@@ -1,0 +1,52 @@
+{
+  "title": "Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Analysis Code and Model",
+  "description": "Versioned analysis code, non-patient aggregate results, plotting source, documentation, and a research model bundle accompanying a multi-cohort retrospective study of mortality risk stratification among ICU patients with documented biochemical hypoferremia. Raw and derived patient-level data, identifiers, row-level outcomes, and row-level prediction probabilities are not redistributed.",
+  "upload_type": "software",
+  "publication_date": "2026-07-31",
+  "version": "1.1.0",
+  "license": "MIT",
+  "creators": [
+    {
+      "name": "Xie, Liangpeng",
+      "affiliation": "Department of Hematology, The Third Xiangya Hospital, Central South University"
+    },
+    {
+      "name": "Zhang, Chang",
+      "affiliation": "Department of Hematology, The Third Xiangya Hospital, Central South University"
+    },
+    {
+      "name": "Sheng, Jiaowen",
+      "affiliation": "Department of Hematology, The First Affiliated Hospital of University of South China"
+    },
+    {
+      "name": "Jiang, Linxuan",
+      "affiliation": "Kingsoft AI Lab, Kingsoft Office"
+    },
+    {
+      "name": "Xiao, Mingxuan",
+      "affiliation": "Department of Pharmacy, The Second Xiangya Hospital, Central South University"
+    },
+    {
+      "name": "Xi, Yang",
+      "affiliation": "Department of Pharmacy, The Second Xiangya Hospital, Central South University"
+    }
+  ],
+  "keywords": [
+    "hypoferremia",
+    "critical care",
+    "intensive care unit",
+    "mortality risk stratification",
+    "machine learning",
+    "calibration",
+    "MIMIC-IV",
+    "MIMIC-III",
+    "TRIPOD+AI"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/linzixuan45/hypoferremia-icu-mortality",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

@@ -1,8 +1,9 @@
-scikit-learn>=1.8
-xgboost>=1.7
+scikit-learn==1.8.0
+xgboost==3.3.0
 pandas>=1.5
 numpy>=1.23
 scipy>=1.9
 matplotlib>=3.6
 openpyxl>=3.0
 pyarrow>=10.0
+statsmodels==0.14.6

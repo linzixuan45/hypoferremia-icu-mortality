@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the accompanying manuscript and this archived release."
+title: "Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Analysis Code and Model"
+type: software
+version: 1.1.0
+date-released: 2026-07-31
+license: MIT
+repository-code: "https://github.com/linzixuan45/hypoferremia-icu-mortality"
+url: "https://github.com/linzixuan45/hypoferremia-icu-mortality"
+authors:
+  - family-names: Xie
+    given-names: Liangpeng
+    affiliation: "Department of Hematology, The Third Xiangya Hospital, Central South University"
+  - family-names: Zhang
+    given-names: Chang
+    affiliation: "Department of Hematology, The Third Xiangya Hospital, Central South University"
+  - family-names: Sheng
+    given-names: Jiaowen
+    affiliation: "Department of Hematology, The First Affiliated Hospital of University of South China"
+  - family-names: Jiang
+    given-names: Linxuan
+    affiliation: "Kingsoft AI Lab, Kingsoft Office"
+  - family-names: Xiao
+    given-names: Mingxuan
+    affiliation: "Department of Pharmacy, The Second Xiangya Hospital, Central South University"
+  - family-names: Xi
+    given-names: Yang
+    affiliation: "Department of Pharmacy, The Second Xiangya Hospital, Central South University"
+preferred-citation:
+  type: article
+  title: "Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Multi-Cohort Development and Retrospective Evaluation"
+  authors:
+    - family-names: Xie
+      given-names: Liangpeng
+    - family-names: Zhang
+      given-names: Chang
+    - family-names: Sheng
+      given-names: Jiaowen
+    - family-names: Jiang
+      given-names: Linxuan
+    - family-names: Xiao
+      given-names: Mingxuan
+    - family-names: Xi
+      given-names: Yang
+  journal: "Scientific Reports"
+  year: 2026

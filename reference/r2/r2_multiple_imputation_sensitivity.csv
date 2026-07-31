@@ -1,0 +1,2 @@
+Analysis,Cohort,n,Events,AUROC,Brier,Brier_95CI_lo,Brier_95CI_hi,Calibration_in_the_large,CITL_95CI_lo,CITL_95CI_hi,Calibration_slope,Slope_95CI_lo,Slope_95CI_hi
+"Five-imputation, five-fold out-of-fold sensitivity",MIMIC-IV all eligible documented-hypoferremia patients,1487,215,0.8083735556530643,0.11246959850781324,0.1053128767364559,0.12045101478913274,-0.9169032536846243,-1.0713168396928707,-0.762489667676378,1.4542992409146327,1.2525145236513906,1.6560839581778748

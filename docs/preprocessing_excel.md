@@ -1,5 +1,10 @@
 # Excel-Based Preprocessing and Reproduction Path
 
+> **Round 2 status:** this document also describes legacy proxy-t₀ scripts retained for audit
+> history. The current manuscript uses retrospective whole-ICU-stay summaries, an outcome measured
+> from hospital admission, and the corrected MIMIC-III cohort (n=799). See
+> [`FE1_spec_en.md`](FE1_spec_en.md) and [`reference/r2/`](../reference/r2/).
+
 **Scope:** credentialed users who hold a local `data/mimic_dataset.xlsx`. This repository does **not** redistribute patient-level data and does **not** include MIMIC raw-table ETL.
 
 **Start here:** [mimic_excel_reproduction_guide.md](mimic_excel_reproduction_guide.md) · column checklist: [required_excel_columns.csv](../config/required_excel_columns.csv)
@@ -94,7 +99,7 @@ python scripts/run_pipeline.py
 |-----|------|
 | MIMIC-IV 80% | Development train |
 | MIMIC-IV 20% | Internal test |
-| MIMIC-III all | External validation (~1,046) |
+| MIMIC-III corrected | Same-institution temporal evaluation (799) |
 
 ---
 

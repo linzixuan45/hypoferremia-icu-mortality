@@ -38,6 +38,10 @@ def main() -> None:
     run_step("prepare_t0_labs_parquet", "prepare_t0_labs_parquet.py")
     run_step("build_t0_cohort", "build_t0_cohort.py")
     run_step("train_models", "train_models.py")
+    run_step("plot_figure6_shap", "plot_figure6_shap.py")
+    run_step("plot_figure4_benchmark", "plot_figure4_benchmark.py")
+    run_step("plot_figure5_benchmark", "plot_figure5_benchmark.py", ["--verify"])
+    run_step("build_external_baseline_tables", "build_external_baseline_tables.py")
 
     if not args.skip_extended:
         run_step("supplementary_analysis", "supplementary_analysis.py")

@@ -21,6 +21,8 @@ webui.log
 .idea/
 .vscode/
 .cursor/
+.cursor
+.trae/
 # Patient-level artifacts
 *.xlsx
 *.xls
@@ -34,7 +36,16 @@ webui.log
 !model_weights/8_features_model.pkl
 
 # Locked reference metrics (no patient IDs)
-reference/
+reference/*
 !reference/README.md
 !reference/manifest.json
 !reference/table2_3_performance.csv
+!reference/r2/
+!reference/r2/**
+
+# Locally rendered manuscript packages and visual-QA artifacts
+deliverables/
+qa_r2_biorender/
+qa_r2_final/
+qa_r2_final*/
+qa_r2_format*/

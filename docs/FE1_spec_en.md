@@ -1,87 +1,43 @@
-# FE1 Methods Specification — English Summary
+# Round 2 Methods and Analysis Specification
 
-**Status:** finalized v1 (2026-06-18)  
-**Full specification (Chinese):** [FE1_spec.md](FE1_spec.md)  
-**Locked reference:** [reference/manifest.json](../reference/manifest.json)
+**Status:** current audited Round 2 specification. The former proxy-t₀ specification and MIMIC-III n=1,046 results are retained only as version history and do not support the current manuscript conclusions.
 
----
+## Analysis task
 
-## 1. Prediction task
+The study performs retrospective, whole-ICU-stay mortality-risk stratification among patients with ICU length of stay ≥48 hours and at least one serum iron measurement <60 µg/dL. It is not an admission-time, real-time, or causal prediction study.
 
-Among ICU patients with **functional hypoferremia**, at **proxy t₀ (first hypoferremia episode)**, estimate the risk of **in-hospital death within 28 calendar days from t₀** using predictors observable at or before t₀.
+## Outcome and predictor windows
 
----
+- Outcome: in-hospital death within 28 days of hospital admission.
+- `_1st`: first recorded value during the ICU stay.
+- `_min`, `_max`, `_mean`: minimum, maximum, and mean across the full ICU stay.
+- `los_icu_to_t0`: synthetic legacy proxy retained for compatibility with the locked model; not an observed timestamp.
+- Reliable serum-iron chart times were not retained, so no observed prediction time t₀ is claimed.
 
-## 2. Cohort inclusion (MIMIC-III / MIMIC-IV)
+## Cohorts
 
-| Rule | Definition |
-|------|------------|
-| Age | 18–100 years |
-| ICU stay | ≥ 48 h (`los_icu >= 2` days) |
-| Hypoferremia | Serum iron < 60 µg/dL at least once |
-| t₀ | Excel proxy (no iron charttime); pipeline writes `mimic_t0_labs.parquet` → manifest `t0_source=parquet` |
-| MIMIC-IV | Development cohort; 80% train / 20% internal test |
-| MIMIC-III | External validation only (n = 1,046); never merged into training |
+| Cohort | Current role | n | Events |
+|---|---|---:|---:|
+| MIMIC-IV after ICU LOS ≥48 h | Screening set | 1,568 | — |
+| MIMIC-IV meeting fixed iron definition | Statistical/sensitivity set | 1,487 | 215 |
+| MIMIC-IV complete locked matrix | Model development/internal test | 1,344 | 200 |
+| MIMIC-IV training | Development (80%) | 1,075 | 160 |
+| MIMIC-IV internal test | Internal evaluation (20%) | 269 | 40 |
+| MIMIC-III | Same-institution temporal evaluation | 799 | 140 |
+| F3 | Exploratory geographic evaluation of 8-feature model | 101 | 26 |
+| NH | Exploratory geographic evaluation of 8-feature model | 98 | 37 |
 
----
+## Models and additional analyses
 
-## 3. t₀ proxy strata (Excel path)
+- The locked 18-predictor soft-voting model is retained as the protocol-continuity benchmark; the data do not establish superiority over logistic regression.
+- The 8-feature model is a post hoc development-data derivative and does not replace the benchmark.
+- Five-imputation, five-fold out-of-fold sensitivity analysis includes all 1,487 eligible MIMIC-IV admissions.
+- The first-serum-iron explanatory model treats race as unordered categorical, uses numeric-median/categorical-mode imputation, and includes a complete-case sensitivity analysis.
+- The restricted cubic spline uses four knots at percentiles 5, 35, 65, and 95 (9, 20, 33, and 55 µg/dL).
+- Incremental serum-iron prediction fits all preprocessing and unweighted logistic regression within each training fold.
 
-| Stratum | Definition |
-|---------|------------|
-| Admission | `iron_1st < 60` µg/dL |
-| Acquired | `iron_1st >= 60` (or missing) and `iron_min < 60` |
-| Legacy sensitivity | Full-stay aggregates + admission-anchored 28-day outcome → Supp Table S10 |
+## Reproducibility boundary
 
----
+The public repository provides analysis code beginning from authorized prepared modeling tables, locked model/preprocessing objects, and aggregate outputs. It does not redistribute patient-level records, labels, or probabilities, and it is not represented as a complete raw-MIMIC-to-modeling-table ETL pipeline.
 
-## 4. Outcome
-
-- **Label:** `hospital_expire_flag` within 28 days from t₀ (`outcome_28d_t0`)
-- Primary analysis horizon differs from legacy sensitivity (admission-anchored 28 days)
-
----
-
-## 5. Feature windows
-
-| Model | Features |
-|-------|----------|
-| **8-feature (deployment)** | `platelet_mean`, `wbc_min`, `bun_min`, `pco2_max`, `creatinine_min`, `is_noninvasive_ventilator`, `spo2_min`, `platelet_1st` |
-| **20-feature (primary)** | LASSO panel in [config/low_fe_lasso_feature.csv](../config/low_fe_lasso_feature.csv); `los_icu` → `los_icu_to_t0` in pipeline |
-
-Conservative mapping: prefer `_1st` / `_min` over full-stay `_max` / `_mean` where applicable.
-
----
-
-## 6. Training / validation split
-
-| Set | Role | Locked n |
-|-----|------|----------|
-| MIMIC-IV train | Development (80%) | 1,075 |
-| MIMIC-IV internal test | Internal validation (20%) | 269 |
-| MIMIC-III external | Temporal external | 1,046 |
-| F3 / NH | Geographic exploratory (option β) | optional |
-
----
-
-## 7. Class imbalance
-
-- **Primary:** `class_weight='balanced'`
-- **Sensitivity:** random undersampling × 5 seeds (Supp Table S9)
-
----
-
-## 8. Model
-
-8-feature and 20-feature **soft-voting** ensembles (XGBoost + Random Forest + Logistic Regression). KNN imputation (k=5) fit on MIMIC-IV training data only.
-
----
-
-## Reproduce
-
-See [mimic_excel_reproduction_guide.md](mimic_excel_reproduction_guide.md) and run:
-
-```bash
-python scripts/run_pipeline.py
-python scripts/verify_reproduction.py
-```
+Current aggregate evidence is under [`reference/r2/`](../reference/r2/). The older [`reference/manifest.json`](../reference/manifest.json) is an R1 historical manifest superseded for Round 2.

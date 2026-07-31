@@ -332,6 +332,38 @@ def write_table6(all_cohorts):
     pd.DataFrame(rows).to_csv(TABLES / "table6_calibration.csv", index=False)
 
 
+def write_table_s10_8f_four_cohorts(res8: dict, ext_rows: list[dict]) -> None:
+    """Supplementary Table S10: 8-feature reduced model performance across four cohorts."""
+    rows = []
+    for split, label in [
+        ("test", "MIMIC-IV internal test"),
+        ("external", "MIMIC-III external"),
+    ]:
+        d = res8[split]
+        rows.append(
+            {
+                "Cohort": label,
+                "n": d["n"],
+                "Events": d["events"],
+                "Model": "8-feature Ensemble_Voting",
+                "AUROC": round(d["auroc"], 3),
+                "AUROC_95CI": f"{d['auroc_ci_lo']:.3f}-{d['auroc_ci_hi']:.3f}",
+            }
+        )
+    for er in ext_rows:
+        rows.append(
+            {
+                "Cohort": er["Cohort"],
+                "n": er["n"],
+                "Events": er["Events"],
+                "Model": "8-feature Ensemble_Voting",
+                "AUROC": round(er["AUROC"], 3),
+                "AUROC_95CI": f"{er['CI_lo']:.3f}-{er['CI_hi']:.3f}",
+            }
+        )
+    pd.DataFrame(rows).to_csv(TABLES / "table_s10_8f_four_cohorts.csv", index=False)
+
+
 def write_s8_s9(m4_raw, test_ids, model, imp, scaler, features20):
     m3_raw = pd.read_excel(DATA_PATH, sheet_name="mimic3_low_fe")
     _, m4_clean = clean_raw(m3_raw, m4_raw)
@@ -439,7 +471,16 @@ def main():
         for tag, df in [("F3", f3), ("NH", nh)]:
             y, prob, n, ev = infer_external(model8, imp8, sc8, f8, df)
             auc, lo, hi = delong_ci(y, prob)
-            ext_rows.append({"Cohort": tag, "n": n, "Events": ev, "AUROC": auc, "CI_lo": lo, "CI_hi": hi})
+            ext_rows.append(
+                {
+                    "Cohort": tag,
+                    "n": n,
+                    "Events": ev,
+                    "AUROC": auc,
+                    "CI_lo": lo,
+                    "CI_hi": hi,
+                }
+            )
             with open(PREDS / f"8_features_{tag}_preds.pkl", "wb") as f:
                 pickle.dump(
                     [
@@ -458,6 +499,7 @@ def main():
         print("Skipping F3/NH: data/external/ cohort workbook not found (MIMIC-only path)")
 
     pd.DataFrame(ext_rows).to_csv(TABLES / "external_f3_nh.csv", index=False)
+    write_table_s10_8f_four_cohorts(res8, ext_rows)
 
     all_cal.extend(
         [
@@ -480,7 +522,10 @@ def main():
     )
 
     manifest_path = OUT / "manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    else:
+        manifest = {}
     manifest["training"] = {
         "model": "Ensemble_Voting_soft",
         "imbalance": "class_weight_balanced_primary",
@@ -504,6 +549,10 @@ def main():
             }
         )
     manifest["external_cohorts_evaluated"] = external_cohorts_available()
+    manifest["chinese_lab_harmonization"] = {
+        "creatinine_min": "umol/L to mg/dL divide by 88.4",
+        "bun_min": "mmol/L urea to mg/dL BUN multiply by 2.801",
+    }
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(json.dumps(manifest["metrics"], indent=2))
     _export_legacy_pred_layout(sc8, sc20)
