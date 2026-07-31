@@ -1,0 +1,17 @@
+{
+  "script": "scripts/r2_supplementary_analyses.py",
+  "random_state": 42,
+  "iron_threshold_micrograms_dl": 60.0,
+  "minimum_icu_los_days": 2.0,
+  "multiple_imputations": 5,
+  "cross_validation_folds": 5,
+  "mimic4_screened_los_ge_48h_n": 1568,
+  "mimic4_eligible_n": 1487,
+  "mimic4_complete_locked_matrix_n": 1344,
+  "mimic3_corrected_n": 799,
+  "mimic3_corrected_events": 140,
+  "patient_level_outputs_public": false,
+  "time_origin": "hospital admission for the available 28-day outcome",
+  "aggregate_window": "full ICU stay for min/max/mean predictors",
+  "legacy_t0_status": "synthetic proxy; not an observed timestamp"
+}

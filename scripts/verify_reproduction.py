@@ -15,6 +15,8 @@ AUROC_KEYS = (
     "mimic3_external_8f_auroc",
     "mimic4_test_20f_auroc",
     "mimic3_external_20f_auroc",
+    "F3_auroc",
+    "NH_auroc",
 )
 COUNT_KEYS = (
     "mimic4_train",

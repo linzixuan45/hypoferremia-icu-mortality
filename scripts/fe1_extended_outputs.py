@@ -324,6 +324,9 @@ def update_manifest_artifacts() -> None:
             "table_s7_missingness": "result/analysis/tables/table_s7_missingness.csv",
             "table_s9_imbalance": "result/analysis/tables/table_s9_imbalance_sensitivity.csv",
             "table_s10_legacy": "result/analysis/tables/table_s10_legacy_window.csv",
+            "table_s10_8f_four_cohorts": "result/analysis/tables/table_s10_8f_four_cohorts.csv",
+            "table_s2_f3_baseline": "result/analysis/tables/table_s2_f3_baseline.csv",
+            "table_s3_nh_baseline": "result/analysis/tables/table_s3_nh_baseline.csv",
         }
     )
     path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")

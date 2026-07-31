@@ -1,0 +1,7 @@
+Step,n,Hospital_deaths,Hospital_mortality_pct,Deaths_within_28d_of_hospital_admission,28d_in_hospital_mortality_pct
+MIMIC-IV low-iron export before LOS filtering,1931,330,17.09,277,14.34
+ICU length of stay >=48 h (screening set),1568,287,18.3,236,15.05
+Documented iron <60 micrograms/dL after LOS filtering,1487,263,17.69,215,14.46
+Complete locked 18-predictor matrix,1344,248,18.45,200,14.88
+Eligible but excluded for locked-matrix missingness,143,15,10.49,15,10.49
+LOS-eligible but not iron <60 by the fixed definition,81,24,29.63,21,25.93

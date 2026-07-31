@@ -94,10 +94,7 @@ class HypoferremiaPredictor:
             pct = round(prob * 100, 1)
             label = int(prob >= self.inference.threshold)
             self._generate_shap_plots(x_raw, x_scaled)
-            if label == 1:
-                result = f"28-day mortality probability: {pct}%"
-            else:
-                result = f"28-day survival probability: {round(100 - pct, 1)}%"
+            result = f"28-day mortality probability: {pct}%"
             return (
                 result,
                 str(SHAP_PLOTS["summary"]),

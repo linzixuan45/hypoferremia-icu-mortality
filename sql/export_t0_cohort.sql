@@ -1,12 +1,12 @@
 -- export_t0_cohort.sql
--- MIMIC-III v1.4 / MIMIC-IV v2.2 template for co-author offline export
+-- MIMIC-IV v2.2 template for co-author offline export
 -- Output: data/mimic_t0_labs.parquet (one row per index ICU stay)
 --
 -- Columns: subject_id, hadm_id, stay_id, icu_intime, t0_charttime,
 --          first_iron_lab_charttime, iron_at_t0, hypoferremia_stratum
 
 -- === MIMIC-IV example (adapt schema for MIMIC-III icustays) ===
--- Verify iron itemids for your MIMIC build (template uses common chemistry itemids).
+-- Serum iron is itemid 50952 in the MIMIC-IV laboratory dictionary.
 WITH first_icu AS (
     SELECT DISTINCT ON (hadm_id)
         subject_id,
@@ -23,13 +23,14 @@ iron_labs AS (
         fi.hadm_id,
         fi.stay_id,
         fi.icu_intime,
+        fi.icu_outtime,
         le.charttime,
         le.valuenum AS iron
     FROM first_icu fi
     JOIN mimiciv_hosp.labevents le
         ON le.subject_id = fi.subject_id
         AND le.hadm_id = fi.hadm_id
-    WHERE le.itemid IN (50998, 50809)  -- iron itemids (verify for your build)
+    WHERE le.itemid = 50952
       AND le.valuenum IS NOT NULL
 ),
 first_iron_lab AS (
@@ -46,6 +47,7 @@ t0 AS (
         il.hadm_id,
         il.stay_id,
         il.icu_intime,
+        il.icu_outtime,
         il.charttime AS t0_charttime,
         il.iron AS iron_at_t0
     FROM iron_labs il

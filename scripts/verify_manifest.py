@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Manifest and table consistency guards for Project_low_Fe (R1 FE1 locked run)."""
+"""Manifest and table consistency guards for the historical R1 FE1 locked run.
+
+Current Round 2 checks are implemented in tests/test_r2_revision.py and use
+reference/r2/r2_analysis_manifest.json.
+"""
 from __future__ import annotations
 
 import json
@@ -46,7 +50,10 @@ def check_manifest() -> list[str]:
 
     counts = manifest.get("cohort_counts", {})
     if counts.get("mimic3_external") and counts["mimic3_external"] != 1046:
-        errors.append(f"mimic3_external n={counts['mimic3_external']} (expected 1046 per FE1)")
+        errors.append(
+            "Historical R1 mimic3_external count changed unexpectedly; "
+            "current R2 n=799 is stored in reference/r2/r2_analysis_manifest.json"
+        )
 
     for artifact in (
         "table_s6a_lasso20_missingness",

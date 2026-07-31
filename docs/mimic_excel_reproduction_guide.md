@@ -1,6 +1,6 @@
 # MIMIC Excel Reproduction Guide
 
-**Audience:** credentialed PhysioNet users who want to reproduce the full analysis pipeline.
+**Audience:** credentialed PhysioNet users who want to reproduce the prepared-table analysis.
 
 This repository does **not** redistribute patient-level data or provide raw-table ETL. You must build `data/mimic_dataset.xlsx` locally from authorized MIMIC access.
 
@@ -22,8 +22,8 @@ Use the community [MIMIC Code Repository](https://github.com/MIT-LCP/mimic-code)
 
 ```
 data/mimic_dataset.xlsx
-├── sheet: mimic3_low_fe   (MIMIC-III external validation, n ≈ 1,046)
-└── sheet: mimic4_low_fe   (MIMIC-IV development, n ≈ 1,568 after filters)
+├── sheet: mimic3_low_fe   (corrected temporal evaluation, n = 799 after ICU LOS ≥48 h)
+└── sheet: mimic4_low_fe   (n = 1,568 after LOS screening; n = 1,487 meets the fixed iron definition)
 ```
 
 Validate before running the pipeline:

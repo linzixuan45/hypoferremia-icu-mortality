@@ -551,6 +551,61 @@ def generate_probast_s11():
 # ── P1: Figure 7 SHAP (XGB base from stacking) ──────────────────────
 
 
+def compose_figure7_composite(col_width: int = 600) -> Path | None:
+    """2×2 layout: 7A | 7B / 7C | 7D (same pattern as paper/low_k/compose_figure_7.py)."""
+    try:
+        from PIL import Image
+    except ImportError:
+        print("  skip composite: Pillow not installed")
+        return None
+
+    paths = [
+        FIGURES / "figure7a_shap_summary.png",
+        FIGURES / "figure7b_roc_four_cohorts.png",
+        FIGURES / "figure7c_shap_force.png",
+        FIGURES / "figure7d_shap_force.png",
+    ]
+    for p in paths:
+        if not p.exists():
+            print(f"  skip composite: missing {p}")
+            return None
+
+    def fit_width(im, w):
+        scale = w / im.width
+        return im.resize((w, int(im.height * scale)), Image.Resampling.LANCZOS)
+
+    a, b, c, d = (fit_width(Image.open(p).convert("RGB"), col_width) for p in paths)
+    top_h = max(a.height, b.height)
+    bottom_h = max(c.height, d.height)
+    out = Image.new("RGB", (col_width * 2, top_h + bottom_h), (255, 255, 255))
+    out.paste(a, (0, 0))
+    out.paste(b, (col_width, 0))
+    out.paste(c, (0, top_h))
+    out.paste(d, (col_width, top_h))
+    composite = FIGURES / "figure7_composite.png"
+    out.save(composite)
+    print(f"  Saved: {composite} (4-panel 7A|7B / 7C|7D)")
+    return composite
+
+
+def _pick_force_plot_cases(y, pred_prob, shap_values_survival, base_val_survival):
+    """Panel C = high-risk (dead); panel D = low-risk (alive)."""
+    survival_score = base_val_survival + np.asarray(shap_values_survival).sum(axis=1)
+    alive = np.where(y == 0)[0]
+    dead = np.where(y == 1)[0]
+    if len(alive) == 0 or len(dead) == 0:
+        return None, None
+    alive_conf = alive[pred_prob[alive] < 0.02]
+    dead_conf = dead[pred_prob[dead] > 0.98]
+    if len(alive_conf) == 0:
+        alive_conf = alive
+    if len(dead_conf) == 0:
+        dead_conf = dead
+    high_idx = int(dead_conf[np.argmin(survival_score[dead_conf])])
+    low_idx = int(alive_conf[np.argmax(survival_score[alive_conf])])
+    return high_idx, low_idx
+
+
 def generate_figure7_shap():
     print("Figure 7 SHAP...")
     try:
@@ -602,6 +657,54 @@ def generate_figure7_shap():
     fig.tight_layout()
     fig.savefig(FIGURES / "figure7b_roc_four_cohorts.png", dpi=200)
     plt.close(fig)
+
+    # 7C & 7D: SHAP force plots on full MIMIC-III external cohort
+    sub_full = prep_frame(ext, feats)
+    X_full = sub_full[feats]
+    Xi_full = pd.DataFrame(imp.transform(X_full), columns=feats)
+    Xs_full = pd.DataFrame(scaler.transform(Xi_full), columns=feats)
+    y_full = sub_full["hospital_expire_flag"].astype(int).values
+    pred_prob = xgb.predict_proba(Xs_full)[:, 1]
+
+    sv_raw = explainer.shap_values(Xs_full)
+    if isinstance(sv_raw, list):
+        shap_values_survival = sv_raw[0]
+        exp_val = np.atleast_1d(explainer.expected_value)
+        base_val_survival = exp_val[0] if len(exp_val) > 1 else -float(exp_val[0])
+    else:
+        shap_values_survival = -np.asarray(sv_raw)
+        base_val_survival = -float(np.atleast_1d(explainer.expected_value).flat[0])
+
+    high_idx, low_idx = _pick_force_plot_cases(
+        y_full, pred_prob, shap_values_survival, base_val_survival
+    )
+    if high_idx is None:
+        print("  skip 7C/7D: no alive/dead samples in external cohort")
+    else:
+        X_disp = Xi_full.round(2)
+        for idx, fname, label in [
+            (high_idx, "figure7c_shap_force.png", "high-risk"),
+            (low_idx, "figure7d_shap_force.png", "low-risk"),
+        ]:
+            shap.force_plot(
+                base_val_survival,
+                shap_values_survival[idx],
+                X_disp.iloc[idx],
+                matplotlib=True,
+                show=False,
+                figsize=(20, 5),
+                feature_names=feats,
+                contribution_threshold=0.1,
+            )
+            plt.tight_layout()
+            out_path = FIGURES / fname
+            plt.savefig(out_path, dpi=200, bbox_inches="tight")
+            plt.close()
+            print(
+                f"  Saved: {out_path} ({label}; pred_death={pred_prob[idx]:.4f})"
+            )
+
+    compose_figure7_composite()
 
 
 # ── Table 4 summary from subgroup ───────────────────────────────────

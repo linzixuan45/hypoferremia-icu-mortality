@@ -21,6 +21,13 @@ _F3_SHEET = "low_fe_F3"
 _NH_SHEET = "low_fe_NH"
 _LABEL_COL = "hospital_expire_flag"
 
+# Chinese cohort LIS exports use μmol/L creatinine and mmol/L urea; model input is mg/dL (MIMIC-aligned).
+CREATININE_UMOL_L_TO_MG_DL = 1.0 / 88.4
+BUN_MMOL_L_UREA_TO_MG_DL = 2.801
+
+CREATININE_MG_DL_MEDIAN_RANGE = (0.4, 1.5)
+BUN_MG_DL_MEDIAN_RANGE = (12.0, 22.0)
+
 
 def _resolve_ext_path() -> Path | None:
     for path in (EXT_PATH, ALT_EXT_PATH):
@@ -31,6 +38,33 @@ def _resolve_ext_path() -> Path | None:
 
 def external_cohorts_available() -> bool:
     return _resolve_ext_path() is not None
+
+
+def _harmonize_chinese_labs(df: pd.DataFrame, cohort: str) -> pd.DataFrame:
+    """Convert F3/NH lab columns to MIMIC-aligned mg/dL before model input."""
+    out = df.copy()
+    if "creatinine_min" in out.columns:
+        cr = pd.to_numeric(out["creatinine_min"], errors="coerce")
+        out["creatinine_min"] = cr * CREATININE_UMOL_L_TO_MG_DL
+    if "bun_min" in out.columns:
+        bun = pd.to_numeric(out["bun_min"], errors="coerce")
+        out["bun_min"] = bun * BUN_MMOL_L_UREA_TO_MG_DL
+
+    cr_med = pd.to_numeric(out.get("creatinine_min"), errors="coerce").median()
+    bun_med = pd.to_numeric(out.get("bun_min"), errors="coerce").median()
+    lo_cr, hi_cr = CREATININE_MG_DL_MEDIAN_RANGE
+    lo_bun, hi_bun = BUN_MG_DL_MEDIAN_RANGE
+    if not (lo_cr <= cr_med <= hi_cr):
+        raise ValueError(
+            f"{cohort} harmonized creatinine_min median {cr_med:.3f} mg/dL "
+            f"outside expected range [{lo_cr}, {hi_cr}]"
+        )
+    if not (lo_bun <= bun_med <= hi_bun):
+        raise ValueError(
+            f"{cohort} harmonized bun_min median {bun_med:.3f} mg/dL "
+            f"outside expected range [{lo_bun}, {hi_bun}]"
+        )
+    return out
 
 
 def load_f3_feature_table() -> pd.DataFrame:
@@ -57,9 +91,9 @@ def load_nh_feature_table() -> pd.DataFrame:
     return df
 
 
-def load_corrected_f3_feature_table():
-    return load_f3_feature_table()
+def load_corrected_f3_feature_table() -> pd.DataFrame:
+    return _harmonize_chinese_labs(load_f3_feature_table(), "F3")
 
 
-def load_corrected_nh_feature_table(**_kwargs):
-    return load_nh_feature_table()
+def load_corrected_nh_feature_table(**_kwargs) -> pd.DataFrame:
+    return _harmonize_chinese_labs(load_nh_feature_table(), "NH")

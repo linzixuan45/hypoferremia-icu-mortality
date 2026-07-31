@@ -1,0 +1,19 @@
+Variable,n,Missing_n,Missing_pct,Observation_window
+mch_min,1487,0,0.0,Full ICU stay aggregate
+ph_max,1487,135,9.078681909885676,Full ICU stay aggregate
+mcv_1st,1487,0,0.0,First recorded value during ICU stay
+bun_min,1487,0,0.0,Full ICU stay aggregate
+pco2_max,1487,135,9.078681909885676,Full ICU stay aggregate
+creatinine_min,1487,0,0.0,Full ICU stay aggregate
+is_noninvasive_ventilator,1487,0,0.0,Full-stay/documentation-derived or baseline
+temperature_max,1487,2,0.13449899125756556,Full ICU stay aggregate
+spo2_min,1487,0,0.0,Full ICU stay aggregate
+baseexcess_mean,1487,135,9.078681909885676,Full ICU stay aggregate
+aniongap_max,1487,0,0.0,Full ICU stay aggregate
+platelet_1st,1487,0,0.0,First recorded value during ICU stay
+admission_age,1487,0,0.0,Full-stay/documentation-derived or baseline
+dbp_ni_max,1487,7,0.47074646940147946,Full ICU stay aggregate
+dbp_min,1487,0,0.0,Full ICU stay aggregate
+wbc_min,1487,0,0.0,Full ICU stay aggregate
+los_icu_to_t0,1487,0,0.0,Synthetic legacy proxy; no real timestamp
+mchc_min,1487,0,0.0,Full ICU stay aggregate
