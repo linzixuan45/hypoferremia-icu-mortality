@@ -52,18 +52,18 @@ COMMON_REPLACEMENTS: list[tuple[str, str]] = [
         "Predictors were constructed using a locked t0-proxy framework that primarily reflected admission-documented hypoferremia in MIMIC-IV (admission stratum n=1,338; acquired stratum n=6), as permitted by the locked retrospective export, with residual temporal-leakage risk acknowledged.",
     ),
     (
-        "All datasets were harmonized using a common data model to standardize variable definitions, coding, and units before analysis.",
+        "All datasets were harmonized using a common data model to standardize variable definitions, coding, and units before analysis. Chinese cohort laboratory values were converted to the MIMIC-aligned model input scale before evaluation: serum creatinine from μmol/L to mg/dL (÷88.4) and blood urea nitrogen from mmol/L urea to mg/dL BUN (×2.801).",
         "All datasets were harmonized using a common data model to standardize variable definitions, coding, and units before analysis. Chinese cohort laboratory values were converted to the MIMIC-aligned model input scale before evaluation: serum creatinine from μmol/L to mg/dL (÷88.4) and blood urea nitrogen from mmol/L urea to mg/dL BUN (×2.801).",
     ),
     (
-        "Variables with cohort-specific high missingness, particularly non-invasive ventilation in MIMIC-III, were interpreted cautiously",
+        "Binary ventilatory support was encoded as is_noninvasive_ventilator (1 = documented non-invasive ventilation use; 0 = no documented use). Variables with cohort-specific high missingness, particularly non-invasive ventilation in MIMIC-III, were interpreted cautiously",
         "Binary ventilatory support was encoded as is_noninvasive_ventilator (1 = documented non-invasive ventilation use; 0 = no documented use). Variables with cohort-specific high missingness, particularly non-invasive ventilation in MIMIC-III, were interpreted cautiously",
     ),
 ]
 
 MANUSCRIPT_ONLY: list[tuple[str, str]] = [
     (
-        "Figure 8. Research web demonstration of the reduced 8-feature mortality prediction model",
+        "Figure 8. Research web demonstration of the reduced 8-feature mortality prediction model. All calculator inputs use model-native units (creatinine and BUN in mg/dL; is_noninvasive_ventilator: 1 = documented non-invasive ventilation use, 0 = no documented use).",
         "Figure 8. Research web demonstration of the reduced 8-feature mortality prediction model. All calculator inputs use model-native units (creatinine and BUN in mg/dL; is_noninvasive_ventilator: 1 = documented non-invasive ventilation use, 0 = no documented use).",
     ),
     (
@@ -190,9 +190,12 @@ def insert_s10_rows(path: Path) -> None:
             break
     if target is None:
         return
+    flat = " ".join(c.text for row in target.rows for c in row.cells)
+    if "MIMIC-IV internal test" in flat:
+        return
     new_rows = [
         ("MIMIC-IV internal test", "269", "40", "0.796 (0.718-0.874)"),
-        ("MIMIC-III external", "1046", "171", "0.733 (0.692-0.775)"),
+        ("MIMIC-III same-institution external/temporal", "1046", "171", "0.733 (0.692-0.775)"),
     ]
     for cohort, n, ev, auroc in new_rows:
         cells = target.add_row().cells

@@ -3,6 +3,7 @@ data/
 !data/README.md
 result/
 result/analysis/reports/
+.trae/
 
 # Python
 __pycache__/

@@ -12,7 +12,7 @@
 
 - 8-feature soft-voting ensemble (XGBoost + Random Forest + Logistic Regression)
 - Trained on MIMIC-IV development cohort with t₀-proxy FE1 definition (`train_models.py`)
-- Class imbalance handled via `class_weight='balanced'` (primary); random undersampling is sensitivity-only (Supp S9)
+- Primary locked soft-voting ensemble uses balanced class weights where supported; random undersampling is sensitivity-only (Supp S9)
 - KNN imputation (k=5) fit on MIMIC-IV training data only; applied without refitting to external cohorts
 
 ## Input features
@@ -52,9 +52,9 @@ The LASSO panel retained 20 candidate predictors; the locked benchmark modeling 
 
 ## Known limitations
 
-- Excel t₀ proxy; residual temporal-leakage risk for aggregate min/max/mean without uniform charttime
+- Locked retrospective t₀-proxy definition; residual temporal-leakage risk remains for aggregate min/max/mean predictors without uniform chart-time anchoring
 - Serum iron alone does not identify absolute iron deficiency; ferritin/transferrin saturation not uniformly available
-- Chinese cohorts (F3/NH) are exploratory geographic validation only (option β; not re-anchored to MIMIC t₀)
+- Chinese cohorts (F3/NH) are exploratory geographic evaluations and were not re-anchored to the MIMIC t₀ definition
 - Cross-site KNN imputation may anchor external cohorts toward the MIMIC-IV training distribution
 - APACHE II / SAPS II benchmarks require full MIMIC SQL export
 - Model probabilities require local prevalence context and recalibration outside derivation settings
@@ -71,6 +71,6 @@ SHAP explanations require `requirements-web.txt` (Gradio + SHAP). The base `requ
 
 ## Citation
 
-Li Y, et al. *Scientific Reports* — Machine-learning model for mortality risk stratification in ICU patients with functional hypoferremia.
+Xie L, Zhang C, et al. *Scientific Reports* — Machine-learning model for mortality risk stratification in ICU patients with functional hypoferremia.
 
-See [CITATION.bib](../CITATION.bib) and [CODE_AVAILABILITY.md](../CODE_AVAILABILITY.md).
+See [CITATION.bib](CITATION.bib) and [CODE_AVAILABILITY.md](CODE_AVAILABILITY.md).

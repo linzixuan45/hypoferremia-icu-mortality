@@ -2,3 +2,4 @@
 shap>=0.42
 gradio>=4.0
 matplotlib>=3.7
+lightgbm>=3.3
