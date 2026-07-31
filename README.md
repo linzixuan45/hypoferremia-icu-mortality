@@ -118,16 +118,16 @@ Outputs a 28-day mortality probability for the built-in demo case. Use `python i
 
 ### Track B — SHAP audit
 
-- **Online:** https://fe.mixaihub.top — interactive probability + SHAP exploration.
+- **Online (recommended):** https://fe.mixaihub.top — interactive probability + SHAP exploration.
 - **Local web demo** (no MIMIC data required):
 
 ```bash
-pip install -r requirements-web.txt
-./start.sh
-# or: python webui.py
+pip install -r requirements-optional.txt
+cd web && python3 webui_low_fe.py
+# or: ./start.sh
 ```
 
-Default: `http://0.0.0.0:7788`. Override with env vars `SERVER_PORT`, `SERVER_NAME`, `ROOT_PATH` (set empty to disable reverse-proxy prefix).
+Inputs use model-native units (creatinine & BUN in **mg/dL**). Default: `http://0.0.0.0:7788`. Override with env vars `SERVER_PORT`, `SERVER_NAME`, `ROOT_PATH` (set empty to disable reverse-proxy prefix).
 
 - **Local Figure 7 (optional):** requires your own `data/mimic_dataset.xlsx`:
 
@@ -199,14 +199,18 @@ python scripts/verify_manifest.py
 | **Model** | 8-feature soft-voting ensemble (XGBoost + Random Forest + Logistic Regression) |
 | **Class balance** | `class_weight='balanced'` on MIMIC-IV development set |
 
-**8 input features:** `platelet_mean`, `wbc_min`, `bun_min`, `pco2_max`, `creatinine_min`, `is_noninvasive_ventilator`, `spo2_min`, `platelet_1st` — see [docs/data_dictionary.md](docs/data_dictionary.md) and [MODEL_CARD.md](MODEL_CARD.md).
+**8 input features:** `platelet_mean`, `wbc_min`, `bun_min`, `pco2_max`, `creatinine_min`, `is_noninvasive_ventilator`, `spo2_min`, `platelet_1st` — all in model-native units (creatinine and BUN in **mg/dL**); see [docs/data_dictionary.md](docs/data_dictionary.md) and [MODEL_CARD.md](MODEL_CARD.md).
 
-**Locked reference performance** (8-feature; see [reference/manifest.json](reference/manifest.json)):
+**Chinese cohort harmonization:** F3/NH creatinine (μmol/L→mg/dL, ÷88.4) and BUN (mmol/L urea→mg/dL, ×2.801) at load time (`scripts/external_cohort_data.py`).
 
-| Cohort | AUROC |
-|--------|-------|
-| MIMIC-IV internal test | 0.796 |
-| MIMIC-III external | 0.712 |
+**Locked reference performance** (8-feature; see `result/analysis/manifest.json`):
+
+| Cohort | AUROC (95% CI) |
+|--------|----------------|
+| MIMIC-IV internal test | 0.796 (0.718–0.874) |
+| MIMIC-III external | 0.733 (0.692–0.775) |
+| F3 exploratory | 0.810 (0.713–0.908) |
+| NH exploratory | 0.898 (0.835–0.961) |
 
 ---
 

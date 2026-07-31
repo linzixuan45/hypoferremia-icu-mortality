@@ -39,15 +39,16 @@ python inference.py --csv your_features.csv
 
 ### Track B — SHAP audit
 
-- **Online:** https://fe.mixaihub.top — interactive probability + SHAP exploration.
+- **Online (recommended):** https://fe.mixaihub.top — interactive probability + SHAP exploration.
 - **Local web demo** (no MIMIC data required):
 
 ```bash
-pip install -r requirements-web.txt
-./start.sh
+pip install -r requirements-optional.txt
+cd web && python3 webui_low_fe.py
+# or: ./start.sh
 ```
 
-Default listen: `0.0.0.0:7788`. Environment: `SERVER_PORT`, `SERVER_NAME`, `ROOT_PATH`, `HYPOFERRREMIA_PYTHON`.
+Inputs use model-native units (creatinine & BUN in **mg/dL**). See [data_dictionary.md](data_dictionary.md). Default listen: `0.0.0.0:7788`. Environment: `SERVER_PORT`, `SERVER_NAME`, `ROOT_PATH`, `HYPOFERRREMIA_PYTHON`.
 
 - **Local Figure 7 (optional):** requires your own `data/mimic_dataset.xlsx` and:
 

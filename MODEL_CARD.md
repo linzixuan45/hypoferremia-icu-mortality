@@ -24,11 +24,20 @@
 | `bun_min` | BUN minimum to t₀ (mg/dL) |
 | `pco2_max` | PaCO₂ maximum to t₀ (mmHg) |
 | `creatinine_min` | Creatinine minimum to t₀ (mg/dL) |
-| `is_noninvasive_ventilator` | Non-invasive ventilation before t₀ (0/1) |
+| `is_noninvasive_ventilator` | Non-invasive ventilation before t₀ (`1` = documented use; `0` = no documented use) |
 | `spo2_min` | SpO₂ minimum to t₀ (%) |
 | `platelet_1st` | First platelet to t₀ |
 
-See `docs/data_dictionary.md` for timing rules.
+Chinese exploratory cohorts (F3/NH): laboratory values are harmonized to mg/dL at load time (creatinine ÷88.4; BUN ×2.801) before locked-model evaluation.
+
+## Performance summary (8-feature reduced model)
+
+| Cohort | n | Events | AUROC (95% CI) |
+|--------|---|--------|----------------|
+| MIMIC-IV internal test | 269 | 40 | 0.796 (0.718–0.874) |
+| MIMIC-III external/temporal | 1,046 | 171 | 0.733 (0.692–0.775) |
+| Third Xiangya (F3) exploratory | 101 | 26 | 0.810 (0.713–0.908) |
+| Nanhua (NH) exploratory | 98 | 37 | 0.898 (0.835–0.961) |
 
 ## Development and evaluation cohorts
 

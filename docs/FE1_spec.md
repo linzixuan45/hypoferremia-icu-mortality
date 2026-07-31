@@ -105,6 +105,7 @@ Patient flow 计数 → **Supp Table S8**。
 |------|----------|------|
 | F3 / NH | **沿用 R1 原始队列定义**（非 MIMIC t₀ 重锚定） | 应用 **MIMIC-t₀ 重训后的 locked 8/20-feature 模型** 外推 |
 | Methods 表述 | *Geographic exploratory validation under original cohort definition; not re-anchored to MIMIC t₀.* | |
+| **单位** | F3/NH 原始导出：creatinine μmol/L，BUN mmol/L 尿素 | 入模前转换为 mg/dL（÷88.4；×2.801），见 `external_cohort_data.py` |
 
 ---
 
