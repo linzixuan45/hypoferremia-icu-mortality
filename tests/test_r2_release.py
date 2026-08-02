@@ -2,10 +2,16 @@ from __future__ import annotations
 
 import json
 import csv
+import sys
 from pathlib import Path
+
+import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from metric_intervals import auroc_ci_for_cohort, ci_method_for_cohort
 
 
 def read(path: str) -> str:
@@ -121,6 +127,8 @@ def test_research_interface_uses_mortality_direction_and_component_label() -> No
         assert "28-day mortality probability" in text
         assert "28-day survival probability" not in text
         assert "XGBoost component explanation" in text
+        assert "Case-level SHAP dot summary" in text
+        assert "Global attribution summary" not in text
         assert "not for clinical decision-making" in text
         assert "ICP_BEIAN" not in text
 
@@ -140,4 +148,41 @@ def test_manuscript_table1_aggregate_reports_availability_and_omits_sparse_heigh
     text = read("reference/r2/r2_table1_mimic4_eligible.csv")
     assert "Height, Median" not in text
     assert "[n=1487]" in text
-    assert "Any documented ventilatory-support flag" in text
+    assert "Any documented ventilatory support" in text
+    assert "Ld," not in text
+    assert "SpO₂ (%)" in text
+
+
+def test_ci_method_is_locked_by_evaluation_setting() -> None:
+    assert ci_method_for_cohort("MIMIC-IV internal test") == "DeLong"
+    assert ci_method_for_cohort("MIMIC-III temporal sensitivity") == "stratified bootstrap"
+    assert ci_method_for_cohort("F3 exploratory geographic cohort") == "stratified bootstrap"
+    assert ci_method_for_cohort("NH exploratory geographic cohort") == "stratified bootstrap"
+
+
+def test_stratified_bootstrap_ci_is_deterministic() -> None:
+    y = np.array([0] * 20 + [1] * 10)
+    score = np.linspace(0.05, 0.95, len(y))
+    first = auroc_ci_for_cohort(y, score, "MIMIC-III temporal sensitivity", n_bootstrap=200)
+    second = auroc_ci_for_cohort(y, score, "MIMIC-III temporal sensitivity", n_bootstrap=200)
+    assert first == second
+    assert first[3] == "stratified bootstrap"
+
+
+def test_active_paths_use_canonical_cohort_specific_ci() -> None:
+    train = read("scripts/train_models.py")
+    figure4 = read("scripts/plot_figure4_benchmark.py")
+    assert "auroc_ci_for_cohort" in train
+    assert "auroc_ci_for_cohort" in figure4
+    assert "auroc, lo, hi = delong_ci(y, prob)" not in figure4
+    supplementary = read("scripts/r2_supplementary_analyses.py")
+    assert "AUROC_CI_method" in supplementary
+    assert "auroc_ci_for_cohort" in supplementary
+
+
+def test_niv_is_encoded_before_knn_imputation() -> None:
+    train = read("scripts/train_models.py")
+    dictionary = read("docs/data_dictionary.md")
+    assert "fillna(0)" in train
+    assert "before KNN" in train
+    assert "not passed to the KNN" in dictionary

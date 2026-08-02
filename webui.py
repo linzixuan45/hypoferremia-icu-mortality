@@ -155,7 +155,7 @@ def create_gradio_interface(predictor: HypoferremiaPredictor) -> gr.Blocks:
             "they are not an exact decomposition of the soft-voting ensemble probability."
         )
         with gr.Row():
-            output_summary = gr.Image(label="Global attribution summary")
+            output_summary = gr.Image(label="Case-level SHAP dot summary")
             output_waterfall = gr.Image(label="Case-level waterfall")
         output_force = gr.Image(label="Case-level force plot")
         predict_button.click(

@@ -39,11 +39,11 @@ from train_models import (
     PREDS,
     RANDOM_STATE,
     TABLES,
-    delong_ci,
     impute_scale,
     load_cohort_frames,
     prep_subset,
 )
+from metric_intervals import auroc_ci_for_cohort
 
 try:
     from lightgbm import LGBMClassifier
@@ -210,15 +210,15 @@ def evaluate_all_cohorts(
     test_rows: list[dict] = []
     ext_rows: list[dict] = []
     cohorts = [
-        (test_rows, y_test.values.astype(int), X_test_s),
-        (ext_rows, y_ext.values.astype(int), X_ext_s),
+        (test_rows, "MIMIC-IV internal test", y_test.values.astype(int), X_test_s),
+        (ext_rows, "MIMIC-III temporal sensitivity", y_ext.values.astype(int), X_ext_s),
     ]
     for name in MODEL_ORDER:
         model = models[name]
         model.fit(X_train_s, y_train)
-        for rows, y, X_eval_s in cohorts:
+        for rows, cohort_label, y, X_eval_s in cohorts:
             prob = model.predict_proba(X_eval_s)[:, 1]
-            auroc, lo, hi = delong_ci(y, prob)
+            auroc, lo, hi, ci_method = auroc_ci_for_cohort(y, prob, cohort_label)
             fpr, tpr, _ = roc_curve(y, prob)
             rows.append(
                 {
@@ -228,6 +228,7 @@ def evaluate_all_cohorts(
                     "auroc": auroc,
                     "auroc_ci_lo": lo,
                     "auroc_ci_hi": hi,
+                    "auroc_ci_method": ci_method,
                     "AUROC_95CI": f"{lo:.3f}-{hi:.3f}",
                     "y": y,
                     "prob": prob,

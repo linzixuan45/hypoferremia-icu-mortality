@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Legacy training-cohort baseline for MIMIC-IV (not the manuscript Table 1)."""
+"""Shared Table 1 formatter plus a legacy training-cohort entry point."""
 from __future__ import annotations
 
 import re
@@ -55,7 +55,6 @@ LAB_ROWS = [
     "Hemoglobin",
     "Inr",
     "Lactate",
-    "Ld",
     "Lymphocytes",
     "Mch",
     "Mchc",
@@ -77,6 +76,69 @@ LAB_ROWS = [
     "Totalco2",
     "Wbc",
 ]
+
+DISPLAY_LABELS = {
+    "Chloride": "Chloride (mmol/L)",
+    "Magnesium": "Magnesium (mg/dL)",
+    "Potassium": "Potassium (mmol/L)",
+    "Sodium": "Sodium (mmol/L)",
+    "Sbp": "SBP (mmHg)",
+    "Sbp Ni": "Non-invasive SBP (mmHg)",
+    "Dbp": "DBP (mmHg)",
+    "Dbp Ni": "Non-invasive DBP (mmHg)",
+    "Mbp": "MAP (mmHg)",
+    "Mbp Ni": "Non-invasive MAP (mmHg)",
+    "Spo2": "SpO₂ (%)",
+    "Glucose": "Glucose (mg/dL)",
+    "Albumin": "Albumin (g/dL)",
+    "Alp": "ALP (U/L)",
+    "Alt": "ALT (U/L)",
+    "Amylase": "Amylase (U/L)",
+    "Aniongap": "Anion gap (mmol/L)",
+    "Ast": "AST (U/L)",
+    "Atypical Lymphocytes": "Atypical lymphocytes (%)",
+    "Bands": "Band neutrophils (%)",
+    "Baseexcess": "Base excess (mmol/L)",
+    "Basophils": "Basophils (%)",
+    "Bicarbonate": "Bicarbonate (mmol/L)",
+    "Bilirubin Direct": "Direct bilirubin (mg/dL)",
+    "Bilirubin Indirect": "Indirect bilirubin (mg/dL)",
+    "Bilirubin Total": "Total bilirubin (mg/dL)",
+    "Bun": "BUN (mg/dL)",
+    "Carboxyhemoglobin": "Carboxyhemoglobin (%)",
+    "Ck Mb": "CK-MB (source-reported units)",
+    "Creatinine": "Creatinine (mg/dL)",
+    "Crp": "CRP (mg/L)",
+    "D-Dimer": "D-dimer (source-reported units)",
+    "Eosinophils": "Eosinophils (%)",
+    "Fibrinogen": "Fibrinogen (mg/dL)",
+    "Ggt": "GGT (U/L)",
+    "Globulin": "Globulin (g/dL)",
+    "Hematocrit": "Hematocrit (%)",
+    "Hemoglobin": "Hemoglobin (g/dL)",
+    "Inr": "INR",
+    "Lactate": "Lactate (mmol/L)",
+    "Lymphocytes": "Lymphocytes (%)",
+    "Mch": "MCH (pg)",
+    "Mchc": "MCHC (g/dL)",
+    "Mcv": "MCV (fL)",
+    "Metamyelocytes": "Metamyelocytes (%)",
+    "Methemoglobin": "Methemoglobin (%)",
+    "Monocytes": "Monocytes (%)",
+    "Neutrophils": "Neutrophils (%)",
+    "Pco2": "PCO₂ (mmHg)",
+    "Ph": "pH",
+    "Platelet": "Platelet count (×10⁹/L)",
+    "Po2": "PO₂ (mmHg)",
+    "Pt": "PT (s)",
+    "Ptt": "aPTT (s)",
+    "Rbc": "RBC count (×10¹²/L)",
+    "Rdw": "RDW (%)",
+    "Thrombin": "Thrombin time (s)",
+    "Total Protein": "Total protein (g/dL)",
+    "Totalco2": "Total CO₂ (mmol/L)",
+    "Wbc": "WBC count (×10⁹/L)",
+}
 
 LABEL_TO_COL = {
     "Age": "admission_age",
@@ -226,13 +288,13 @@ def build_table1(df: pd.DataFrame) -> pd.DataFrame:
     add_binary("Male", male, _p_binary(male, y))
     add_binary("Female", ~male, "")
 
-    add_continuous("Age, Median (Q1, Q3)", "admission_age")
+    add_continuous("Age (years), median (Q1, Q3)", "admission_age")
     # Height is omitted because the eligible export contains too few observed
     # values for a defensible group comparison.
-    add_continuous("Weight, Median (Q1, Q3)", "weight_mean")
-    add_continuous("Heart Rate, Median (Q1, Q3)", "heart_rate_mean")
-    add_continuous("Resp Rate, Median (Q1, Q3)", "resp_rate_mean")
-    add_continuous("Temperature, Median (Q1, Q3)", "temperature_mean")
+    add_continuous("Weight (kg), median (Q1, Q3)", "weight_mean")
+    add_continuous("Heart rate (beats/min), median (Q1, Q3)", "heart_rate_mean")
+    add_continuous("Respiratory rate (breaths/min), median (Q1, Q3)", "resp_rate_mean")
+    add_continuous("Temperature (°C), median (Q1, Q3)", "temperature_mean")
 
     add_section("Race, n (%)")
     if "race" in df.columns:
@@ -241,14 +303,14 @@ def build_table1(df: pd.DataFrame) -> pd.DataFrame:
             m = buckets == race_label
             add_binary(race_label, m, _p_binary(m, y) if race_label == "White" else "")
 
-    add_continuous("Hospitalization days, Median (Q1, Q3)", "los_hospital")
-    add_continuous("ICU hospitalization days, Median (Q1, Q3)", "los_icu")
-    add_continuous("SOFA Score, Median (Q1, Q3)", "sofa_score")
+    add_continuous("Hospital length of stay (days), median (Q1, Q3)", "los_hospital")
+    add_continuous("ICU length of stay (days), median (Q1, Q3)", "los_icu")
+    add_continuous("SOFA score, median (Q1, Q3)", "sofa_score")
 
     vent = pd.to_numeric(df.get("is_ventilator", 0), errors="coerce").fillna(0) > 0
     rows.append(
         {
-            "Variables": "Any documented ventilatory-support flag, n (%)",
+            "Variables": "Any documented ventilatory support, n (%)",
             "Total": _fmt_count(int(vent.sum()), n_all),
             "Non_survivors": _fmt_count(int(vent[dead.index].sum()), n_d),
             "Survivors": _fmt_count(int(vent[alive.index].sum()), n_a),
@@ -259,7 +321,7 @@ def build_table1(df: pd.DataFrame) -> pd.DataFrame:
     vaso = pd.to_numeric(df.get("vasoactive", 0), errors="coerce").fillna(0) > 0
     rows.append(
         {
-            "Variables": "Vasoactive, n (%)",
+            "Variables": "Any documented vasoactive therapy, n (%)",
             "Total": _fmt_count(int(vaso.sum()), n_all),
             "Non_survivors": _fmt_count(int(vaso[dead.index].sum()), n_d),
             "Survivors": _fmt_count(int(vaso[alive.index].sum()), n_a),
@@ -267,10 +329,10 @@ def build_table1(df: pd.DataFrame) -> pd.DataFrame:
         }
     )
 
-    add_section("Laboratory Data, Median (Q1, Q3)")
+    add_section("Laboratory data, median (Q1, Q3)")
     for lab in LAB_ROWS:
         col = _label_to_col(lab)
-        add_continuous(lab, col if col in df.columns else "")
+        add_continuous(DISPLAY_LABELS.get(lab, lab), col if col in df.columns else "")
 
     return pd.DataFrame(rows)
 

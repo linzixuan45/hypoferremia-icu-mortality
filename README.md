@@ -85,6 +85,11 @@ pytest -q
 | `MODEL_CARD.md` | Intended use, model status, and limitations |
 | `tests/` | Data-free integrity, parameter, and privacy tests |
 
+Historical patch scripts are isolated under `scripts/legacy_R1/`. A small number
+of active compatibility filenames still contain the historical token
+`20_features`; in the Round 2 workflow these files refer to the locked
+18-predictor benchmark and do not denote a current 20-predictor model.
+
 ## Locked aggregate results
 
 | Model and cohort | n (events) | AUROC (95% CI) |
@@ -94,7 +99,7 @@ pytest -q
 | Post hoc reduced model, MIMIC-IV internal test | 269 (40) | 0.796 (0.716–0.871) |
 | Post hoc reduced model, corrected MIMIC-III temporal sensitivity | 799 (140) | 0.715 (0.669–0.761) |
 | Post hoc reduced model, Third Xiangya exploratory cohort | 101 (26) | 0.810 (0.703–0.901) |
-| Post hoc reduced model, Nanhua exploratory cohort | 98 (37) | 0.898 (0.827–0.956) |
+| Post hoc reduced model, First Affiliated Hospital of University of South China (Nanhua cohort, NH), exploratory | 98 (37) | 0.898 (0.827–0.956) |
 
 See [reference/r2/README.md](reference/r2/README.md) for calibration, missing-data, serum-iron, and sensitivity results.
 

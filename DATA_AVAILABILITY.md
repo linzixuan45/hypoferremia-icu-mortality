@@ -6,7 +6,7 @@ MIMIC-III and MIMIC-IV are available to credentialed researchers through PhysioN
 
 ## Institution-held cohorts
 
-The Third Xiangya and Nanhua exploratory cohorts contain institution-held clinical data and are not publicly redistributed. Access, if legally and ethically permissible, remains subject to the responsible institutions, approvals, and data-governance procedures; no unconditional “available upon request” promise is made here.
+The Third Xiangya exploratory cohort and the First Affiliated Hospital of University of South China cohort (referred to as the Nanhua cohort, NH) contain institution-held clinical data and are not publicly redistributed. Access, if legally and ethically permissible, remains subject to the responsible institutions, approvals, and data-governance procedures; no unconditional “available upon request” promise is made here.
 
 ## Local files required for reproduction
 

@@ -53,6 +53,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from xgboost import XGBClassifier
 
+from metric_intervals import auroc_ci_for_cohort
+
 warnings.filterwarnings("ignore")
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -496,7 +498,7 @@ def _fit_calibration(y: np.ndarray, prob: np.ndarray) -> CalibrationResult:
 
 def _metric_row(analysis: str, cohort: str, y: np.ndarray, prob: np.ndarray) -> dict:
     cal = _fit_calibration(y, prob)
-    return {
+    row = {
         "Analysis": analysis,
         "Cohort": cohort,
         "n": cal.n,
@@ -512,6 +514,21 @@ def _metric_row(analysis: str, cohort: str, y: np.ndarray, prob: np.ndarray) -> 
         "Slope_95CI_lo": cal.slope_lo,
         "Slope_95CI_hi": cal.slope_hi,
     }
+    try:
+        auc, lower, upper, method = auroc_ci_for_cohort(y, prob, cohort)
+    except ValueError:
+        # Supplementary resampling labels outside the four prespecified
+        # evaluation settings do not claim a cohort-level AUROC interval here.
+        return row
+    row.update(
+        {
+            "AUROC": auc,
+            "AUROC_95CI_lo": lower,
+            "AUROC_95CI_hi": upper,
+            "AUROC_CI_method": method,
+        }
+    )
+    return row
 
 
 def _load_prediction_pickle(path: Path, preferred_model: str = "Ensemble_Voting") -> tuple[np.ndarray, np.ndarray]:

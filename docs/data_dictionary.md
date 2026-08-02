@@ -11,6 +11,12 @@
 | `spo2_min` | Minimum oxygen saturation over the full ICU stay | % |
 | `platelet_1st` | First recorded platelet count during the ICU stay | 10⁹/L |
 
+`is_noninvasive_ventilator` is a legacy documentation indicator: 1 denotes
+documented NIV use, whereas a blank or undocumented source entry is encoded as
+0 before modelling.  This binary field is therefore not passed to the KNN
+imputer; KNN imputation is restricted to remaining predictors with missing
+values.
+
 Chinese exploratory cohort values are harmonized to the MIMIC-aligned scale before evaluation: creatinine µmol/L to mg/dL by dividing by 88.4; urea mmol/L to BUN mg/dL by multiplying by 2.801.
 
 Outcome: death in hospital within 28 days of hospital admission (`outcome_28d_admission`). Full-stay summaries may be outcome-proximal or extend beyond day 28, so the model is retrospective whole-stay risk stratification rather than admission-time prediction.
