@@ -92,12 +92,8 @@ class HypoferremiaPredictor:
             x_raw, x_scaled = self.inference.preprocess(kwargs)
             prob = self.inference.predict_proba(kwargs)
             pct = round(prob * 100, 1)
-            label = int(prob >= self.inference.threshold)
             self._generate_shap_plots(x_raw, x_scaled)
-            if label == 1:
-                result = f"28-day mortality probability: {pct}%"
-            else:
-                result = f"28-day survival probability: {round(100 - pct, 1)}%"
+            result = f"28-day mortality probability: {pct}%"
             return (
                 result,
                 str(SHAP_PLOTS["summary"]),
@@ -169,7 +165,6 @@ def create_gradio_interface(predictor: HypoferremiaPredictor) -> gr.Blocks:
             ],
             outputs=[output_text, output_summary, output_waterfall, output_force],
         )
-        gr.Markdown(f"---\n[{ICP_BEIAN}](https://beian.miit.gov.cn/)")
     return demo
 
 

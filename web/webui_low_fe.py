@@ -101,12 +101,8 @@ class HypoferremiaPredictor:
             x_raw, x_scaled = self.inference.preprocess(kwargs)
             prob = self.inference.predict_proba(kwargs)
             pct = round(prob * 100, 1)
-            label = int(prob >= self.inference.threshold)
             self._generate_shap_plots(x_raw, x_scaled)
-            if label == 1:
-                result = f"28-day mortality probability: {pct}%"
-            else:
-                result = f"28-day survival probability: {round(100 - pct, 1)}%"
+            result = f"28-day mortality probability: {pct}%"
             return (
                 result,
                 str(SHAP_PLOTS["summary"]),
@@ -161,9 +157,9 @@ def create_gradio_interface(predictor: HypoferremiaPredictor) -> gr.Blocks:
         predict_button = gr.Button("Predict", variant="primary")
         output_text = gr.Label(label="Prediction Result")
         with gr.Row():
-            output_summary = gr.Image(label="SHAP Summary")
-            output_waterfall = gr.Image(label="SHAP Waterfall")
-        output_force = gr.Image(label="SHAP Force")
+            output_summary = gr.Image(label="SHAP Summary — XGBoost component explanation")
+            output_waterfall = gr.Image(label="SHAP Waterfall — XGBoost component explanation")
+        output_force = gr.Image(label="SHAP Force — XGBoost component explanation")
         predict_button.click(
             predict_wrapper,
             inputs=[
@@ -178,7 +174,6 @@ def create_gradio_interface(predictor: HypoferremiaPredictor) -> gr.Blocks:
             ],
             outputs=[output_text, output_summary, output_waterfall, output_force],
         )
-        gr.Markdown(f"---\n[{ICP_BEIAN}](https://beian.miit.gov.cn/)")
     return demo
 
 
