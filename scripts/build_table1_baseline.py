@@ -163,13 +163,13 @@ def load_train_cohort() -> pd.DataFrame:
     if "los_icu" in df.columns:
         los = pd.to_numeric(df["los_icu"], errors="coerce")
         df = df[los >= 2.0]
-    if "outcome_28d_t0" not in df.columns:
-        raise ValueError("outcome_28d_t0 missing after merge")
+    if "outcome_28d_admission" not in df.columns:
+        raise ValueError("outcome_28d_admission missing after merge")
     return df.reset_index(drop=True)
 
 
 def build_table1(df: pd.DataFrame) -> pd.DataFrame:
-    y = df["outcome_28d_t0"].astype(int)
+    y = df["outcome_28d_admission"].astype(int)
     dead = df[y == 1]
     alive = df[y == 0]
     n_all, n_d, n_a = len(df), len(dead), len(alive)
@@ -270,7 +270,7 @@ def main() -> None:
     table = build_table1(df)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     table.to_csv(OUT, index=False)
-    print(f"Wrote {OUT} ({len(table)} rows, n={len(df)}, events={int(df['outcome_28d_t0'].sum())})")
+    print(f"Wrote {OUT} ({len(table)} rows, n={len(df)}, events={int(df['outcome_28d_admission'].sum())})")
 
 
 if __name__ == "__main__":

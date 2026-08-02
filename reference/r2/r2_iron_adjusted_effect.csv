@@ -1,0 +1,5 @@
+Analysis,n,Events,Adjusted_OR,OR_95CI_lo,OR_95CI_hi,P_value,Spline_knot_P05,Spline_knot_P35,Spline_knot_P65,Spline_knot_P95
+"Unadjusted first serum iron, per 10 micrograms/dL",1487,215,1.0910275652151566,0.9861105151251819,1.207107245893433,0.09125243088193374,9.0,20.0,33.0,55.0
+"Adjusted first serum iron, per 10 micrograms/dL",1487,215,1.0617129925356323,0.9538388393250645,1.1817871447933466,0.2733249900221951,9.0,20.0,33.0,55.0
+"Adjusted first serum iron, complete-case sensitivity",1269,198,1.0754781405558698,0.9605547194294328,1.2041513173768597,0.20695118373891452,9.0,20.0,33.0,55.0
+Four-knot restricted cubic spline likelihood-ratio test for nonlinearity,1487,215,,,,0.5894115752983347,9.0,20.0,33.0,55.0

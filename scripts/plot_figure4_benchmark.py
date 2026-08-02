@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Train 12 FE1-aligned benchmark models and export Figure 4 ROC panels."""
+"""Train the locked R2 benchmark models and export Figure 4 ROC panels."""
 from __future__ import annotations
 
 import argparse
@@ -65,7 +65,9 @@ MODEL_ORDER = [
     "Ensemble_Stacking",
 ]
 
-# Locked manuscript Table 2 / Table 3 AUROC (3 d.p.) for optional verification.
+# Locked manuscript AUROC values (3 d.p.) used only as guardrails.  The full
+# twelve-model temporal profile must be recomputed after applying the corrected
+# MIMIC-III eligibility rule; the earlier values came from the broader cohort.
 REFERENCE_AUROC = {
     "MIMIC-IV internal test": {
         "Logistic Regression": 0.846,
@@ -81,19 +83,8 @@ REFERENCE_AUROC = {
         "Ensemble_Voting": 0.840,
         "Ensemble_Stacking": 0.841,
     },
-    "MIMIC-III external": {
-        "Logistic Regression": 0.695,
-        "KNN": 0.639,
-        "SVM": 0.724,
-        "Decision Tree": 0.612,
-        "Random Forest": 0.738,
-        "ANN": 0.680,
-        "XGBoost": 0.706,
-        "LightGBM": 0.699,
-        "AdaBoost": 0.715,
-        "GaussianNB": 0.662,
-        "Ensemble_Voting": 0.722,
-        "Ensemble_Stacking": 0.723,
+    "MIMIC-III temporal sensitivity": {
+        "Ensemble_Voting": 0.705,
     },
 }
 
@@ -312,13 +303,10 @@ def plot_figure4(test_rows: list[dict], ext_rows: list[dict], out_path: Path) ->
     plot_roc_panel(
         axes[1],
         ext_rows,
-        "MIMIC-III external (n=1,046)",
+        f"MIMIC-III temporal sensitivity (n={ext_rows[0]['n']:,})",
     )
-    fig.suptitle(
-        "Figure 4. Comparative performance of 12 machine learning models",
-        fontsize=12,
-        y=1.02,
-    )
+    axes[0].text(-0.12, 1.05, "A", transform=axes[0].transAxes, fontsize=12, fontweight="bold")
+    axes[1].text(-0.12, 1.05, "B", transform=axes[1].transAxes, fontsize=12, fontweight="bold")
     fig.tight_layout()
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=300, bbox_inches="tight", facecolor="white")
@@ -375,7 +363,7 @@ def main() -> None:
         d.mkdir(parents=True, exist_ok=True)
 
     table2 = rows_to_table(test_rows, "MIMIC-IV internal test")
-    table3 = rows_to_table(ext_rows, "MIMIC-III external")
+    table3 = rows_to_table(ext_rows, "MIMIC-III temporal sensitivity")
     table2.to_csv(TABLES / "table2_benchmark_12models.csv", index=False)
     table3.to_csv(TABLES / "table3_benchmark_12models.csv", index=False)
     pd.concat([table2, table3], ignore_index=True).to_csv(
@@ -397,7 +385,7 @@ def main() -> None:
     print(f"\nSaved figure: {FIGURES / 'figure4_roc_12models.png'}")
 
     errors = verify_reference(test_rows, "MIMIC-IV internal test", args.tol)
-    errors.extend(verify_reference(ext_rows, "MIMIC-III external", args.tol))
+    errors.extend(verify_reference(ext_rows, "MIMIC-III temporal sensitivity", args.tol))
     if errors:
         print("\nAUROC verification mismatches:")
         for e in errors:

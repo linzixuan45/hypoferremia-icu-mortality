@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Manifest and table consistency guards for Project_low_Fe (R1 FE1 locked run)."""
+"""Manifest and table consistency guards for the locked R2 analysis."""
 from __future__ import annotations
 
 import json
@@ -45,8 +45,11 @@ def check_manifest() -> list[str]:
                 errors.append(f"Table 2/3 {feat_tag} MIMIC-III AUROC != manifest {m3_key}")
 
     counts = manifest.get("cohort_counts", {})
-    if counts.get("mimic3_external") and counts["mimic3_external"] != 1046:
-        errors.append(f"mimic3_external n={counts['mimic3_external']} (expected 1046 per FE1)")
+    if counts.get("mimic3_external") and counts["mimic3_external"] != 799:
+        errors.append(
+            f"mimic3_external n={counts['mimic3_external']} "
+            "(expected 799 after the locked ICU-LOS >=48-hour criterion)"
+        )
 
     for artifact in (
         "table_s6a_lasso20_missingness",

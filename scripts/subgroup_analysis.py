@@ -81,8 +81,8 @@ def load_evaluation_cohorts(model_tag: str = "8_features"):
 
     from train_models import prep_eval_rows
 
-    test_raw = prep_eval_rows(test_df, feats, label_col="outcome_28d_t0")
-    ext_raw = prep_eval_rows(ext_df, feats, label_col="outcome_28d_t0")
+    test_raw = prep_eval_rows(test_df, feats, label_col="outcome_28d_admission")
+    ext_raw = prep_eval_rows(ext_df, feats, label_col="outcome_28d_admission")
     return test_raw, ext_raw
 
 
@@ -238,7 +238,7 @@ def run_subgroup_analysis(model_tag: str = "8_features") -> pd.DataFrame:
             preds["test"]["y_true"],
             preds["test"]["y_prob"],
         ),
-        "MIMIC-III external": (
+        "MIMIC-III temporal sensitivity": (
             ext_raw.reset_index(drop=True),
             preds["external"]["y_true"],
             preds["external"]["y_prob"],

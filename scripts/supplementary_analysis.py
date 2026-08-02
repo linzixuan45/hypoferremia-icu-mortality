@@ -35,6 +35,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 from train_models import (
     FEAT8,
+    LABEL,
     build_stacking,
     delong_ci,
     impute_scale,
@@ -57,7 +58,7 @@ RANDOM_STATE = 42
 
 
 def _eval_cohort_splits() -> list[tuple[str, str]]:
-    cohorts = [("MIMIC-IV internal test", "test"), ("MIMIC-III external", "external")]
+    cohorts = [("MIMIC-IV internal test", "test"), ("MIMIC-III temporal sensitivity", "external")]
     if external_cohorts_available():
         cohorts.extend([("F3", "F3"), ("NH", "NH")])
     return cohorts
@@ -136,7 +137,7 @@ def generate_dca_figures():
 
     cohorts = [
         ("MIMIC-IV internal test", "test"),
-        ("MIMIC-III external", "external"),
+        ("MIMIC-III temporal sensitivity", "external"),
     ]
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
     for ax, (title, split) in zip(axes, cohorts):
@@ -160,7 +161,7 @@ def generate_dca_figures():
     # Supp S5 — available cohorts only
     datasets = {
         "MIMIC-IV internal test": PREDS8 / "test_preds.pkl",
-        "MIMIC-III external": PREDS8 / "external_preds.pkl",
+        "MIMIC-III temporal sensitivity": PREDS8 / "external_preds.pkl",
     }
     if external_cohorts_available():
         datasets["F3"] = PREDS8 / "F3_preds.pkl"
@@ -189,7 +190,7 @@ def generate_dca_figures():
     fig2.savefig(FIGURES / "figure_s5_dca_all.png", dpi=200, bbox_inches="tight")
     plt.close(fig2)
 
-    # Supp S7 with SOFA (MIMIC-III external)
+    # SOFA comparison in the MIMIC-III temporal sensitivity cohort
     m3 = pd.read_excel(DATA_PATH, sheet_name="mimic3_low_fe")
     ext_ids = pd.read_csv(COHORT / "mimic3_external_ids.csv")
     id_m3 = "icustay_id" if "icustay_id" in m3.columns else "subject_id"
@@ -206,7 +207,7 @@ def generate_dca_figures():
     ax3.plot(thresholds_main, treat_all_nb(y_ext, thresholds_main), "k--", lw=1, label="Treat all")
     ax3.axhline(0, color="gray", ls=":", lw=1)
     ax3.set_xlim(0.15, 0.40)
-    ax3.set_title("Supplementary Figure S7: DCA vs SOFA (MIMIC-III external)")
+    ax3.set_title("DCA vs SOFA: MIMIC-III temporal sensitivity")
     ax3.legend()
     ax3.grid(alpha=0.3)
     fig3.tight_layout()
@@ -229,9 +230,9 @@ def los_sensitivity_s14():
     rows = []
     for label, drop_los in [("With LOS predictors", False), ("Without LOS predictors", True)]:
         feats = [c for c in f18 if c not in los_cols] if drop_los else f18
-        sub = prep_frame(test, feats, label_col="outcome_28d_t0")
+        sub = prep_frame(test, feats, label_col="outcome_28d_admission")
         X = sub[feats]
-        y = sub["outcome_28d_t0"].astype(int)
+        y = sub["outcome_28d_admission"].astype(int)
         if drop_los:
             m, imp2, sc2 = _quick_train(feats)
             Xs = pd.DataFrame(sc2.transform(pd.DataFrame(imp2.transform(X), columns=feats)), columns=feats)
@@ -263,9 +264,9 @@ def _quick_train(features):
     from train_models import load_cohort_frames
 
     train, _, _ = load_cohort_frames("parquet")
-    tr = prep_frame(train, features, label_col="outcome_28d_t0")
+    tr = prep_frame(train, features, label_col="outcome_28d_admission")
     X = tr[features]
-    y = tr["outcome_28d_t0"].astype(int)
+    y = tr["outcome_28d_admission"].astype(int)
     imp = IterativeImputer(max_iter=5, random_state=RANDOM_STATE)
     X_i = pd.DataFrame(imp.fit_transform(X), columns=features)
     sc = StandardScaler()
@@ -290,24 +291,24 @@ def _s10_train_eval(
     if len(use_feats) < len(feats):
         return None
 
-    train_p = prep_frame(train_df, use_feats, label_col="outcome_28d_t0", los_icu_min=los_min)
-    test_p = prep_frame(test_df, use_feats, label_col="outcome_28d_t0", los_icu_min=los_min)
-    val_p = prep_frame(val_df, use_feats, label_col="outcome_28d_t0", los_icu_min=los_min)
+    train_p = prep_frame(train_df, use_feats, label_col="outcome_28d_admission", los_icu_min=los_min)
+    test_p = prep_frame(test_df, use_feats, label_col="outcome_28d_admission", los_icu_min=los_min)
+    val_p = prep_frame(val_df, use_feats, label_col="outcome_28d_admission", los_icu_min=los_min)
 
-    y_tr = train_p["outcome_28d_t0"].astype(int)
+    y_tr = train_p["outcome_28d_admission"].astype(int)
     if y_tr.nunique() < 2 or len(train_p) < 40:
         return None
 
     X_tr = train_p[use_feats]
     _, X_tr_s, _, [X_te_s, X_va_s], _, _ = impute_scale(X_tr, [test_p[use_feats], val_p[use_feats]])
-    y_te = test_p["outcome_28d_t0"].astype(int)
-    y_va = val_p["outcome_28d_t0"].astype(int)
+    y_te = test_p["outcome_28d_admission"].astype(int)
+    y_va = val_p["outcome_28d_admission"].astype(int)
 
     model = build_stacking()
     model.fit(X_tr_s, y_tr)
 
     out = []
-    for tag, X_s, y in [("MIMIC-IV internal test", X_te_s, y_te), ("MIMIC-III external", X_va_s, y_va)]:
+    for tag, X_s, y in [("MIMIC-IV internal test", X_te_s, y_te), ("MIMIC-III temporal sensitivity", X_va_s, y_va)]:
         if len(y) < 20 or y.nunique() < 2:
             continue
         prob = model.predict_proba(X_s)[:, 1]
@@ -360,7 +361,7 @@ def icu_stay_los_sensitivity():
             test_df = m4_f.merge(test_ids[[id_m4]], on=id_m4, how="inner")
             val_df = m3_f.merge(val_ids[[id_m3]], on=id_m3, how="inner")
         else:
-            y_all = m4_f["outcome_28d_t0"]
+            y_all = m4_f["outcome_28d_admission"]
             if y_all.nunique() < 2 or len(m4_f) < 40:
                 print(f"  WARN LOS sensitivity: skip {hours}h — insufficient MIMIC-IV pool")
                 continue
@@ -588,9 +589,9 @@ def compose_figure7_composite(col_width: int = 600) -> Path | None:
     return composite
 
 
-def _pick_force_plot_cases(y, pred_prob, shap_values_survival, base_val_survival):
+def _pick_force_plot_cases(y, pred_prob, shap_values_mortality, base_val_mortality):
     """Panel C = high-risk (dead); panel D = low-risk (alive)."""
-    survival_score = base_val_survival + np.asarray(shap_values_survival).sum(axis=1)
+    mortality_score = base_val_mortality + np.asarray(shap_values_mortality).sum(axis=1)
     alive = np.where(y == 0)[0]
     dead = np.where(y == 1)[0]
     if len(alive) == 0 or len(dead) == 0:
@@ -601,8 +602,8 @@ def _pick_force_plot_cases(y, pred_prob, shap_values_survival, base_val_survival
         alive_conf = alive
     if len(dead_conf) == 0:
         dead_conf = dead
-    high_idx = int(dead_conf[np.argmin(survival_score[dead_conf])])
-    low_idx = int(alive_conf[np.argmax(survival_score[alive_conf])])
+    high_idx = int(dead_conf[np.argmax(mortality_score[dead_conf])])
+    low_idx = int(alive_conf[np.argmin(mortality_score[alive_conf])])
     return high_idx, low_idx
 
 
@@ -641,7 +642,7 @@ def generate_figure7_shap():
     m = manifest["metrics"]
     labels = [
         ("MIMIC-IV internal test", "test", m["mimic4_test_8f_auroc"]),
-        ("MIMIC-III external", "external", m["mimic3_external_8f_auroc"]),
+        ("MIMIC-III temporal sensitivity", "external", m["mimic3_external_8f_auroc"]),
     ]
     if external_cohorts_available() and "F3_auroc" in m:
         labels.extend([("F3", "F3", m["F3_auroc"]), ("NH", "NH", m["NH_auroc"])])
@@ -658,25 +659,25 @@ def generate_figure7_shap():
     fig.savefig(FIGURES / "figure7b_roc_four_cohorts.png", dpi=200)
     plt.close(fig)
 
-    # 7C & 7D: SHAP force plots on full MIMIC-III external cohort
+    # 7C & 7D: SHAP force plots in the corrected MIMIC-III temporal cohort
     sub_full = prep_frame(ext, feats)
     X_full = sub_full[feats]
     Xi_full = pd.DataFrame(imp.transform(X_full), columns=feats)
     Xs_full = pd.DataFrame(scaler.transform(Xi_full), columns=feats)
-    y_full = sub_full["hospital_expire_flag"].astype(int).values
+    y_full = sub_full[LABEL].astype(int).values
     pred_prob = xgb.predict_proba(Xs_full)[:, 1]
 
     sv_raw = explainer.shap_values(Xs_full)
     if isinstance(sv_raw, list):
-        shap_values_survival = sv_raw[0]
+        shap_values_mortality = sv_raw[1]
         exp_val = np.atleast_1d(explainer.expected_value)
-        base_val_survival = exp_val[0] if len(exp_val) > 1 else -float(exp_val[0])
+        base_val_mortality = exp_val[1] if len(exp_val) > 1 else float(exp_val[0])
     else:
-        shap_values_survival = -np.asarray(sv_raw)
-        base_val_survival = -float(np.atleast_1d(explainer.expected_value).flat[0])
+        shap_values_mortality = np.asarray(sv_raw)
+        base_val_mortality = float(np.atleast_1d(explainer.expected_value).flat[0])
 
     high_idx, low_idx = _pick_force_plot_cases(
-        y_full, pred_prob, shap_values_survival, base_val_survival
+        y_full, pred_prob, shap_values_mortality, base_val_mortality
     )
     if high_idx is None:
         print("  skip 7C/7D: no alive/dead samples in external cohort")
@@ -687,8 +688,8 @@ def generate_figure7_shap():
             (low_idx, "figure7d_shap_force.png", "low-risk"),
         ]:
             shap.force_plot(
-                base_val_survival,
-                shap_values_survival[idx],
+                base_val_mortality,
+                shap_values_mortality[idx],
                 X_disp.iloc[idx],
                 matplotlib=True,
                 show=False,
@@ -727,14 +728,14 @@ def table4_from_subgroup():
         "Acquired hypoferremia",
     ]
     calib = {}
-    for split, label in [("test", "MIMIC-IV internal test"), ("external", "MIMIC-III external")]:
+    for split, label in [("test", "MIMIC-IV internal test"), ("external", "MIMIC-III temporal sensitivity")]:
         y, prob = _load_pred_any(split, tag="8_features")
         brier, slope, _ = calibration_metrics(y, prob)
         calib[label] = {"Brier": round(brier, 3), "Calibration_slope": round(slope, 3)}
 
     rows = []
     for sg in main_subgroups:
-        for cohort in ["MIMIC-IV internal test", "MIMIC-III external"]:
+        for cohort in ["MIMIC-IV internal test", "MIMIC-III temporal sensitivity"]:
             m = results[(results["Subgroup"] == sg) & (results["Cohort"] == cohort)]
             if len(m):
                 row = m.iloc[0]

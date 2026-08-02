@@ -1,0 +1,5 @@
+Cohort,Rows,Unique_patients,Repeated_patient_rows
+MIMIC-IV eligible,1487,1487,0
+MIMIC-IV locked train,1075,1075,0
+MIMIC-IV locked internal test,269,269,0
+MIMIC-III corrected eligibility set,799,779,39

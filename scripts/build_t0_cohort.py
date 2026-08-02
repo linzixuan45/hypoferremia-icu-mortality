@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""
-Build t₀ cohort ID lists and manifest for hypoferremia (FE1).
+"""Build the R2 retrospective whole-stay cohorts and analysis manifest.
 
-Uses data/mimic_t0_labs.parquet when present; otherwise Excel proxy per FE1_spec §3.
-MIMIC-IV: 80/20 development split. MIMIC-III: full external validation cohort.
+The 28-day in-hospital endpoint is anchored to hospital admission. The retained
+``los_icu_to_t0`` field is a synthetic R1 protocol-continuity predictor, not an
+observed prediction time. MIMIC-IV is split 80/20 by patient; MIMIC-III is
+filtered with the same ICU length-of-stay criterion and used only as a
+same-institution cross-database temporal sensitivity cohort.
 """
 from __future__ import annotations
 
@@ -130,12 +132,11 @@ def days_from_admission(df: pd.DataFrame) -> pd.Series:
     return pd.Series(proxy, index=df.index).fillna(999)
 
 
-def outcome_28d_from_t0(df: pd.DataFrame) -> pd.Series:
+def outcome_28d_from_admission(df: pd.DataFrame) -> pd.Series:
+    """Death in hospital within 28 days of hospital admission."""
     expired = pd.to_numeric(df["hospital_expire_flag"], errors="coerce").fillna(0).astype(int)
     days_from_adm = days_from_admission(df)
-    hours = pd.to_numeric(df["hours_icu_to_t0"], errors="coerce").fillna(0)
-    days_from_t0 = days_from_adm - (hours / 24.0)
-    return ((expired == 1) & (days_from_t0 <= OUTCOME_HORIZON_DAYS)).astype(int)
+    return ((expired == 1) & (days_from_adm <= OUTCOME_HORIZON_DAYS)).astype(int)
 
 
 def attach_outcomes(raw: pd.DataFrame, cleaned: pd.DataFrame, t0_source: str) -> pd.DataFrame:
@@ -148,7 +149,7 @@ def attach_outcomes(raw: pd.DataFrame, cleaned: pd.DataFrame, t0_source: str) ->
     out = out[stratum != "unknown"].copy()
     out["hours_icu_to_t0"] = hours_icu_to_t0_proxy(out, out["hypoferremia_stratum"])
     out["los_icu_to_t0"] = los_icu_to_t0(out, out["hours_icu_to_t0"])
-    out["outcome_28d_t0"] = outcome_28d_from_t0(out)
+    out["outcome_28d_admission"] = outcome_28d_from_admission(out)
     out["t0_source"] = t0_source
     return out
 
@@ -198,7 +199,7 @@ def primary_features(lasso20: list[str]) -> list[str]:
 
 def feature_complete(df: pd.DataFrame, features: list[str]) -> pd.DataFrame:
     use = [c for c in features if c in df.columns]
-    sub = df[use + ["outcome_28d_t0"]].dropna(subset=use)
+    sub = df[use + ["outcome_28d_admission"]].dropna(subset=use)
     return df.loc[sub.index]
 
 
@@ -208,11 +209,11 @@ def assign_splits(
     m3_base = apply_base_filters(m3)
     m4_base = apply_base_filters(m4)
 
-    m3_external = m3.dropna(subset=["hypoferremia_stratum"]).copy()
+    m3_external = m3_base.dropna(subset=["hypoferremia_stratum"]).copy()
     m3_external = m3_external[m3_external["hypoferremia_stratum"] != "unknown"]
 
     m4f = feature_complete(m4_base, features)
-    y = m4f["outcome_28d_t0"]
+    y = m4f["outcome_28d_admission"]
     train_idx, test_idx = train_test_split(
         m4f.index, test_size=0.2, random_state=RANDOM_STATE, stratify=y
     )
@@ -221,9 +222,9 @@ def assign_splits(
     id_col_m4 = "subject_id" if "subject_id" in m4f.columns else "icustay_id"
 
     splits = {
-        "mimic4_train": m4f.loc[train_idx, [id_col_m4, "outcome_28d_t0", "hypoferremia_stratum"]],
-        "mimic4_test": m4f.loc[test_idx, [id_col_m4, "outcome_28d_t0", "hypoferremia_stratum"]],
-        "mimic3_external": m3_external[[id_col_m3, "outcome_28d_t0", "hypoferremia_stratum"]],
+        "mimic4_train": m4f.loc[train_idx, [id_col_m4, "outcome_28d_admission", "hypoferremia_stratum"]],
+        "mimic4_test": m4f.loc[test_idx, [id_col_m4, "outcome_28d_admission", "hypoferremia_stratum"]],
+        "mimic3_external": m3_external[[id_col_m3, "outcome_28d_admission", "hypoferremia_stratum"]],
         "legacy_mimic4_test": m4f.loc[test_idx].copy(),
         "legacy_mimic3_external": m3_external.copy(),
         "mimic4_train_indices": pd.Series(train_idx, name="index"),
@@ -316,7 +317,10 @@ def write_manifest(
         "imbalance_primary": "class_weight_balanced",
         "imbalance_sensitivity": "random_undersample_x5_seeds",
         "t0_source": t0_source,
-        "outcome": "death_within_28d_from_t0",
+        "outcome": "death_in_hospital_within_28_days_from_hospital_admission",
+        "analysis_frame": "retrospective_whole_ICU_stay_risk_stratification",
+        "predictor_window": "full_ICU_stay_for_min_max_mean; first_ICU_value_for_1st",
+        "legacy_t0_status": "synthetic_proxy_retained_only_for_R1_protocol_continuity",
         "primary_features": features,
         "feat8": FEAT8,
         "china_cohorts": "option_beta_no_reanchor",

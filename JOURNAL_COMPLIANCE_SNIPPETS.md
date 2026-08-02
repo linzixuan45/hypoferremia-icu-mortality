@@ -1,59 +1,24 @@
-# Journal compliance snippets
+# Journal Compliance Snippets
 
-Use these drafts when updating the revised manuscript and point-by-point response.
-Replace Zenodo placeholders after GitHub release and Zenodo DOI assignment.
+Replace DOI placeholders only after Zenodo has archived the reviewed `v1.2.0` release.
 
----
-
-## 1. Code Availability (Methods or dedicated section)
+## Code Availability
 
 ```text
-An HTTPS research demonstration calculator for the 8-feature model is available at https://fe.mixaihub.top (not for clinical use). The underlying code and the released research model bundle are available at https://github.com/linzixuan45/hypoferremia-icu-mortality and will be archived with a DOI at Zenodo upon release. The repository includes the analysis pipeline, SQL extraction scripts, inference code, model card, and data dictionary. Raw patient-level data are not redistributed because access to MIMIC and local validation data is restricted.
+Analysis code operating on authorized prepared modelling tables and non-patient aggregate Round 2 outputs is available at https://github.com/linzixuan45/hypoferremia-icu-mortality and will be archived as release v1.2.0 at Zenodo. The repository provides input validation, cohort construction, patient-separated splitting, training-set-only preprocessing, model fitting, evaluation, figure generation, and supplementary-audit workflows. It excludes patient-level records, identifiers, outcomes, individual probabilities, cohort-ID lists, and fitted preprocessing or model objects that retain training-row information. The assigned Zenodo DOI will be inserted before final resubmission.
 ```
 
----
-
-## 2. Ethics / guidelines statement (Methods)
-
-Add after the existing institutional approval statement:
+## Editor response on code deposit
 
 ```text
-The study was approved by the relevant institutional review board, and all methods were performed in accordance with the relevant guidelines and regulations. Use of MIMIC-III and MIMIC-IV data followed PhysioNet credentialed access and data-use requirements.
+We re-audited the repository and prepared release v1.2.0. The active workflow reconstructs the Round 2 analyses from an authorized prepared modelling workbook and includes validation, cohort construction, patient-separated splitting, training-set-only preprocessing, candidate and ensemble model fitting, evaluation, figure generation, and supplementary audits. The release excludes patient-level data, cohort-ID lists, row-level outcomes or probabilities, and fitted objects that retain training-row information. The reviewed GitHub release will be archived by Zenodo, and the assigned version DOI will be inserted before final resubmission.
 ```
 
----
-
-## 3. Point-by-point response — Code deposit (editor requirement)
-
-**Editor comment:** Custom/bespoke computational code must be deposited in a DOI-assigning repository and linked from Methods or Code Availability.
-
-**Response:**
-
-```text
-We thank the editor for this reminder. We have deployed an HTTPS research demonstration calculator at https://fe.mixaihub.top (not for clinical use) and deposited the underlying analysis code, SQL extraction scripts, inference code, model card, data dictionary, and the released 8-feature research model bundle in a public GitHub repository (https://github.com/linzixuan45/hypoferremia-icu-mortality), to be archived with a Zenodo DOI upon release. The Code Availability statement in the revised manuscript now provides these links. Raw patient-level data were not redistributed because MIMIC and local validation cohorts are access-restricted.
-```
-
----
-
-## 4. Point-by-point response — Guidelines and regulations (editor requirement)
-
-**Editor comment:** Confirm that all methods were performed in accordance with relevant guidelines and regulations.
-
-**Response:**
-
-```text
-We have added an explicit statement to the Methods section confirming that all methods were performed in accordance with the relevant guidelines and regulations, in addition to the existing institutional approval disclosure.
-```
-
----
-
-## 5. Placeholder tracking
+## Placeholder tracking
 
 | Item | Status | Value |
-|------|--------|-------|
-| Research demo URL | Done | https://fe.mixaihub.top |
-| GitHub URL | Done | https://github.com/linzixuan45/hypoferremia-icu-mortality |
+|---|---|---|
+| GitHub | Complete | https://github.com/linzixuan45/hypoferremia-icu-mortality |
+| Release target | Prepared | `v1.2.0` |
 | Zenodo concept DOI | Pending | |
 | Zenodo version DOI | Pending | |
-| Release tag | Recommended | `v1.0.0` |
-| Submission ID | Known | `91406a0b-fc8b-4fcf-95bc-820b99f21793` |

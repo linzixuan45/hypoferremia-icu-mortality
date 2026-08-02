@@ -30,7 +30,10 @@ def load_bundle(weights_path: Path | None = None) -> dict:
         return _BUNDLE
     if not path.exists():
         raise FileNotFoundError(
-            f"Model weights not found: {path}\n"
+            f"Protected local model bundle not found: {path}\n"
+            "The public release intentionally excludes fitted objects because the fitted "
+            "KNN imputer retains training-row information. Reconstruct the bundle locally "
+            "from authorized data by running scripts/run_r2_analysis.py.\n"
             "This repository ships 8_features_model.pkl for Quick Start. "
             "If missing, re-export with: python scripts/export_github_weights.py "
             "(after running the analysis pipeline). See README.md."

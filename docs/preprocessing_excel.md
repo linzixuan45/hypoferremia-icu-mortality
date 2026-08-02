@@ -1,115 +1,26 @@
-# Excel-Based Preprocessing and Reproduction Path
+# Excel-Based Round 2 Preprocessing
 
-**Scope:** credentialed users who hold a local `data/mimic_dataset.xlsx`. This repository does **not** redistribute patient-level data and does **not** include MIMIC raw-table ETL.
+This path is for credentialed investigators who hold an authorized `data/mimic_dataset.xlsx`. The workbook is not public.
 
-**Start here:** [mimic_excel_reproduction_guide.md](mimic_excel_reproduction_guide.md) · column checklist: [required_excel_columns.csv](../config/required_excel_columns.csv)
+## Required semantics
 
-For public reproduction, use the Excel input plus the scripts below.
+- Sheets: `mimic4_low_fe` and `mimic3_low_fe`.
+- ICU eligibility: `los_icu >= 2` days.
+- Documented hypoferremia: `iron_1st < 60` or `iron_min < 60` µg/dL after the LOS filter.
+- Outcome: `hospital_expire_flag == 1` and survival time from hospital admission ≤28 days.
+- Predictor suffixes: `_1st` is first ICU value; `_min`, `_max`, `_mean` summarize the full ICU stay.
+- Historical `los_icu_to_t0`: synthetic R1 proxy; retained only in the locked benchmark and removed in a sensitivity analysis.
 
----
+## Leakage controls
 
-## Required input
+The MIMIC-IV split is patient-separated. KNN imputation (`n_neighbors=5`) is fitted only on the training set. StandardScaler is fitted only to the imputed training matrix. Both objects are applied unchanged to internal and non-training cohorts. Multiple-imputation sensitivity preprocessing is refitted inside each training fold.
 
-Place your authorized export at:
-
-```
-data/mimic_dataset.xlsx
-```
-
-### Required sheets
-
-| Sheet | Purpose |
-|-------|---------|
-| `mimic3_low_fe` | MIMIC-III external validation source |
-| `mimic4_low_fe` | MIMIC-IV development / internal test source |
-| `Feature_names` | Optional; used by exploratory `dataset.py` / LASSO flows |
-
-### Minimum columns
-
-**Identifiers**
-
-| Column | MIMIC-III | MIMIC-IV |
-|--------|-----------|----------|
-| `subject_id` | required | required |
-| `icustay_id` | required (preferred join key) | — |
-
-**Outcome and follow-up**
-
-| Column | Purpose |
-|--------|---------|
-| `hospital_expire_flag` | In-hospital death indicator |
-| `hosp_survival_days` or `icu_survival_days` | Used to derive `outcome_28d_t0` from t₀ |
-
-**Cohort filters**
-
-| Column | Purpose |
-|--------|---------|
-| `admission_age` | Clipped to 18–100 years |
-| `los_icu` | Primary analysis: ≥ 2 days (48 h ICU stay) |
-
-**t₀ proxy (Excel path)**
-
-| Column | Purpose |
-|--------|---------|
-| `iron_1st` | Admission-stratum proxy (< 60 µg/dL) |
-| `iron_min` | Acquired-hypoferremia proxy |
-
-**8-feature model panel** — see [data_dictionary.md](data_dictionary.md):
-
-`platelet_mean`, `wbc_min`, `bun_min`, `pco2_max`, `creatinine_min`, `is_noninvasive_ventilator`, `spo2_min`, `platelet_1st`
-
-**20-feature / severity benchmark**
-
-| Column | Purpose |
-|--------|---------|
-| `sofa_score` | Table 5 SOFA comparator (Excel proxy) |
-| APACHE II / SAPS II | **Not in Excel**; require SQL export via [sql/README.md](../sql/README.md) |
-
----
-
-## Pipeline (Excel path)
+## Commands
 
 ```bash
-python scripts/validate_excel_input.py
-python scripts/prepare_t0_labs_parquet.py
-python scripts/build_t0_cohort.py
-python scripts/train_models.py
-python scripts/supplementary_analysis.py
-python scripts/benchmark_severity_scores.py
-python scripts/build_table1_baseline.py
-python scripts/export_github_weights.py
+python scripts/validate_excel_input.py --report --strict
+python scripts/run_r2_analysis.py
+python scripts/verify_reproduction.py
 ```
 
-Or:
-
-```bash
-python scripts/run_pipeline.py
-```
-
----
-
-## Cohort split (FE1)
-
-| Set | Role |
-|-----|------|
-| MIMIC-IV 80% | Development train |
-| MIMIC-IV 20% | Internal test |
-| MIMIC-III all | External validation (~1,046) |
-
----
-
-## Script roles
-
-| Script | Role |
-|--------|------|
-| `validate_excel_input.py` | Pre-flight column/sheet checks |
-| `prepare_t0_labs_parquet.py` | Synthetic t₀ timing from `iron_*` + `los_icu` |
-| `build_t0_cohort.py` | Filters, `outcome_28d_t0`, train/test/external ID lists |
-| `train_models.py` | 20/8-feature soft-voting ensemble |
-
----
-
-## Limitations (Methods disclosure)
-
-- No charttime-level serum iron in the Excel export; t₀ uses **excel_derived_interim** proxy per [FE1_spec.md](FE1_spec.md).
-- Full-stay min/max/mean aggregates cannot be truly truncated to t₀ without SQL; primary 20-feature set uses conservative `_1st`/`_min` mapping.
+Outputs under `result/` are local and gitignored. Do not commit cohort IDs, row-level predictions, or fitted objects.

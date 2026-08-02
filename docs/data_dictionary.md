@@ -1,20 +1,16 @@
-# Data dictionary — 8-feature hypoferremia model
+# Data Dictionary — Post Hoc 8-Feature Derivative
 
-| Feature | Description | Unit |
-|---------|-------------|------|
-| `platelet_mean` | Platelet count (mean to t₀) | 10⁹/L |
-| `wbc_min` | White blood cell count (min to t₀) | 10⁹/L |
-| `bun_min` | Blood urea nitrogen (min to t₀) | mg/dL |
-| `pco2_max` | Partial pressure of CO₂ (max to t₀) | mmHg |
-| `creatinine_min` | Serum creatinine (min to t₀) | mg/dL |
-| `is_noninvasive_ventilator` | Non-invasive ventilation before t₀ (`1` = documented use; `0` = no documented use) | 0/1 |
-| `spo2_min` | Peripheral oxygen saturation (min to t₀) | % |
-| `platelet_1st` | First platelet measurement to t₀ | 10⁹/L |
+| Feature | Round 2 interpretation | Unit |
+|---|---|---|
+| `platelet_mean` | Mean platelet count over the full ICU stay | 10⁹/L |
+| `wbc_min` | Minimum white blood cell count over the full ICU stay | 10⁹/L |
+| `bun_min` | Minimum blood urea nitrogen over the full ICU stay | mg/dL |
+| `pco2_max` | Maximum PaCO₂ over the full ICU stay | mmHg |
+| `creatinine_min` | Minimum creatinine over the full ICU stay | mg/dL |
+| `is_noninvasive_ventilator` | Documented NIV use; not equivalent to confirmed physiological absence when 0 or missing | 0/1 |
+| `spo2_min` | Minimum oxygen saturation over the full ICU stay | % |
+| `platelet_1st` | First recorded platelet count during the ICU stay | 10⁹/L |
 
-**Chinese cohort harmonization (F3/NH):** before model input, `creatinine_min` is converted from μmol/L to mg/dL (÷88.4) and `bun_min` from mmol/L urea to mg/dL BUN (×2.801), matching the MIMIC-aligned model scale. See `scripts/external_cohort_data.py`.
+Chinese exploratory cohort values are harmonized to the MIMIC-aligned scale before evaluation: creatinine µmol/L to mg/dL by dividing by 88.4; urea mmol/L to BUN mg/dL by multiplying by 2.801.
 
-**Web demo inputs** (`web/webui_low_fe.py`, https://fe.mixaihub.top): always enter creatinine and BUN in **mg/dL**.
-
-Outcome (training): death within 28 calendar days from t₀ (`outcome_28d_t0`).
-
-See `docs/FE1_spec.md` for full variable timing rules.
+Outcome: death in hospital within 28 days of hospital admission (`outcome_28d_admission`). Full-stay summaries may be outcome-proximal or extend beyond day 28, so the model is retrospective whole-stay risk stratification rather than admission-time prediction.

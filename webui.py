@@ -2,7 +2,8 @@
 """
 Hypoferremia 8-feature research web demo (not for clinical use).
 
-Gradio UI with SHAP audit plots. Uses model_weights/8_features_model.pkl.
+Gradio UI with SHAP audit plots. Requires a locally reconstructed, protected
+model bundle at model_weights/8_features_model.pkl; the bundle is not public.
 All lab inputs in model-native units (creatinine & BUN: mg/dL).
 """
 from __future__ import annotations

@@ -55,7 +55,7 @@ FIGURES = OUT / "figures"
 COHORT = OUT / "cohorts"
 DATA_PATH = ROOT / "data" / "mimic_dataset.xlsx"
 RANDOM_STATE = 42
-LABEL = "outcome_28d_t0"
+LABEL = "outcome_28d_admission"
 LOS_ICU_MIN_DAYS = 2.0
 
 
@@ -170,7 +170,7 @@ def youden_threshold(y_true, y_prob):
 
 
 def load_cohort_frames(t0_source: str = "excel_proxy") -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """MIMIC-IV train/test + MIMIC-III external, aligned with cohort ID lists."""
+    """MIMIC-IV train/test plus corrected MIMIC-III temporal sensitivity cohort."""
     m4_raw, m3_raw = load_raw()
     m3_clean, m4_clean = clean_raw(m3_raw, m4_raw)
     m3 = attach_outcomes(m3_raw, m3_clean, t0_source)
@@ -296,7 +296,7 @@ def write_table23(res20, res8):
     for feat_tag, res in [("20-feature", res20), ("8-feature", res8)]:
         for split, label in [
             ("test", "MIMIC-IV internal test"),
-            ("external", "MIMIC-III external"),
+            ("external", "MIMIC-III temporal sensitivity"),
         ]:
             d = res[split]
             rows.append(
@@ -337,7 +337,7 @@ def write_table_s10_8f_four_cohorts(res8: dict, ext_rows: list[dict]) -> None:
     rows = []
     for split, label in [
         ("test", "MIMIC-IV internal test"),
-        ("external", "MIMIC-III external"),
+        ("external", "MIMIC-III temporal sensitivity"),
     ]:
         d = res8[split]
         rows.append(
@@ -432,7 +432,7 @@ def plot_figure5(y_test, prob_test, y_ext, prob_ext, out_path):
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
     for ax, y, p, title in [
         (axes[0], y_test, prob_test, "MIMIC-IV internal test"),
-        (axes[1], y_ext, prob_ext, "MIMIC-III external"),
+        (axes[1], y_ext, prob_ext, "MIMIC-III temporal sensitivity"),
     ]:
         prob_true, prob_pred = calibration_curve(y, p, n_bins=8, strategy="quantile")
         ax.plot([0, 1], [0, 1], "k--", lw=1)
@@ -504,7 +504,7 @@ def main():
     all_cal.extend(
         [
             ("MIMIC-IV test 8f", np.array(res8["test"]["lable"]), np.array(res8["test"]["pred_prob"])),
-            ("MIMIC-III external 8f", np.array(res8["external"]["lable"]), np.array(res8["external"]["pred_prob"])),
+            ("MIMIC-III temporal sensitivity 8f", np.array(res8["external"]["lable"]), np.array(res8["external"]["pred_prob"])),
         ]
     )
     write_table6(all_cal)

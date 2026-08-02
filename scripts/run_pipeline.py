@@ -25,7 +25,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Excel-based analysis pipeline")
     parser.add_argument("--skip-validate", action="store_true")
     parser.add_argument("--skip-extended", action="store_true")
-    parser.add_argument("--skip-weights", action="store_true")
+    parser.add_argument("--skip-model-metadata", action="store_true")
     parser.add_argument("--strict-validate", action="store_true", help="Pass --strict to validate_excel_input.py")
     args = parser.parse_args()
 
@@ -49,8 +49,8 @@ def main() -> None:
 
     run_step("build_table1_baseline", "build_table1_baseline.py")
 
-    if not args.skip_weights:
-        run_step("export_github_weights", "export_github_weights.py")
+    if not args.skip_model_metadata:
+        run_step("export_privacy_safe_model_metadata", "export_github_weights.py")
 
     print("[pipeline] complete", flush=True)
 

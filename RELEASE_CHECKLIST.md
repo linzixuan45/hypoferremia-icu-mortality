@@ -1,38 +1,26 @@
-# Release Checklist
+# Release Checklist — v1.2.0
 
-Complete on publication day. Repository positioning: **auditable analysis source code** (not bit-exact numeric reproduction).
+## Privacy and reproducibility gate
 
-## Pre-release verification
+- [ ] `pytest -q` passes.
+- [ ] No `.xlsx`, `.xls`, `.parquet`, `.pkl`, `.joblib`, `.npz`, cohort-ID list, row-level outcome, or individual probability is tracked.
+- [ ] `model_weights/8_features_model.pkl` is absent from the release tree.
+- [ ] `python scripts/validate_excel_input.py --report --strict` passes on the authorized local workbook.
+- [ ] `python scripts/run_r2_analysis.py` completes, or any unavailable optional cohort is stated explicitly.
+- [ ] Aggregate outputs match `reference/r2/` and the manuscript.
+- [ ] Table S4 ensemble-specific parameters match `scripts/train_models.py`, `scripts/plot_figure4_benchmark.py`, and `reference/r2/model_bundle_metadata.json`.
 
-- [ ] `pip install -r requirements.txt && python inference.py` — prints 28-day mortality probability
-- [ ] `grep -r "TODO.md\|numbering_map\|paper_data_overview" docs/` — no broken public links
-- [ ] GitHub URL consistent across `README.md`, `CODE_AVAILABILITY.md`, `JOURNAL_COMPLIANCE_SNIPPETS.md`, `CITATION.bib`
-- [ ] `reference/manifest.json` AUROC values match manuscript Table 2/3 (8-feature)
+## GitHub and Zenodo
 
-## GitHub
+- [ ] Merge the reviewed pull request into `main`.
+- [ ] Create GitHub release `v1.2.0` from that exact commit.
+- [ ] Enable Zenodo integration and archive release `v1.2.0`.
+- [ ] Record the Zenodo concept DOI and version DOI.
+- [ ] Insert the assigned DOI in `README.md`, `CODE_AVAILABILITY.md`, `CITATION.cff`, `.zenodo.json`, the manuscript, and the point-by-point response.
+- [ ] Re-run all tests after DOI-only edits and confirm the archived tree remains data-free.
 
-- [ ] Repository public at https://github.com/linzixuan45/hypoferremia-icu-mortality
-- [ ] Create release tag `v1.0.0` from the commit used for the manuscript
-- [ ] Release notes mention: auditable code deposit, online calculator URL, locked reference metrics, no patient data
+## Submission-only items
 
-## Zenodo
-
-- [ ] Enable GitHub integration in Zenodo
-- [ ] Trigger archive from GitHub release `v1.0.0`
-- [ ] Record concept DOI and version DOI
-
-## Fill placeholders
-
-| File | Field |
-|------|-------|
-| `CITATION.bib` | authors, journal, volume, issue, pages, DOI |
-| `README.md` | Zenodo DOI in Archive table |
-| `CODE_AVAILABILITY.md` | Zenodo concept + version DOI |
-| `JOURNAL_COMPLIANCE_SNIPPETS.md` | Zenodo version DOI in snippets + tracking table |
-| Manuscript | Code Availability paragraph |
-| Point-by-point response | GitHub + Zenodo links |
-
-## Post-release
-
-- [ ] If pipeline was re-run for the release, confirm `result/analysis/manifest.json` `git_commit` matches the tag
-- [ ] Add Zenodo DOI to Scientific Reports submission
+- [ ] Upload the final response letter as PDF after page-by-page visual inspection.
+- [ ] Retain the Figure 1 BioRender publication licence or equivalent rights documentation.
+- [ ] Confirm Figure 1 authorship/provenance with the journal as requested.

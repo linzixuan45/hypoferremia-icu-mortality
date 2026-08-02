@@ -1,0 +1,30 @@
+{
+  "title": "Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Analysis Code and Aggregate Outputs",
+  "description": "Prepared-table Round 2 analysis code, non-patient aggregate results, and documentation for a retrospective ICU risk-stratification study. Patient-level data, identifiers, outcomes, individual probabilities, cohort-ID lists, and fitted preprocessing or model objects are not redistributed.",
+  "upload_type": "software",
+  "version": "1.2.0",
+  "license": "MIT",
+  "creators": [
+    {"name": "Xie, Liangpeng"},
+    {"name": "Zhang, Chang"},
+    {"name": "Sheng, Jiaowen"},
+    {"name": "Jiang, Linxuan"},
+    {"name": "Xiao, Mingxuan"},
+    {"name": "Xi, Yang"}
+  ],
+  "keywords": [
+    "hypoferremia",
+    "critical care",
+    "mortality risk stratification",
+    "machine learning",
+    "calibration",
+    "TRIPOD+AI"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/linzixuan45/hypoferremia-icu-mortality",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

@@ -2,7 +2,8 @@
 """
 Hypoferremia 8-feature research web demo (not for clinical use).
 
-Synced from .cursor/LowFe_K; uses model_weights/8_features_model.pkl (ensemble).
+Requires a locally reconstructed, protected model bundle at
+model_weights/8_features_model.pkl; the bundle is not distributed publicly.
 All lab inputs in model-native units (creatinine & BUN: mg/dL).
 """
 from __future__ import annotations

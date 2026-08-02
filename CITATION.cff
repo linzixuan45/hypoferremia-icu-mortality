@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, cite the accompanying manuscript and archived release."
+title: "Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Analysis Code and Aggregate Outputs"
+type: software
+version: 1.2.0
+license: MIT
+repository-code: "https://github.com/linzixuan45/hypoferremia-icu-mortality"
+authors:
+  - family-names: Xie
+    given-names: Liangpeng
+  - family-names: Zhang
+    given-names: Chang
+  - family-names: Sheng
+    given-names: Jiaowen
+  - family-names: Jiang
+    given-names: Linxuan
+  - family-names: Xiao
+    given-names: Mingxuan
+  - family-names: Xi
+    given-names: Yang
+preferred-citation:
+  type: article
+  title: "Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Multi-Cohort Development and Retrospective Evaluation"
+  journal: "Scientific Reports"
+  year: 2026

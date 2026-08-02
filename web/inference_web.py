@@ -27,7 +27,9 @@ class WebInference:
         path = weights_path or WEIGHTS_PATH
         if not path.exists():
             raise FileNotFoundError(
-                f"Model bundle not found: {path}\n"
+                f"Protected local model bundle not found: {path}\n"
+                "The public release intentionally excludes fitted objects. Reconstruct "
+                "the bundle locally from authorized data before starting the interface.\n"
                 "Run: python scripts/export_github_weights.py"
             )
         with open(path, "rb") as f:

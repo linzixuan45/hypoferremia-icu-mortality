@@ -1,0 +1,11 @@
+Model,Cohort,n,Events,AUROC,Brier
+Locked 18-predictor benchmark,MIMIC-IV locked internal test: all stays,269,40,0.8400655021834061,0.10878667477955509
+Locked 18-predictor benchmark,MIMIC-IV locked internal test: ICU LOS <=28 days,240,40,0.849875,0.10886956937256737
+Locked 18-predictor benchmark,MIMIC-III corrected eligibility set,799,140,0.7045740299154564,0.1410863213708644
+Locked 18-predictor benchmark,MIMIC-III corrected set: ICU LOS <=28 days,712,140,0.7216408591408591,0.14306890377240206
+Locked 18-predictor benchmark,MIMIC-III corrected set: one admission per patient,779,136,0.713246729484951,0.1398029005460012
+Post hoc 8-feature derivative,MIMIC-IV locked internal test: all stays,269,40,0.796288209606987,0.11834129976270114
+Post hoc 8-feature derivative,MIMIC-IV locked internal test: ICU LOS <=28 days,240,40,0.80125,0.12013054139554485
+Post hoc 8-feature derivative,MIMIC-III corrected eligibility set,799,140,0.7154617385649252,0.1339662497544761
+Post hoc 8-feature derivative,MIMIC-III corrected set: ICU LOS <=28 days,712,140,0.7327235264735265,0.13798374128780538
+Post hoc 8-feature derivative,MIMIC-III corrected set: one admission per patient,779,136,0.7230811453663891,0.13264819843149675

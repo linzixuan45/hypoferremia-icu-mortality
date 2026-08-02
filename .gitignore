@@ -30,12 +30,19 @@ webui.log
 !config/*.csv
 *.docx
 
-# Pickle artifacts except released model bundle
+# Fitted or row-level artifacts are never public
 *.pkl
-!model_weights/8_features_model.pkl
+*.joblib
+*.npz
+model_weights/
 
 # Locked reference metrics (no patient IDs)
-reference/
+reference/*
 !reference/README.md
 !reference/manifest.json
 !reference/table2_3_performance.csv
+!reference/r2/
+reference/r2/*
+!reference/r2/*.csv
+!reference/r2/*.json
+!reference/r2/*.md

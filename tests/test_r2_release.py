@@ -1,0 +1,115 @@
+from __future__ import annotations
+
+import json
+import csv
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def read(path: str) -> str:
+    return (ROOT / path).read_text(encoding="utf-8")
+
+
+def test_release_identity_and_scope() -> None:
+    text = read("README.md") + read("CODE_AVAILABILITY.md")
+    assert "v1.2.0" in text
+    assert "authorized" in text.lower()
+    assert "raw-clinical-database-to-modelling-table" in text
+    assert "fitted preprocessing" in text
+
+
+def test_audited_numerical_environment_is_pinned() -> None:
+    frozen = read("requirements-frozen.txt")
+    assert "scikit-learn==1.8.0" in frozen
+    assert "xgboost==3.2.0" in frozen
+    lock = read("ENVIRONMENT_LOCK.md")
+    assert "XGBoost 3.3.0" in lock
+
+
+def test_no_fitted_or_patient_level_artifacts_are_tracked() -> None:
+    forbidden_suffixes = {".xlsx", ".xls", ".parquet", ".pkl", ".joblib", ".npz"}
+    offenders = [
+        str(path.relative_to(ROOT))
+        for path in ROOT.rglob("*")
+        if path.is_file() and ".git" not in path.parts and path.suffix.lower() in forbidden_suffixes
+    ]
+    assert offenders == []
+
+
+def test_endpoint_and_corrected_mimic3_are_active() -> None:
+    source = read("scripts/build_t0_cohort.py")
+    assert "outcome_28d_from_admission" in source
+    assert 'm3_external = m3_base' in source
+    assert "death_in_hospital_within_28_days_from_hospital_admission" in source
+    assert "outcome_28d_t0" not in source
+
+
+def test_active_pipeline_is_not_silent_partial_success() -> None:
+    source = read("scripts/run_r2_analysis.py")
+    assert "required step failed" in source
+    assert "required outputs are missing" in source
+    assert 'run("run_pipeline.py")' in source
+    assert 'run("r2_supplementary_analyses.py")' in source
+
+
+def test_r2_manifest_has_corrected_denominators() -> None:
+    manifest = json.loads(read("reference/r2/r2_analysis_manifest.json"))
+    assert manifest["mimic4_eligible_n"] == 1487
+    assert manifest["mimic4_complete_locked_matrix_n"] == 1344
+    assert manifest["mimic3_corrected_n"] == 799
+    assert manifest["mimic3_corrected_events"] == 140
+
+
+def test_locked_round_2_discrimination_values_are_reproduced() -> None:
+    path = ROOT / "reference" / "r2" / "r2_standard_calibration_metrics.csv"
+    with path.open(encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    observed = {(row["Analysis"], row["Cohort"]): round(float(row["AUROC"]), 3) for row in rows}
+    assert observed[("Locked 18-predictor soft-voting model", "MIMIC-IV internal test")] == 0.840
+    assert observed[("Locked 18-predictor soft-voting model", "MIMIC-III corrected eligibility set (ICU LOS >=48 h)")] == 0.705
+    assert observed[("Reduced 8-feature soft-voting model", "MIMIC-IV internal test")] == 0.796
+    assert observed[("Reduced 8-feature soft-voting model", "MIMIC-III corrected eligibility set (ICU LOS >=48 h)")] == 0.715
+    assert observed[("Reduced 8-feature soft-voting model", "F3 exploratory geographic cohort")] == 0.810
+    assert observed[("Reduced 8-feature soft-voting model", "NH exploratory geographic cohort")] == 0.898
+
+
+def test_ensemble_parameters_match_code_and_metadata() -> None:
+    metadata = json.loads(read("reference/r2/model_bundle_metadata.json"))
+    ensemble = metadata["ensemble"]
+    train = read("scripts/train_models.py")
+    benchmark = read("scripts/plot_figure4_benchmark.py")
+    for source in (train, benchmark):
+        assert "n_estimators=200" in source
+        assert "max_depth=6" in source
+        assert "n_estimators=120" in source
+        assert "max_depth=4" in source
+        assert "learning_rate=0.08" in source
+    assert ensemble["random_forest"]["n_estimators"] == 200
+    assert ensemble["random_forest"]["max_depth"] == 6
+    assert ensemble["xgboost"]["n_estimators"] == 120
+    assert ensemble["xgboost"]["max_depth"] == 4
+    assert ensemble["xgboost"]["learning_rate"] == 0.08
+
+
+def test_privacy_safe_export_writes_metadata_only() -> None:
+    source = read("scripts/export_github_weights.py")
+    assert "metadata_only" in source
+    assert "public_pickle_exported" in source
+    assert "model_weights" not in source
+
+
+def test_r2_aggregate_outputs_cover_major_audits() -> None:
+    required = [
+        "r2_patient_flow.csv",
+        "r2_multiple_imputation_sensitivity.csv",
+        "r2_standard_calibration_metrics.csv",
+        "r2_niv_exclusion_sensitivity.csv",
+        "r2_iron_adjusted_effect.csv",
+        "r2_iron_incremental_value.csv",
+        "r2_duration_proxy_exclusion_sensitivity.csv",
+        "observation_patient_sensitivity.csv",
+        "patient_unit_audit.csv",
+    ]
+    assert all((ROOT / "reference" / "r2" / name).is_file() for name in required)

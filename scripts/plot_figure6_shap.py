@@ -23,7 +23,7 @@ SCRIPTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS))
 
 from build_t0_cohort import load_lasso_features, primary_features
-from train_models import FIGURES, OUT, load_cohort_frames, prep_frame
+from train_models import FIGURES, LABEL, OUT, load_cohort_frames, prep_frame
 
 MODEL_TAG = "20_features"
 FORBIDDEN = frozenset({"platelet_mean", "los_icu", "bun_max"})
@@ -42,9 +42,9 @@ def load_stacking(tag: str = MODEL_TAG):
     return model, bundle["imputer"], bundle["scaler"], bundle["features"]
 
 
-def _pick_force_plot_cases(y, pred_prob, shap_values_survival, base_val_survival):
+def _pick_force_plot_cases(y, pred_prob, shap_values_mortality, base_val_mortality):
     """Panel C = low-risk (alive); panel D = high-risk (dead)."""
-    survival_score = base_val_survival + np.asarray(shap_values_survival).sum(axis=1)
+    mortality_score = base_val_mortality + np.asarray(shap_values_mortality).sum(axis=1)
     alive = np.where(y == 0)[0]
     dead = np.where(y == 1)[0]
     if len(alive) == 0 or len(dead) == 0:
@@ -55,8 +55,8 @@ def _pick_force_plot_cases(y, pred_prob, shap_values_survival, base_val_survival
         alive_conf = alive
     if len(dead_conf) == 0:
         dead_conf = dead
-    high_idx = int(dead_conf[np.argmin(survival_score[dead_conf])])
-    low_idx = int(alive_conf[np.argmax(survival_score[alive_conf])])
+    high_idx = int(dead_conf[np.argmax(mortality_score[dead_conf])])
+    low_idx = int(alive_conf[np.argmin(mortality_score[alive_conf])])
     return low_idx, high_idx
 
 
@@ -132,7 +132,7 @@ def generate_figure6_shap() -> dict:
     X = sub[feats]
     Xi = pd.DataFrame(imp.transform(X), columns=feats)
     Xs = pd.DataFrame(scaler.transform(Xi), columns=feats)
-    y = sub["hospital_expire_flag"].astype(int).values
+    y = sub[LABEL].astype(int).values
 
     explainer = shap.TreeExplainer(xgb)
     sv_raw = explainer.shap_values(Xs)
@@ -169,17 +169,19 @@ def generate_figure6_shap() -> dict:
     plt.close(fig)
     print(f"  Saved: {path_6b}")
 
-    # 6C / 6D: force plots (survival-oriented sign convention, same as Figure 7)
+    # 6C / 6D: mortality-oriented force plots (positive SHAP raises death risk).
     pred_prob = xgb.predict_proba(Xs)[:, 1]
     if isinstance(sv_raw, list):
-        shap_values_survival = sv_raw[0]
+        shap_values_mortality = sv_raw[1]
         exp_val = np.atleast_1d(explainer.expected_value)
-        base_val_survival = exp_val[0] if len(exp_val) > 1 else -float(exp_val[0])
+        base_val_mortality = exp_val[1] if len(exp_val) > 1 else float(exp_val[0])
     else:
-        shap_values_survival = -np.asarray(sv_raw)
-        base_val_survival = -float(np.atleast_1d(explainer.expected_value).flat[0])
+        shap_values_mortality = np.asarray(sv_raw)
+        base_val_mortality = float(np.atleast_1d(explainer.expected_value).flat[0])
 
-    low_idx, high_idx = _pick_force_plot_cases(y, pred_prob, shap_values_survival, base_val_survival)
+    low_idx, high_idx = _pick_force_plot_cases(
+        y, pred_prob, shap_values_mortality, base_val_mortality
+    )
     if low_idx is None:
         raise RuntimeError("Could not select low/high-risk force-plot cases")
 
@@ -190,8 +192,8 @@ def generate_figure6_shap() -> dict:
         (high_idx, "figure6d_shap_force.png", "high-risk"),
     ]:
         shap.force_plot(
-            base_val_survival,
-            shap_values_survival[idx],
+            base_val_mortality,
+            shap_values_mortality[idx],
             X_disp.iloc[idx],
             matplotlib=True,
             show=False,
@@ -216,7 +218,7 @@ def generate_figure6_shap() -> dict:
     manifest = {
         **bundle_report,
         "model_tag": MODEL_TAG,
-        "cohort": "MIMIC-III external",
+        "cohort": "MIMIC-III temporal sensitivity",
         "n_samples_shap": int(len(y)),
         "top_feature": ranked[0],
         "top3_features": top3,
