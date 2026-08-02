@@ -71,7 +71,7 @@ MODEL_ORDER = [
 REFERENCE_AUROC = {
     "MIMIC-IV internal test": {
         "Logistic Regression": 0.846,
-        "KNN": 0.713,
+        "KNN": 0.712,
         "SVM": 0.848,
         "Decision Tree": 0.653,
         "Random Forest": 0.822,
@@ -81,7 +81,7 @@ REFERENCE_AUROC = {
         "AdaBoost": 0.798,
         "GaussianNB": 0.803,
         "Ensemble_Voting": 0.840,
-        "Ensemble_Stacking": 0.841,
+        "Ensemble_Stacking": 0.840,
     },
     "MIMIC-III temporal sensitivity": {
         "Ensemble_Voting": 0.705,

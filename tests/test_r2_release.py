@@ -113,3 +113,31 @@ def test_r2_aggregate_outputs_cover_major_audits() -> None:
         "patient_unit_audit.csv",
     ]
     assert all((ROOT / "reference" / "r2" / name).is_file() for name in required)
+
+
+def test_research_interface_uses_mortality_direction_and_component_label() -> None:
+    for relative in ("webui.py", "web/webui_low_fe.py"):
+        text = read(relative)
+        assert "28-day mortality probability" in text
+        assert "28-day survival probability" not in text
+        assert "XGBoost component explanation" in text
+        assert "not for clinical decision-making" in text
+        assert "ICP_BEIAN" not in text
+
+
+def test_active_pipeline_does_not_generate_legacy_training_table1() -> None:
+    source = read("scripts/run_pipeline.py")
+    assert 'run_step("build_table1_baseline"' not in source
+
+
+def test_figure4_guardrails_match_final_internal_values() -> None:
+    source = read("scripts/plot_figure4_benchmark.py")
+    assert '"KNN": 0.712' in source
+    assert '"Ensemble_Stacking": 0.840' in source
+
+
+def test_manuscript_table1_aggregate_reports_availability_and_omits_sparse_height() -> None:
+    text = read("reference/r2/r2_table1_mimic4_eligible.csv")
+    assert "Height, Median" not in text
+    assert "[n=1487]" in text
+    assert "Any documented ventilatory-support flag" in text

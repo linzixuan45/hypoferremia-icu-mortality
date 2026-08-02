@@ -14,6 +14,7 @@ from pathlib import Path
 import gradio as gr
 import matplotlib.pyplot as plt
 import shap
+from PIL import Image
 
 from inference_web import WebInference
 
@@ -24,7 +25,6 @@ WEB_DIR = Path(__file__).resolve().parent
 ROOT_PATH = "https://fe.mixaihub.top"
 SERVER_PORT = 7788
 SERVER_NAME = "0.0.0.0"
-ICP_BEIAN = "湘ICP备2026024281号"
 
 FEATURE_NAMES = [
     "platelet_mean",
@@ -97,22 +97,18 @@ class HypoferremiaPredictor:
         plt.savefig(SHAP_PLOTS["force"])
         plt.close()
 
-    def predict(self, **kwargs) -> tuple[str, str, str, str]:
+    def predict(self, **kwargs) -> tuple[str, Image.Image, Image.Image, Image.Image]:
         try:
             x_raw, x_scaled = self.inference.preprocess(kwargs)
             prob = self.inference.predict_proba(kwargs)
             pct = round(prob * 100, 1)
-            label = int(prob >= self.inference.threshold)
             self._generate_shap_plots(x_raw, x_scaled)
-            if label == 1:
-                result = f"28-day mortality probability: {pct}%"
-            else:
-                result = f"28-day survival probability: {round(100 - pct, 1)}%"
+            result = f"28-day mortality probability: {pct}%"
             return (
                 result,
-                str(SHAP_PLOTS["summary"]),
-                str(SHAP_PLOTS["waterfall"]),
-                str(SHAP_PLOTS["force"]),
+                Image.open(SHAP_PLOTS["summary"]).copy(),
+                Image.open(SHAP_PLOTS["waterfall"]).copy(),
+                Image.open(SHAP_PLOTS["force"]).copy(),
             )
         except Exception as e:
             logger.exception("Prediction failed")
@@ -126,7 +122,8 @@ def create_gradio_interface(predictor: HypoferremiaPredictor) -> gr.Blocks:
     with gr.Blocks(title="Hypoferremia Mortality Prediction (Research Demo)") as demo:
         gr.Markdown("# Hypoferremia 8-Feature Research Demo")
         gr.Markdown(
-            "**Not for clinical use.** Inputs use model-native units: "
+            "**Research use only — not for clinical decision-making.** "
+            "Inputs use model-native units: "
             "creatinine & BUN in **mg/dL**; platelets in **×10⁹/L**; "
             "SpO₂ in **%**; PCO₂ in **mmHg**. "
             "`is_noninvasive_ventilator`: 1 = documented NIV use, 0 = no documented use."
@@ -161,10 +158,15 @@ def create_gradio_interface(predictor: HypoferremiaPredictor) -> gr.Blocks:
             )
         predict_button = gr.Button("Predict", variant="primary")
         output_text = gr.Label(label="Prediction Result")
+        gr.Markdown("## XGBoost component explanation")
+        gr.Markdown(
+            "These SHAP displays describe the fitted XGBoost base learner; "
+            "they are not an exact decomposition of the soft-voting ensemble probability."
+        )
         with gr.Row():
-            output_summary = gr.Image(label="SHAP Summary")
-            output_waterfall = gr.Image(label="SHAP Waterfall")
-        output_force = gr.Image(label="SHAP Force")
+            output_summary = gr.Image(label="Global attribution summary")
+            output_waterfall = gr.Image(label="Case-level waterfall")
+        output_force = gr.Image(label="Case-level force plot")
         predict_button.click(
             predict_wrapper,
             inputs=[
@@ -179,7 +181,6 @@ def create_gradio_interface(predictor: HypoferremiaPredictor) -> gr.Blocks:
             ],
             outputs=[output_text, output_summary, output_waterfall, output_force],
         )
-        gr.Markdown(f"---\n[{ICP_BEIAN}](https://beian.miit.gov.cn/)")
     return demo
 
 

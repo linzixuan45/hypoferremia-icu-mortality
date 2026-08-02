@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Table 1: MIMIC-III development (train) baseline from Excel + train IDs — no SQL."""
+"""Legacy training-cohort baseline for MIMIC-IV (not the manuscript Table 1)."""
 from __future__ import annotations
 
 import re
@@ -12,7 +12,7 @@ from scipy import stats
 ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / "data" / "mimic_dataset.xlsx"
 TRAIN_IDS = ROOT / "result" / "analysis" / "cohorts" / "mimic4_train_ids.csv"
-OUT = ROOT / "result" / "analysis" / "tables" / "table1_baseline.csv"
+OUT = ROOT / "result" / "analysis" / "tables" / "legacy_training_cohort_baseline_not_for_manuscript.csv"
 
 LAB_ROWS = [
     "Chloride",
@@ -106,6 +106,15 @@ def _fmt_median(s: pd.Series) -> str:
     return f"{med:.2f} ({q1:.2f}, {q3:.2f})"
 
 
+def _fmt_median_with_n(s: pd.Series) -> str:
+    """Median (IQR) plus the variable-specific available observation count."""
+    numeric = pd.to_numeric(s, errors="coerce").dropna()
+    if numeric.empty:
+        return "— [n=0]"
+    q1, med, q3 = numeric.quantile([0.25, 0.5, 0.75])
+    return f"{med:.2f} ({q1:.2f}, {q3:.2f}) [n={len(numeric)}]"
+
+
 def _fmt_count(n: int, total: int) -> str:
     pct = 100.0 * n / total if total else 0.0
     return f"{n} ({pct:.2f})"
@@ -152,7 +161,7 @@ def _race_bucket(race: str) -> str:
 
 
 def load_train_cohort() -> pd.DataFrame:
-    """MIMIC-IV development train cohort (Table 1 descriptive baseline)."""
+    """Legacy MIMIC-IV development subset (not the manuscript Table 1)."""
     train = pd.read_csv(TRAIN_IDS)
     m4 = pd.read_excel(DATA_PATH, sheet_name="mimic4_low_fe")
     id_col = "subject_id" if "subject_id" in train.columns else "icustay_id"
@@ -205,9 +214,9 @@ def build_table1(df: pd.DataFrame) -> pd.DataFrame:
         rows.append(
             {
                 "Variables": label,
-                "Total": _fmt_median(df[col]),
-                "Non_survivors": _fmt_median(dead[col]),
-                "Survivors": _fmt_median(alive[col]),
+                "Total": _fmt_median_with_n(df[col]),
+                "Non_survivors": _fmt_median_with_n(dead[col]),
+                "Survivors": _fmt_median_with_n(alive[col]),
                 "P": _p_continuous(dead[col], alive[col]),
             }
         )
@@ -218,7 +227,8 @@ def build_table1(df: pd.DataFrame) -> pd.DataFrame:
     add_binary("Female", ~male, "")
 
     add_continuous("Age, Median (Q1, Q3)", "admission_age")
-    add_continuous("Height, Median (Q1, Q3)", "height_mean")
+    # Height is omitted because the eligible export contains too few observed
+    # values for a defensible group comparison.
     add_continuous("Weight, Median (Q1, Q3)", "weight_mean")
     add_continuous("Heart Rate, Median (Q1, Q3)", "heart_rate_mean")
     add_continuous("Resp Rate, Median (Q1, Q3)", "resp_rate_mean")
@@ -238,7 +248,7 @@ def build_table1(df: pd.DataFrame) -> pd.DataFrame:
     vent = pd.to_numeric(df.get("is_ventilator", 0), errors="coerce").fillna(0) > 0
     rows.append(
         {
-            "Variables": "Ventilator, n (%)",
+            "Variables": "Any documented ventilatory-support flag, n (%)",
             "Total": _fmt_count(int(vent.sum()), n_all),
             "Non_survivors": _fmt_count(int(vent[dead.index].sum()), n_d),
             "Survivors": _fmt_count(int(vent[alive.index].sum()), n_a),
