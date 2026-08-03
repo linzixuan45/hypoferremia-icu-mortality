@@ -24,6 +24,15 @@
     "reduced_F3_auroc": 0.810,
     "reduced_NH_auroc": 0.898
   },
+  "web_interface": {
+    "source": "webui.py",
+    "public_url": "https://fe.mixaihub.top",
+    "source_revision": "R2-web-2026-08-03",
+    "reviewed_figure": "reference/r2/figure8_reviewed_interface.png",
+    "reviewed_figure_sha256": "6868302337d9c6e30db3bef19da8ec5ea59de2229af373521a245c813ae171cb",
+    "default_case_probability_percent": 22.4,
+    "contains_patient_level_data": false
+  },
   "patient_level_outputs_public": false,
   "fitted_objects_public": false
 }

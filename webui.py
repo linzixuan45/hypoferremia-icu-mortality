@@ -26,6 +26,13 @@ WEB_DIR = Path(__file__).resolve().parent
 ROOT_PATH = os.environ.get("ROOT_PATH", "https://fe.mixaihub.top")
 SERVER_PORT = int(os.environ.get("SERVER_PORT", "7788"))
 SERVER_NAME = os.environ.get("SERVER_NAME", "0.0.0.0")
+WEBUI_REVISION = "R2-web-2026-08-03"
+RESEARCH_USE_WARNING = "Research use only—not for clinical decision-making."
+SHAP_PANEL_LABELS = {
+    "summary": "Case-level SHAP dot summary",
+    "waterfall": "Case-level waterfall",
+    "force": "Case-level force plot",
+}
 
 DEFAULT_VALUES = {
     "platelet_mean": 180.0,
@@ -110,10 +117,16 @@ def create_gradio_interface(predictor: HypoferremiaPredictor) -> gr.Blocks:
     def predict_wrapper(*args):
         return predictor.predict(**dict(zip(FEATURES, args)))
 
-    with gr.Blocks(title="Hypoferremia Mortality Prediction (Research Demo)") as demo:
+    with gr.Blocks(
+        title=f"Hypoferremia Mortality Prediction (Research Demo) | {WEBUI_REVISION}"
+    ) as demo:
+        gr.HTML(
+            f'<span id="webui-revision" data-revision="{WEBUI_REVISION}" '
+            'style="display:none"></span>'
+        )
         gr.Markdown("# Hypoferremia 8-Feature Research Demo")
         gr.Markdown(
-            "**Research use only — not for clinical decision-making.** "
+            f"**{RESEARCH_USE_WARNING}** "
             "Inputs use model-native units: "
             "creatinine & BUN in **mg/dL**; platelets in **×10⁹/L**; "
             "SpO₂ in **%**; PCO₂ in **mmHg**. "
@@ -155,9 +168,9 @@ def create_gradio_interface(predictor: HypoferremiaPredictor) -> gr.Blocks:
             "they are not an exact decomposition of the soft-voting ensemble probability."
         )
         with gr.Row():
-            output_summary = gr.Image(label="Case-level SHAP dot summary")
-            output_waterfall = gr.Image(label="Case-level waterfall")
-        output_force = gr.Image(label="Case-level force plot")
+            output_summary = gr.Image(label=SHAP_PANEL_LABELS["summary"])
+            output_waterfall = gr.Image(label=SHAP_PANEL_LABELS["waterfall"])
+        output_force = gr.Image(label=SHAP_PANEL_LABELS["force"])
         predict_button.click(
             predict_wrapper,
             inputs=[

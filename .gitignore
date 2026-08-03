@@ -46,3 +46,4 @@ reference/r2/*
 !reference/r2/*.csv
 !reference/r2/*.json
 !reference/r2/*.md
+!reference/r2/figure8_reviewed_interface.png

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import csv
 import sys
@@ -132,6 +133,32 @@ def test_research_interface_uses_mortality_direction_and_component_label() -> No
         assert "Global attribution summary" not in text
         assert "not for clinical decision-making" in text
         assert "ICP_BEIAN" not in text
+
+
+def test_remote_webui_is_locked_to_the_reviewed_figure8_text() -> None:
+    text = read("webui.py")
+    assert 'WEBUI_REVISION = "R2-web-2026-08-03"' in text
+    assert 'RESEARCH_USE_WARNING = "Research use only—not for clinical decision-making."' in text
+    assert '"summary": "Case-level SHAP dot summary"' in text
+    assert '"waterfall": "Case-level waterfall"' in text
+    assert '"force": "Case-level force plot"' in text
+    assert 'data-revision="{WEBUI_REVISION}"' in text
+    assert "SHAP Summary" not in text
+    assert "SHAP Waterfall" not in text
+    assert "SHAP Force" not in text
+
+
+def test_reviewed_figure8_reference_is_hash_locked_and_data_free() -> None:
+    figure = ROOT / "reference" / "r2" / "figure8_reviewed_interface.png"
+    expected = "6868302337d9c6e30db3bef19da8ec5ea59de2229af373521a245c813ae171cb"
+    assert figure.is_file()
+    assert hashlib.sha256(figure.read_bytes()).hexdigest() == expected
+    manifest = json.loads(read("reference/manifest.json"))
+    assert manifest["web_interface"]["source"] == "webui.py"
+    assert manifest["web_interface"]["source_revision"] == "R2-web-2026-08-03"
+    assert manifest["web_interface"]["reviewed_figure_sha256"] == expected
+    assert manifest["web_interface"]["default_case_probability_percent"] == 22.4
+    assert manifest["web_interface"]["contains_patient_level_data"] is False
 
 
 def test_public_institution_name_and_release_archive_are_explicit() -> None:
