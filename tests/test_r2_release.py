@@ -20,7 +20,8 @@ def read(path: str) -> str:
 
 def test_release_identity_and_scope() -> None:
     text = read("README.md") + read("CODE_AVAILABILITY.md")
-    assert "v1.2.0" in text
+    assert "v1.2.1" in text
+    assert "10.5281/zenodo.21761430" in text
     assert "authorized" in text.lower()
     assert "raw-clinical-database-to-modelling-table" in text
     assert "fitted preprocessing" in text
@@ -78,7 +79,7 @@ def test_locked_round_2_discrimination_values_are_reproduced() -> None:
     assert observed[("Reduced 8-feature soft-voting model", "MIMIC-IV internal test")] == 0.796
     assert observed[("Reduced 8-feature soft-voting model", "MIMIC-III corrected eligibility set (ICU LOS >=48 h)")] == 0.715
     assert observed[("Reduced 8-feature soft-voting model", "F3 exploratory geographic cohort")] == 0.810
-    assert observed[("Reduced 8-feature soft-voting model", "NH exploratory geographic cohort")] == 0.898
+    assert observed[("Reduced 8-feature soft-voting model", "USC-FAH exploratory geographic cohort")] == 0.898
 
 
 def test_ensemble_parameters_match_code_and_metadata() -> None:
@@ -133,6 +134,28 @@ def test_research_interface_uses_mortality_direction_and_component_label() -> No
         assert "ICP_BEIAN" not in text
 
 
+def test_public_institution_name_and_release_archive_are_explicit() -> None:
+    public = "\n".join(
+        read(path)
+        for path in (
+            "README.md",
+            "DATA_AVAILABILITY.md",
+            "MODEL_CARD.md",
+            "docs/data_flow_cohorts.md",
+            "reference/table2_3_performance.csv",
+            "reference/r2/figure7_corrected_metrics.csv",
+            "reference/r2/r2_standard_calibration_metrics.csv",
+        )
+    )
+    assert "The First Affiliated Hospital of University of South China" in public
+    assert "USC-FAH" in public
+    assert "Nanhua cohort" not in public
+    archive = read("CODE_AVAILABILITY.md") + read("RELEASE_CHECKLIST.md")
+    assert "0e49490" in archive
+    assert "10.5281/zenodo.21761430" in archive
+    assert "v1.2.1" in archive
+
+
 def test_active_pipeline_does_not_generate_legacy_training_table1() -> None:
     source = read("scripts/run_pipeline.py")
     assert 'run_step("build_table1_baseline"' not in source
@@ -157,7 +180,8 @@ def test_ci_method_is_locked_by_evaluation_setting() -> None:
     assert ci_method_for_cohort("MIMIC-IV internal test") == "DeLong"
     assert ci_method_for_cohort("MIMIC-III temporal sensitivity") == "stratified bootstrap"
     assert ci_method_for_cohort("F3 exploratory geographic cohort") == "stratified bootstrap"
-    assert ci_method_for_cohort("NH exploratory geographic cohort") == "stratified bootstrap"
+    assert ci_method_for_cohort("USC-FAH exploratory geographic cohort") == "stratified bootstrap"
+    assert ci_method_for_cohort("The First Affiliated Hospital of University of South China") == "stratified bootstrap"
 
 
 def test_stratified_bootstrap_ci_is_deterministic() -> None:

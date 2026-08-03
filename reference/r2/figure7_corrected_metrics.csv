@@ -2,4 +2,4 @@ Cohort,n,Events,AUROC,CI_lo,CI_hi,CI_method
 MIMIC-IV internal test,269,40,0.796288209606987,0.7161722821965112,0.8711261727911128,DeLong
 MIMIC-III cross-database temporal sensitivity,799,140,0.7154617385649252,0.6692366328499161,0.7607511764503039,Stratified bootstrap
 Third Xiangya exploratory cohort,101,26,0.8102564102564103,0.7026203465982029,0.900901852556782,Stratified bootstrap
-First Affiliated Hospital of University of South China (Nanhua cohort; NH),98,37,0.898094816127603,0.8265659158983935,0.9557018441324786,Stratified bootstrap
+The First Affiliated Hospital of University of South China (USC-FAH),98,37,0.898094816127603,0.8265659158983935,0.9557018441324786,Stratified bootstrap

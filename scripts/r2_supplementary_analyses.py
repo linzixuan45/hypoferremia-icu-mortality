@@ -571,7 +571,7 @@ def write_locked_calibration(
         ),
         (
             "Reduced 8-feature soft-voting model",
-            "NH exploratory geographic cohort",
+            "USC-FAH exploratory geographic cohort",
             LEGACY_RESULT / "preds" / "8_features_NH_preds.pkl",
         ),
     ]

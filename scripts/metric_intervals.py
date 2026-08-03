@@ -36,6 +36,8 @@ def ci_method_for_cohort(cohort: str) -> str:
         or "mimic3" in key
         or "temporal" in key
         or "exploratory" in key
+        or "usc fah" in key
+        or "first affiliated hospital" in key
         or key in {"f3", "nh", "third xiangya", "nanhua"}
     ):
         return "stratified bootstrap"

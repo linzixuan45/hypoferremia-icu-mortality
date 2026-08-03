@@ -36,7 +36,7 @@ Creatinine and BUN use mg/dL. The NIV feature represents documented use, not phy
 | MIMIC-IV internal test | 269 (40) | 0.796 (0.716–0.871) |
 | Corrected MIMIC-III temporal sensitivity | 799 (140) | 0.715 (0.669–0.761) |
 | Third Xiangya exploratory | 101 (26) | 0.810 (0.703–0.901) |
-| First Affiliated Hospital of University of South China (Nanhua cohort, NH), exploratory | 98 (37) | 0.898 (0.827–0.956) |
+| The First Affiliated Hospital of University of South China (USC-FAH), exploratory | 98 (37) | 0.898 (0.827–0.956) |
 
 These discrimination estimates do not establish calibration or clinical value. Probability miscalibration, small event counts, cross-system missingness, and dataset-specific documentation require independent prospective validation and local recalibration.
 

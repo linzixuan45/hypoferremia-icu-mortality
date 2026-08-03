@@ -1,13 +1,14 @@
 # Code Availability
 
-## Repository and planned archive
+## Repository and archive status
 
 - GitHub: https://github.com/linzixuan45/hypoferremia-icu-mortality
-- Reviewed release target: `v1.2.0`
-- Zenodo concept DOI: pending
-- Zenodo version DOI: pending
+- Published prior snapshot: `v1.2.0`, GitHub commit `0e49490`
+- Published version DOI: `10.5281/zenodo.21761430`
+- Zenodo concept DOI: `10.5281/zenodo.21761212`
+- Exact reviewed release target after merge: `v1.2.1`
 
-No DOI is claimed before Zenodo assigns it.
+The published v1.2.0 record predates the final R2-alignment commits and must not be described as the exact archive of the reviewed branch. The post-review merge commit will be archived as the next immutable Zenodo version.
 
 ## Reproduction scope
 
@@ -30,5 +31,5 @@ The fitted KNN imputer retains its training-feature matrix. For that reason, the
 ## Manuscript-ready wording
 
 ```text
-Analysis code operating on authorized prepared modelling tables and non-patient aggregate Round 2 outputs is available at https://github.com/linzixuan45/hypoferremia-icu-mortality and will be archived as release v1.2.0 at Zenodo. The repository provides input validation, cohort construction, patient-separated splitting, training-set-only preprocessing, model fitting, evaluation, figure generation, and supplementary-audit workflows. It excludes patient-level records, identifiers, outcomes, individual probabilities, cohort-ID lists, and fitted preprocessing or model objects that retain training-row information. The assigned Zenodo DOI will be inserted before final resubmission.
+Analysis code operating on authorized prepared modelling tables and non-patient aggregate Round 2 outputs is available at https://github.com/linzixuan45/hypoferremia-icu-mortality. Zenodo v1.2.0 is archived at https://doi.org/10.5281/zenodo.21761430. Because that immutable record corresponds to GitHub commit 0e49490 and predates the final Round 2 alignment commits, the reviewed merge commit will be deposited as the next Zenodo version and its version DOI will be inserted before final resubmission. The repository provides input validation, cohort construction, patient-separated splitting, training-set-only preprocessing, model fitting, evaluation, figure generation, and supplementary-audit workflows. It excludes patient-level records, identifiers, outcomes, individual probabilities, cohort-ID lists, and fitted preprocessing or model objects that retain training-row information.
 ```

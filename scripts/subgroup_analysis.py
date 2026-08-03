@@ -117,7 +117,7 @@ def _load_mimic_pred(split: str, model_tag: str = "8_features") -> dict:
 
 
 def load_predictions(model_tag: str = "8_features"):
-    """Load MIMIC predictions from pkl; score F3/NH when external data exist."""
+    """Load MIMIC predictions; score F3/USC-FAH (legacy key NH) when available."""
     preds = {
         "test": _load_mimic_pred("test", model_tag),
         "external": _load_mimic_pred("external", model_tag),
@@ -252,7 +252,7 @@ def run_subgroup_analysis(model_tag: str = "8_features") -> pd.DataFrame:
             preds["F3"]["y_true"],
             preds["F3"]["y_prob"],
         )
-        cohorts["Nanhua (NH)"] = (
+        cohorts["The First Affiliated Hospital of University of South China (USC-FAH)"] = (
             nh.reset_index(drop=True),
             preds["NH"]["y_true"],
             preds["NH"]["y_prob"],

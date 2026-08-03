@@ -540,7 +540,7 @@ def generate_probast_s11():
     rows = [
         {"Domain": "Participants", "Arm": "Development (MIMIC-IV)", "Rating": "Moderate", "Note": "t0-proxy; S10 legacy sensitivity"},
         {"Domain": "Participants", "Arm": "External (MIMIC-III)", "Rating": "Moderate", "Note": "Non-training same-institution temporal evaluation"},
-        {"Domain": "Participants", "Arm": "External (F3/NH)", "Rating": "High", "Note": "Small n; exploratory geographic only"},
+        {"Domain": "Participants", "Arm": "External (F3/USC-FAH)", "Rating": "High", "Note": "Small n; exploratory geographic only"},
         {"Domain": "Predictors", "Arm": "All", "Rating": "Moderate", "Note": "Excel proxy t0 until SQL export"},
         {"Domain": "Outcome", "Arm": "All", "Rating": "Low", "Note": "Hospital mortality objectively ascertained"},
         {"Domain": "Analysis", "Arm": "Development", "Rating": "Moderate", "Note": "Natural prevalence; no random undersampling"},

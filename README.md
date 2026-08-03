@@ -12,8 +12,8 @@ It does **not** redistribute raw or derived patient-level data, cohort-ID lists,
 
 - Repository: https://github.com/linzixuan45/hypoferremia-icu-mortality
 - Research demonstration: https://fe.mixaihub.top (not for clinical use)
-- Planned reproducibility release: `v1.2.0`
-- Zenodo DOI: pending release; do not cite a DOI until Zenodo assigns it
+- Published prior snapshot: `v1.2.0`, DOI [10.5281/zenodo.21761430](https://doi.org/10.5281/zenodo.21761430), GitHub commit `0e49490`
+- Exact Round 2 release target after review and merge: `v1.2.1` under Zenodo concept DOI [10.5281/zenodo.21761212](https://doi.org/10.5281/zenodo.21761212)
 
 ## Scientific scope
 
@@ -48,7 +48,7 @@ MIMIC-III and MIMIC-IV are available to credentialed users through PhysioNet und
 data/mimic_dataset.xlsx
 ```
 
-The required sheets and columns are described in [docs/R2_INPUT_SCHEMA.md](docs/R2_INPUT_SCHEMA.md), [docs/preprocessing_excel.md](docs/preprocessing_excel.md), and [config/required_excel_columns.csv](config/required_excel_columns.csv). Institution-held F3/NH data remain local and are described in [DATA_AVAILABILITY.md](DATA_AVAILABILITY.md).
+The required sheets and columns are described in [docs/R2_INPUT_SCHEMA.md](docs/R2_INPUT_SCHEMA.md), [docs/preprocessing_excel.md](docs/preprocessing_excel.md), and [config/required_excel_columns.csv](config/required_excel_columns.csv). Institution-held F3/USC-FAH data remain local and are described in [DATA_AVAILABILITY.md](DATA_AVAILABILITY.md).
 
 ## Reproduce the Round 2 workflow
 
@@ -99,17 +99,17 @@ of active compatibility filenames still contain the historical token
 | Post hoc reduced model, MIMIC-IV internal test | 269 (40) | 0.796 (0.716–0.871) |
 | Post hoc reduced model, corrected MIMIC-III temporal sensitivity | 799 (140) | 0.715 (0.669–0.761) |
 | Post hoc reduced model, Third Xiangya exploratory cohort | 101 (26) | 0.810 (0.703–0.901) |
-| Post hoc reduced model, First Affiliated Hospital of University of South China (Nanhua cohort, NH), exploratory | 98 (37) | 0.898 (0.827–0.956) |
+| Post hoc reduced model, The First Affiliated Hospital of University of South China (USC-FAH), exploratory | 98 (37) | 0.898 (0.827–0.956) |
 
 See [reference/r2/README.md](reference/r2/README.md) for calibration, missing-data, serum-iron, and sensitivity results.
 
 ## Research demonstration
 
-The hosted interface illustrates input/output behaviour and XGBoost-component SHAP explanations. It is not a medical device and is not intended for diagnosis, triage, treatment selection, or other clinical decisions. Local interface and inference source are retained for audit, but a fitted bundle is deliberately not published. Authorized investigators may reconstruct it locally by running the workflow.
+The hosted interface illustrates input/output behaviour and XGBoost-component SHAP explanations. It is not a medical device and is not intended for diagnosis, triage, treatment selection, or other clinical decisions. The reviewed source uses the case-level labels shown in manuscript Figure 8; the production deployment must be refreshed from this reviewed source after merge. Local interface and inference source are retained for audit, but a fitted bundle is deliberately not published. Authorized investigators may reconstruct it locally by running the workflow.
 
 ## Citation and archive
 
-Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). After the reviewed branch is merged, create GitHub release `v1.2.0`, allow Zenodo to archive that exact release, and replace all DOI placeholders only with the assigned concept and version DOIs.
+Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). Zenodo v1.2.0 is a valid prior snapshot but is not the exact archive of this reviewed branch. After merge, create GitHub release `v1.2.1` from the merge commit, allow Zenodo to archive that exact release under concept DOI 10.5281/zenodo.21761212, and cite the new immutable version DOI in the final submission.
 
 ## License
 

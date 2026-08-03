@@ -472,7 +472,7 @@ def main():
                 )
             all_cal.append((tag, y, prob))
     else:
-        print("Skipping F3/NH: data/external/ cohort workbook not found (MIMIC-only path)")
+        print("Skipping F3/USC-FAH (legacy key NH): data/external/ cohort workbook not found (MIMIC-only path)")
 
     pd.DataFrame(ext_rows).to_csv(TABLES / "external_f3_nh.csv", index=False)
     write_table_s10_8f_four_cohorts(res8, ext_rows)

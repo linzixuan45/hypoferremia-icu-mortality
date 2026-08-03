@@ -1,4 +1,4 @@
-# Release Checklist — v1.2.0
+# Release Checklist — v1.2.1
 
 ## Privacy and reproducibility gate
 
@@ -13,10 +13,10 @@
 ## GitHub and Zenodo
 
 - [ ] Merge the reviewed pull request into `main`.
-- [ ] Create GitHub release `v1.2.0` from that exact commit.
-- [ ] Enable Zenodo integration and archive release `v1.2.0`.
-- [ ] Record the Zenodo concept DOI and version DOI.
-- [ ] Insert the assigned DOI in `README.md`, `CODE_AVAILABILITY.md`, `CITATION.cff`, `.zenodo.json`, the manuscript, and the point-by-point response.
+- [ ] Create GitHub release `v1.2.1` from that exact merge commit; do not move the published v1.2.0 tag.
+- [ ] Archive release `v1.2.1` as the next version under Zenodo concept DOI `10.5281/zenodo.21761212`.
+- [ ] Record the new immutable version DOI; v1.2.0 DOI `10.5281/zenodo.21761430` remains a prior snapshot.
+- [ ] Insert the new version DOI in `README.md`, `CODE_AVAILABILITY.md`, `CITATION.cff`, `.zenodo.json`, the manuscript, and the point-by-point response.
 - [ ] Re-run all tests after DOI-only edits and confirm the archived tree remains data-free.
 
 ## Submission-only items
@@ -24,3 +24,4 @@
 - [ ] Upload the final response letter as PDF after page-by-page visual inspection.
 - [ ] Retain the Figure 1 BioRender publication licence or equivalent rights documentation.
 - [ ] Confirm Figure 1 authorship/provenance with the journal as requested.
+- [ ] Refresh https://fe.mixaihub.top from the reviewed web source and verify that all visible Figure 8 headings and warning text match the manuscript.
