@@ -1,259 +1,116 @@
-# Hypoferremia ICU Mortality Risk Model
+# Hypoferremia ICU Mortality Risk Stratification
 
-**Research use only. Not for clinical use.**
+**Research use only. Not for clinical decision-making.**
 
-Code repository for the manuscript:
+Companion code for:
 
-> *Machine-Learning Prediction of In-Hospital Mortality in Critically Ill Patients with Hypoferremia: Multi-Cohort Development, External Evaluation, and Research Web Demonstration*
+> *Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Multi-Cohort Development and Retrospective Evaluation*
 
-This repository is deposited as **auditable analysis source code**: the pipeline, inference code, model card, data dictionary, locked reference metrics, and a released 8-feature research model bundle. **Raw patient-level data are not redistributed.**
+This repository provides the active Round 2 analysis workflow from authorized, user-prepared modelling tables. It includes cohort construction, patient-separated splitting, training-set-only preprocessing, candidate-model fitting, locked soft-voting and post hoc reduced-model evaluation, calibration analyses, figure generation, and reviewer-requested supplementary audits.
 
-- **Repository:** https://github.com/linzixuan45/hypoferremia-icu-mortality  
-- **Research calculator:** https://fe.mixaihub.top (not for clinical use)
+It does **not** redistribute raw or derived patient-level data, cohort-ID lists, individual outcomes or probabilities, or fitted preprocessing/model objects. The previously tracked 8-feature pickle was removed because its fitted KNN imputer retained a training-feature matrix.
 
-To learn more about the underlying critical care databases, see [MIMIC](https://mimic.mit.edu) and the community [MIMIC Code Repository](https://github.com/MIT-LCP/mimic-code).
+- Repository: https://github.com/linzixuan45/hypoferremia-icu-mortality
+- Research demonstration: https://fe.mixaihub.top (not for clinical use)
+- Published prior snapshot: `v1.2.0`, DOI [10.5281/zenodo.21761430](https://doi.org/10.5281/zenodo.21761430), GitHub commit `0e49490`
+- Exact Round 2 release target after review and merge: `v1.2.1` under Zenodo concept DOI [10.5281/zenodo.21761212](https://doi.org/10.5281/zenodo.21761212)
 
-**User guide:** [docs/USER_GUIDE.md](docs/USER_GUIDE.md)
+## Scientific scope
 
----
+| Item | Round 2 definition |
+|---|---|
+| Population | ICU admissions with documented serum iron <60 µg/dL and ICU length of stay ≥48 h |
+| Outcome | Death in hospital within 28 days of hospital admission |
+| Predictor window | `_1st`: first recorded ICU-stay value; `_min`, `_max`, `_mean`: full ICU-stay summaries |
+| Benchmark | Locked 18-predictor soft-voting model retained for R1 protocol continuity |
+| Reduced model | Post hoc 8-feature derivative; not prespecified and not proven superior |
+| MIMIC-III role | Same-institution cross-database temporal sensitivity cohort, not independent external validation |
+| Chinese cohorts | Small exploratory geographic evaluations of the post hoc reduced model |
 
-## What this repository provides
+The retained `los_icu_to_t0` variable is a synthetic R1 proxy rather than an observed timestamp. The model is therefore described as retrospective whole-stay risk stratification, not real-time or admission-time prediction.
+
+## What is and is not provided
 
 | Provided | Not provided |
-|----------|--------------|
-| Full analysis scripts (`scripts/`) and optional SQL (`sql/`) | MIMIC raw tables or patient identifiers |
-| Released 8-feature model weights (`model_weights/`) | Pre-built `mimic_dataset.xlsx` |
-| Local inference CLI (`inference.py`) | ETL from raw MIMIC to Excel |
-| Local Gradio web demo (`webui.py`, `start.sh`) | Bit-exact guarantee of manuscript AUROC/tables |
-| Model card, data dictionary, methods specs | Chinese validation cohort files |
-| Locked aggregate reference metrics (`reference/`) | |
-| Reviewer verification script (`verify_reproduction.py`) | |
-| Online SHAP research calculator (Track B below) | |
+|---|---|
+| Active Python analysis and audit scripts | MIMIC tables or prepared patient-level workbooks |
+| Input schema and data dictionary | Chinese validation cohort files |
+| Optional SQL examples | A complete raw-database-to-modelling-table ETL |
+| Aggregate Round 2 reference outputs | Cohort-ID lists or row-level predictions |
+| Research-interface source | Public fitted model, imputer, or scaler objects |
+| Tests enforcing release and privacy boundaries | Clinical-use approval or calibrated bedside risk estimates |
 
-Python ≥3.10 recommended.
+## Data access and local inputs
 
----
+MIMIC-III and MIMIC-IV are available to credentialed users through PhysioNet under their respective data-use requirements. Place an authorized prepared workbook at:
 
-## Access to data
-
-Re-running the pipeline requires credentialed access to MIMIC on PhysioNet:
-
-| Database | PhysioNet |
-|----------|-----------|
-| MIMIC-III | [mimiciii](https://physionet.org/content/mimiciii/) |
-| MIMIC-IV | [mimiciv](https://physionet.org/content/mimiciv/) |
-
-Access requires completion of required training and a data-use agreement. Place locally prepared feature tables at `data/mimic_dataset.xlsx` (format in [docs/preprocessing_excel.md](docs/preprocessing_excel.md) and [docs/mimic_excel_reproduction_guide.md](docs/mimic_excel_reproduction_guide.md)). Chinese geographic validation (F3/NH) requires additional local files under `data/external/` — see [DATA_AVAILABILITY.md](DATA_AVAILABILITY.md).
-
----
-
-## Navigating this repository
-
-| Path | Contents |
-|------|----------|
-| [`inference.py`](inference.py) | Single-patient / batch 28-day mortality probability (CLI) |
-| [`webui.py`](webui.py) | Gradio research calculator with SHAP audit (local) |
-| [`start.sh`](start.sh) | Launch local web demo (port 7788 by default) |
-| [`src/inference.py`](src/inference.py) | Shared inference module for CLI and web |
-| [`model_weights/`](model_weights/) | Released 8-feature ensemble + imputer + scaler |
-| [`reference/`](reference/) | Locked AUROC / cohort-count benchmark (no patient IDs) |
-| [`scripts/`](scripts/) | End-to-end analysis pipeline (Python) |
-| [`sql/`](sql/) | Optional SQL exports for charttime-level t₀ and severity scores |
-| [`docs/`](docs/) | User guide, methods specs, data dictionary, Excel preprocessing |
-| [`config/`](config/) | Non-patient metadata (e.g. LASSO feature list, column checklist) |
-| [`data/README.md`](data/README.md) | Where to place local `mimic_dataset.xlsx` |
-
-Pipeline outputs are written to `result/analysis/` (local only; gitignored).
-
-### Documentation (language)
-
-| Document | Language |
-|----------|----------|
-| README, MODEL_CARD, USER_GUIDE, preprocessing_excel, mimic_excel_reproduction_guide | English |
-| FE1_spec.md, data_flow_cohorts.md | Chinese (methods); see [FE1_spec_en.md](docs/FE1_spec_en.md) for English summary |
-
-### Analysis pipeline (`scripts/`)
-
-| Script | Role |
-|--------|------|
-| [`run_pipeline.py`](scripts/run_pipeline.py) | Run the full Excel-based pipeline |
-| [`validate_excel_input.py`](scripts/validate_excel_input.py) | Validate `mimic_dataset.xlsx` before analysis |
-| [`verify_reproduction.py`](scripts/verify_reproduction.py) | Compare local manifest to `reference/manifest.json` |
-| [`prepare_t0_labs_parquet.py`](scripts/prepare_t0_labs_parquet.py) | Build interim t₀ timing from Excel (`excel_derived_interim`) |
-| [`build_t0_cohort.py`](scripts/build_t0_cohort.py) | Cohort filters, `outcome_28d`, train/test/val ID lists, `manifest.json` |
-| [`train_models.py`](scripts/train_models.py) | Train 20/8-feature soft-voting models; Tables 2–6, S8–S9 |
-| [`supplementary_analysis.py`](scripts/supplementary_analysis.py) | DCA, sensitivities, subgroups, SHAP Figure 7; Tables S6–S15 |
-| [`benchmark_severity_scores.py`](scripts/benchmark_severity_scores.py) | Table 5 severity-score benchmark |
-| [`build_table1_baseline.py`](scripts/build_table1_baseline.py) | Table 1 baseline characteristics |
-| [`export_github_weights.py`](scripts/export_github_weights.py) | Export `model_weights/8_features_model.pkl` |
-| [`verify_manifest.py`](scripts/verify_manifest.py) | Manifest ↔ table consistency checks |
-
-`subgroup_analysis.py` is invoked by `supplementary_analysis.py`; no need to run it separately.
-
-Further detail: [docs/preprocessing_excel.md](docs/preprocessing_excel.md) · [docs/data_flow_cohorts.md](docs/data_flow_cohorts.md)
-
-### SQL extraction (`sql/`)
-
-Optional upgrade when definitive charttime-level t₀ and APACHE/SAPS scores are available from PhysioNet SQL access. See [sql/README.md](sql/README.md).
-
-| File | Purpose |
-|------|---------|
-| [`export_t0_cohort.sql`](sql/export_t0_cohort.sql) | Charttime-level t₀ → `data/mimic_t0_labs.parquet` |
-| [`export_severity_at_t0.sql`](sql/export_severity_at_t0.sql) | SOFA / APACHE II / SAPS II at t₀ |
-
-After SQL export, re-run from `build_t0_cohort.py`.
-
----
-
-## Quick start
-
-### Track A — Local probability (no MIMIC data required)
-
-```bash
-pip install -r requirements.txt
-python inference.py
+```text
+data/mimic_dataset.xlsx
 ```
 
-Outputs a 28-day mortality probability for the built-in demo case. Use `python inference.py --help` for JSON/CSV batch input.
+The required sheets and columns are described in [docs/R2_INPUT_SCHEMA.md](docs/R2_INPUT_SCHEMA.md), [docs/preprocessing_excel.md](docs/preprocessing_excel.md), and [config/required_excel_columns.csv](config/required_excel_columns.csv). Institution-held F3/USC-FAH data remain local and are described in [DATA_AVAILABILITY.md](DATA_AVAILABILITY.md).
 
-### Track B — SHAP audit
+## Reproduce the Round 2 workflow
 
-- **Online (recommended):** https://fe.mixaihub.top — interactive probability + SHAP exploration.
-- **Local web demo** (no MIMIC data required):
+Python 3.12 is recommended. Install the audited environment where practical:
 
 ```bash
-pip install -r requirements-optional.txt
-cd web && python3 webui_low_fe.py
-# or: ./start.sh
+python -m venv .venv
+.venv/Scripts/python -m pip install -r requirements-frozen.txt
 ```
 
-Inputs use model-native units (creatinine & BUN in **mg/dL**). Default: `http://0.0.0.0:7788`. Override with env vars `SERVER_PORT`, `SERVER_NAME`, `ROOT_PATH` (set empty to disable reverse-proxy prefix).
-
-- **Local Figure 7 (optional):** requires your own `data/mimic_dataset.xlsx`:
+Validate the authorized workbook and run the core plus reviewer-requested analyses:
 
 ```bash
-pip install -r requirements-optional.txt
-python scripts/run_pipeline.py
-```
-
-### Track C — Reviewer verification (locked reference)
-
-Locked aggregate metrics (no patient IDs): [reference/manifest.json](reference/manifest.json) · [reference/table2_3_performance.csv](reference/table2_3_performance.csv)
-
-After a local reproduction (Track B), run:
-
-```bash
+python scripts/validate_excel_input.py --report --strict
+python scripts/run_r2_analysis.py
 python scripts/verify_reproduction.py
+pytest -q
 ```
 
-Compares AUROC and cohort counts against the locked reference (tolerance ±0.005 AUROC).
+`scripts/run_r2_analysis.py` fails if a required core step fails. It first reconstructs local cohort IDs, fitted preprocessing objects, models, predictions, tables, and figures under the gitignored `result/` directory, then executes the supplementary Round 2 audit workflow. Missing optional Chinese cohorts are reported explicitly and limit the run to the MIMIC analyses.
 
----
+## Repository map
 
-## Re-running the analysis pipeline
+| Path | Purpose |
+|---|---|
+| `scripts/run_r2_analysis.py` | End-to-end prepared-table Round 2 orchestrator |
+| `scripts/run_pipeline.py` | Core cohort, model, evaluation, and figure workflow |
+| `scripts/r2_supplementary_analyses.py` | Reviewer-requested R2 analyses |
+| `scripts/validate_excel_input.py` | Input validation |
+| `scripts/train_models.py` | Locked and post hoc model training/evaluation |
+| `scripts/plot_figure4_benchmark.py` | Twelve-model comparison and temporal sensitivity |
+| `reference/r2/` | Non-patient aggregate Round 2 reference outputs |
+| `docs/R2_REPRODUCTION_SCOPE.md` | Reproduction claim and boundaries |
+| `MODEL_CARD.md` | Intended use, model status, and limitations |
+| `tests/` | Data-free integrity, parameter, and privacy tests |
 
-Requires a user-prepared `data/mimic_dataset.xlsx`. The default public path uses an Excel-derived t₀ proxy; metrics may differ slightly from the published manuscript. See [docs/preprocessing_excel.md](docs/preprocessing_excel.md) (Known limitations).
+Historical patch scripts are isolated under `scripts/legacy_R1/`. A small number
+of active compatibility filenames still contain the historical token
+`20_features`; in the Round 2 workflow these files refer to the locked
+18-predictor benchmark and do not denote a current 20-predictor model.
 
-**One command:**
+## Locked aggregate results
 
-```bash
-python scripts/validate_excel_input.py
-python scripts/run_pipeline.py
-python scripts/verify_reproduction.py
-```
+| Model and cohort | n (events) | AUROC (95% CI) |
+|---|---:|---:|
+| Locked benchmark, MIMIC-IV internal test | 269 (40) | 0.840 (0.767–0.913) |
+| Locked benchmark, corrected MIMIC-III temporal sensitivity | 799 (140) | 0.705 (0.657–0.751) |
+| Post hoc reduced model, MIMIC-IV internal test | 269 (40) | 0.796 (0.716–0.871) |
+| Post hoc reduced model, corrected MIMIC-III temporal sensitivity | 799 (140) | 0.715 (0.669–0.761) |
+| Post hoc reduced model, Third Xiangya exploratory cohort | 101 (26) | 0.810 (0.703–0.901) |
+| Post hoc reduced model, The First Affiliated Hospital of University of South China (USC-FAH), exploratory | 98 (37) | 0.898 (0.827–0.956) |
 
-**Step by step:**
+See [reference/r2/README.md](reference/r2/README.md) for calibration, missing-data, serum-iron, and sensitivity results.
 
-```bash
-python scripts/validate_excel_input.py
-python scripts/prepare_t0_labs_parquet.py
-python scripts/build_t0_cohort.py
-python scripts/train_models.py
-python scripts/supplementary_analysis.py
-python scripts/benchmark_severity_scores.py
-python scripts/build_table1_baseline.py
-python scripts/export_github_weights.py
-python scripts/verify_reproduction.py
-```
+## Research demonstration
 
-**Diagnostic tools:**
+The hosted interface illustrates input/output behaviour and XGBoost-component SHAP explanations. It is not a medical device and is not intended for diagnosis, triage, treatment selection, or other clinical decisions. The reviewed source uses the case-level labels shown in manuscript Figure 8; the production deployment must be refreshed from this reviewed source after merge. Local interface and inference source are retained for audit, but a fitted bundle is deliberately not published. Authorized investigators may reconstruct it locally by running the workflow.
 
-```bash
-python scripts/audit_mimic_excel.py
-python scripts/validate_excel_input.py --report
-python scripts/validate_parquet_export.py
-python scripts/verify_manifest.py
-```
+## Citation and archive
 
-`run_pipeline.py` flags: `--skip-validate`, `--skip-extended`, `--skip-weights`, `--strict-validate`.
+Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). Zenodo v1.2.0 is a valid prior snapshot but is not the exact archive of this reviewed branch. After merge, create GitHub release `v1.2.1` from the merge commit, allow Zenodo to archive that exact release under concept DOI 10.5281/zenodo.21761212, and cite the new immutable version DOI in the final submission.
 
----
+## License
 
-## Model overview
-
-| Item | Definition |
-|------|------------|
-| **Cohort** | ICU patients with documented functional hypoferremia (serum iron < 60 µg/dL) |
-| **Index time t₀** | Proxy first hypoferremia episode (Excel) or first iron < 60 from SQL |
-| **Outcome** | Death within 28 calendar days from t₀ |
-| **Model** | 8-feature soft-voting ensemble (XGBoost + Random Forest + Logistic Regression) |
-| **Class balance** | `class_weight='balanced'` on MIMIC-IV development set |
-
-**8 input features:** `platelet_mean`, `wbc_min`, `bun_min`, `pco2_max`, `creatinine_min`, `is_noninvasive_ventilator`, `spo2_min`, `platelet_1st` — all in model-native units (creatinine and BUN in **mg/dL**); see [docs/data_dictionary.md](docs/data_dictionary.md) and [MODEL_CARD.md](MODEL_CARD.md).
-
-**Chinese cohort harmonization:** F3/NH creatinine (μmol/L→mg/dL, ÷88.4) and BUN (mmol/L urea→mg/dL, ×2.801) at load time (`scripts/external_cohort_data.py`).
-
-**Locked reference performance** (8-feature; see `result/analysis/manifest.json`):
-
-| Cohort | AUROC (95% CI) |
-|--------|----------------|
-| MIMIC-IV internal test | 0.796 (0.718–0.874) |
-| MIMIC-III external | 0.733 (0.692–0.775) |
-| F3 exploratory | 0.810 (0.713–0.908) |
-| NH exploratory | 0.898 (0.835–0.961) |
-
----
-
-## Acknowledgement
-
-If you use this repository, we ask that you:
-
-1. Cite the accompanying manuscript (BibTeX below; also in [CITATION.bib](CITATION.bib)).
-2. Cite the MIMIC database(s) you used, as described on PhysioNet: [MIMIC-III](https://physionet.org/content/mimiciii/) · [MIMIC-IV](https://physionet.org/content/mimiciv/).
-3. Acknowledge use of the [MIMIC Code Repository](https://github.com/MIT-LCP/mimic-code) if you adopt its data-access or SQL workflow patterns.
-
-```bibtex
-@article{hypoferremia_icu_mortality,
-  title   = {Machine-learning model for mortality risk stratification in ICU patients with functional hypoferremia},
-  author  = {Li, Y. and others},
-  journal = {[Journal name -- fill after acceptance]},
-  volume  = {[Volume -- fill]},
-  number  = {[Issue -- fill]},
-  pages   = {[Pages -- fill]},
-  year    = {[Year -- fill]},
-  doi     = {[DOI -- fill]},
-  note    = {Manuscript under revision at Scientific Reports. Accompanying code: https://github.com/linzixuan45/hypoferremia-icu-mortality}
-}
-```
-
-Additional availability text: [CODE_AVAILABILITY.md](CODE_AVAILABILITY.md).
-
----
-
-## Archive and citation
-
-| Resource | Link |
-|----------|------|
-| GitHub | https://github.com/linzixuan45/hypoferremia-icu-mortality |
-| Zenodo DOI | `[fill after release]` — see [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) |
-| Research demo | https://fe.mixaihub.top |
-
-Recommended release tag: `v1.0.0`
-
----
-
-## License / use
-
-- **Code:** [MIT License](LICENSE)
-- **Data:** MIMIC and local validation cohorts require separate authorized access; not redistributed here.
-- **Use:** Research use only. **Do not use for clinical decision-making.**
+Code is released under the [MIT License](LICENSE). Data retain their original access restrictions. No clinical use is authorized.

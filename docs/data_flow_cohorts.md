@@ -1,51 +1,15 @@
-# 低铁项目：队列数据流
+# Round 2 Cohort Data Flow
 
-**代码映射**：`run_pipeline.py` · `train_models.py` · `supplementary_analysis.py`  
-**用途**：Methods / 脚注 / 分析口径说明  
-**关联**：[`FE1_spec.md`](FE1_spec.md) · [`FE1_spec_en.md`](FE1_spec_en.md) · [`reference/manifest.json`](../reference/manifest.json)
+| Cohort | Role | Current denominator |
+|---|---|---:|
+| MIMIC-IV eligible documented hypoferremia | Descriptive and sensitivity analyses | 1,487 (215 events) |
+| MIMIC-IV complete locked matrix | Development/internal split | 1,344 (200 events) |
+| MIMIC-IV training | Model fitting and preprocessing fit | 1,075 (160 events) |
+| MIMIC-IV internal test | Locked internal evaluation | 269 (40 events) |
+| Corrected MIMIC-III | Same-institution cross-database temporal sensitivity | 799 (140 events) |
+| Third Xiangya | Exploratory geographic evaluation of post hoc reduced model | 101 (26 events) |
+| USC-FAH | Exploratory geographic evaluation of post hoc reduced model | 98 (37 events) |
 
----
+The endpoint is death in hospital within 28 days of hospital admission. MIMIC-III is filtered with the same ICU length-of-stay ≥48 h criterion and is not described as independent external validation.
 
-## 1. 队列划分（FE1）
-
-| 层级 | 含义 |
-|------|------|
-| **MIMIC-IV train** | 开发集（80%，class_weight balanced） |
-| **MIMIC-IV internal test** | 内部验证（20%） |
-| **MIMIC-III external** | 时间外部验证（全队列 n ≈ 1,046） |
-| **F3 / NH** | 中国探索性外验（选项 β） |
-
----
-
-## 2. 代码与文稿对齐状态
-
-| 项目 | 状态 |
-|------|------|
-| ICU ≥48h | ✅ `LOS_ICU_MIN_DAYS = 2` |
-| 主分析不平衡 | ✅ `class_weight='balanced'` |
-| t₀ | ✅ Excel proxy → `prepare_t0_labs_parquet.py` → `mimic_t0_labs.parquet`（manifest: `t0_source=parquet`）；SQL 为可选升级 |
-| 结局 | ✅ 28-day from t₀ (`outcome_28d_t0`) |
-
----
-
-## 3. 预测文件与队列对应
-
-| pkl | 队列 |
-|-----|------|
-| `preds/8_features/test_preds.pkl` | MIMIC-IV internal test |
-| `preds/8_features/external_preds.pkl` | MIMIC-III external |
-| `preds/8_features/F3_preds.pkl` | 湘雅三院 |
-| `preds/8_features/NH_preds.pkl` | 南华 |
-
----
-
-## 4. 分析输出目录
-
-```
-result/analysis/
-├── manifest.json
-├── cohorts/
-├── preds/
-├── tables/
-└── figures/
-```
+The historical R1 flow is retained at [legacy_R1/data_flow_cohorts.md](legacy_R1/data_flow_cohorts.md) for provenance only.

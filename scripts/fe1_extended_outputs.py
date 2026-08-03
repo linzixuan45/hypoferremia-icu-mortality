@@ -44,7 +44,7 @@ S6A_EXTRA_VARS = ["platelet_mean", "bun_max"]
 S6A_COHORT_LABELS = {
     "MIMIC-IV train": "MIMIC-IV train",
     "MIMIC-IV test": "MIMIC-IV test",
-    "MIMIC-III external": "MIMIC-III ext./temporal",
+    "MIMIC-III temporal sensitivity": "MIMIC-III temporal sensitivity",
 }
 
 load_lasso20 = load_lasso_features
@@ -118,7 +118,7 @@ def eval_ensemble(
     rows = []
     for cohort, y, X_s in [
         ("MIMIC-IV internal test", y_test, X_test_s),
-        ("MIMIC-III external", y_ext, X_ext_s),
+        ("MIMIC-III temporal sensitivity", y_ext, X_ext_s),
     ]:
         prob = model.predict_proba(X_s)[:, 1]
         auc, lo, hi = delong_ci(y.values, prob)
@@ -158,7 +158,7 @@ def _cohort_frames_for_missingness() -> list[tuple[str, pd.DataFrame]]:
     return [
         ("MIMIC-IV train", m4.merge(train_ids, on=id_m4, how="inner")),
         ("MIMIC-IV test", m4.merge(test_ids, on=id_m4, how="inner")),
-        ("MIMIC-III external", m3.merge(ext_ids, on=id_m3, how="inner")),
+        ("MIMIC-III temporal sensitivity", m3.merge(ext_ids, on=id_m3, how="inner")),
     ]
 
 
@@ -299,7 +299,7 @@ def generate_s10_legacy_window() -> Path:
     primary_rows = eval_ensemble(train_p, test_p, ext_p, f20_primary, LABEL)
     for r in primary_rows:
         r["Feature_window"] = "t0_proxy_primary"
-        r["Outcome"] = "death_within_28d_from_t0"
+        r["Outcome"] = "death_in_hospital_within_28_days_from_hospital_admission"
 
     legacy_rows = eval_ensemble(train_l, test_l, ext_l, f20_legacy, "outcome_28d_admission")
     for r in legacy_rows:

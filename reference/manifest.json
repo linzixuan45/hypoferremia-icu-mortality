@@ -1,82 +1,38 @@
 {
   "pipeline": "hypoferremia_mortality",
-  "fe1_version": "fe1_v1_2026-06-18",
-  "fe1_spec_status": "finalized_2026-06-18",
-  "created_utc": "2026-06-30T08:58:36.769241+00:00",
-  "git_commit": "69335824cfefba61544045fed81c9cadaeb4a815",
+  "status": "Round 2 aggregate reference manifest",
+  "current_R2_manifest": "reference/r2/r2_analysis_manifest.json",
   "random_state": 42,
-  "los_icu_min_days": 2.0,
-  "downsample_ratio": 0,
-  "imbalance_primary": "class_weight_balanced",
-  "imbalance_sensitivity": "random_undersample_x5_seeds",
-  "t0_source": "parquet",
-  "outcome": "death_within_28d_from_t0",
-  "primary_features": [
-    "mch_min",
-    "ph_max",
-    "mcv_1st",
-    "bun_min",
-    "pco2_max",
-    "creatinine_min",
-    "is_noninvasive_ventilator",
-    "temperature_max",
-    "spo2_min",
-    "baseexcess_mean",
-    "aniongap_max",
-    "platelet_1st",
-    "admission_age",
-    "dbp_ni_max",
-    "dbp_min",
-    "wbc_min",
-    "los_icu_to_t0",
-    "mchc_min"
-  ],
-  "feat8": [
-    "platelet_mean",
-    "wbc_min",
-    "bun_min",
-    "pco2_max",
-    "creatinine_min",
-    "is_noninvasive_ventilator",
-    "spo2_min",
-    "platelet_1st"
-  ],
-  "china_cohorts": "option_beta_no_reanchor",
+  "minimum_icu_los_days": 2.0,
+  "outcome": "death_in_hospital_within_28_days_from_hospital_admission",
+  "analysis_frame": "retrospective_whole_ICU_stay_risk_stratification",
   "cohort_counts": {
+    "mimic4_eligible": 1487,
+    "mimic4_complete_locked_matrix": 1344,
     "mimic4_train": 1075,
     "mimic4_internal_test": 269,
-    "mimic3_external": 1046
-  },
-  "severity_source": "excel_proxy_sofa_only",
-  "training": {
-    "model": "Ensemble_Voting_soft",
-    "imbalance": "class_weight_balanced_primary",
-    "imputer": "KNN_k5_train_fit"
+    "mimic3_temporal_sensitivity": 799,
+    "mimic3_temporal_events": 140,
+    "F3_exploratory": 101,
+    "NH_exploratory": 98
   },
   "metrics": {
-    "mimic4_test_8f_auroc": 0.7962882096069869,
-    "mimic3_external_8f_auroc": 0.7333166248955723,
-    "mimic4_test_events": 40,
-    "mimic3_external_events": 171,
-    "mimic4_test_20f_auroc": 0.8400655021834061,
-    "mimic3_external_20f_auroc": 0.7266499582289055,
-    "F3_auroc": 0.8102564102564103,
-    "NH_auroc": 0.898094816127603,
-    "F3_events": 26,
-    "NH_events": 37
+    "benchmark_mimic4_internal_auroc": 0.840,
+    "benchmark_mimic3_temporal_auroc": 0.705,
+    "reduced_mimic4_internal_auroc": 0.796,
+    "reduced_mimic3_temporal_auroc": 0.715,
+    "reduced_F3_auroc": 0.810,
+    "reduced_NH_auroc": 0.898
   },
-  "external_cohorts_evaluated": true,
-  "chinese_lab_harmonization": {
-    "creatinine_min": "umol/L to mg/dL divide by 88.4",
-    "bun_min": "mmol/L urea to mg/dL BUN multiply by 2.801"
+  "web_interface": {
+    "source": "webui.py",
+    "public_url": "https://fe.mixaihub.top",
+    "source_revision": "R2-web-2026-08-03",
+    "reviewed_figure": "reference/r2/figure8_reviewed_interface.png",
+    "reviewed_figure_sha256": "6868302337d9c6e30db3bef19da8ec5ea59de2229af373521a245c813ae171cb",
+    "default_case_probability_percent": 22.4,
+    "contains_patient_level_data": false
   },
-  "artifacts": {
-    "table_s6a_lasso20_missingness": "result/analysis/tables/table_s6a_lasso20_missingness.csv",
-    "table_s7_missingness": "result/analysis/tables/table_s7_missingness.csv",
-    "table_s9_imbalance": "result/analysis/tables/table_s9_imbalance_sensitivity.csv",
-    "table_s10_legacy": "result/analysis/tables/table_s10_legacy_window.csv",
-    "table_s10_8f_four_cohorts": "result/analysis/tables/table_s10_8f_four_cohorts.csv",
-    "table_s2_f3_baseline": "result/analysis/tables/table_s2_f3_baseline.csv",
-    "table_s3_nh_baseline": "result/analysis/tables/table_s3_nh_baseline.csv"
-  }
+  "patient_level_outputs_public": false,
+  "fitted_objects_public": false
 }

@@ -1,0 +1,52 @@
+{
+  "artifact_status": "metadata_only; fitted objects are not publicly distributed",
+  "audited_software": {
+    "python": "3.12.13",
+    "scikit_learn": "1.8.0",
+    "xgboost": "3.2.0"
+  },
+  "verified_against": [
+    "scripts/train_models.py",
+    "scripts/plot_figure4_benchmark.py",
+    "locally inspected fitted 8-feature object"
+  ],
+  "features": [
+    "platelet_mean",
+    "wbc_min",
+    "bun_min",
+    "pco2_max",
+    "creatinine_min",
+    "is_noninvasive_ventilator",
+    "spo2_min",
+    "platelet_1st"
+  ],
+  "preprocessing": {
+    "imputer": "KNNImputer",
+    "n_neighbors": 5,
+    "imputer_fit": "MIMIC-IV training data only",
+    "scaler": "StandardScaler",
+    "scaler_fit": "imputed MIMIC-IV training matrix only"
+  },
+  "ensemble": {
+    "voting": "soft",
+    "logistic_regression": {
+      "max_iter": 2000,
+      "class_weight": "balanced",
+      "random_state": 42
+    },
+    "random_forest": {
+      "n_estimators": 200,
+      "max_depth": 6,
+      "class_weight": "balanced",
+      "random_state": 42
+    },
+    "xgboost": {
+      "n_estimators": 120,
+      "max_depth": 4,
+      "learning_rate": 0.08,
+      "eval_metric": "logloss",
+      "random_state": 42
+    }
+  },
+  "public_pickle_exported": false
+}

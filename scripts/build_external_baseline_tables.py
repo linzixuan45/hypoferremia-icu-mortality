@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Supplementary Table S2/S3 baseline stats for F3/NH (harmonized units)."""
+"""Supplementary Table S2/S3 baseline stats for F3/USC-FAH (harmonized units)."""
 from __future__ import annotations
 
 import sys

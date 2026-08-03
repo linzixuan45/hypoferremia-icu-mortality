@@ -81,8 +81,8 @@ def load_evaluation_cohorts(model_tag: str = "8_features"):
 
     from train_models import prep_eval_rows
 
-    test_raw = prep_eval_rows(test_df, feats, label_col="outcome_28d_t0")
-    ext_raw = prep_eval_rows(ext_df, feats, label_col="outcome_28d_t0")
+    test_raw = prep_eval_rows(test_df, feats, label_col="outcome_28d_admission")
+    ext_raw = prep_eval_rows(ext_df, feats, label_col="outcome_28d_admission")
     return test_raw, ext_raw
 
 
@@ -117,7 +117,7 @@ def _load_mimic_pred(split: str, model_tag: str = "8_features") -> dict:
 
 
 def load_predictions(model_tag: str = "8_features"):
-    """Load MIMIC predictions from pkl; score F3/NH when external data exist."""
+    """Load MIMIC predictions; score F3/USC-FAH (legacy key NH) when available."""
     preds = {
         "test": _load_mimic_pred("test", model_tag),
         "external": _load_mimic_pred("external", model_tag),
@@ -238,7 +238,7 @@ def run_subgroup_analysis(model_tag: str = "8_features") -> pd.DataFrame:
             preds["test"]["y_true"],
             preds["test"]["y_prob"],
         ),
-        "MIMIC-III external": (
+        "MIMIC-III temporal sensitivity": (
             ext_raw.reset_index(drop=True),
             preds["external"]["y_true"],
             preds["external"]["y_prob"],
@@ -252,7 +252,7 @@ def run_subgroup_analysis(model_tag: str = "8_features") -> pd.DataFrame:
             preds["F3"]["y_true"],
             preds["F3"]["y_prob"],
         )
-        cohorts["Nanhua (NH)"] = (
+        cohorts["The First Affiliated Hospital of University of South China (USC-FAH)"] = (
             nh.reset_index(drop=True),
             preds["NH"]["y_true"],
             preds["NH"]["y_prob"],

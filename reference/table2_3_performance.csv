@@ -1,5 +1,7 @@
 Model,Cohort,n,Events,AUROC,AUROC_95CI
-20-feature,MIMIC-IV internal test,269,40,0.84,0.767-0.913
-20-feature,MIMIC-III external,1046,171,0.727,0.684-0.769
-8-feature,MIMIC-IV internal test,269,40,0.796,0.718-0.874
-8-feature,MIMIC-III external,1046,171,0.733,0.692-0.775
+Locked 18-predictor benchmark,MIMIC-IV internal test,269,40,0.840,0.767-0.913
+Locked 18-predictor benchmark,MIMIC-III temporal sensitivity,799,140,0.705,0.657-0.751
+Post hoc 8-feature derivative,MIMIC-IV internal test,269,40,0.796,0.716-0.871
+Post hoc 8-feature derivative,MIMIC-III temporal sensitivity,799,140,0.715,0.669-0.761
+Post hoc 8-feature derivative,Third Xiangya exploratory,101,26,0.810,0.703-0.901
+Post hoc 8-feature derivative,The First Affiliated Hospital of University of South China (USC-FAH) exploratory,98,37,0.898,0.827-0.956

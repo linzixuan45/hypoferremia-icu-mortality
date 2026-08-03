@@ -1,47 +1,35 @@
 # Code Availability
 
-Repository positioning: **auditable analysis source code** — pipeline logic, inference, model card, and locked reference metrics are public; patient-level data are not redistributed. See [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for publication-day steps. Review submission bundles may omit internal release docs; see the GitHub repository for the full file tree.
+## Repository and archive status
 
-## Research demonstration calculator
+- GitHub: https://github.com/linzixuan45/hypoferremia-icu-mortality
+- Published prior snapshot: `v1.2.0`, GitHub commit `0e49490`
+- Published version DOI: `10.5281/zenodo.21761430`
+- Zenodo concept DOI: `10.5281/zenodo.21761212`
+- Exact reviewed release target after merge: `v1.2.1`
 
-- URL: https://fe.mixaihub.top
-- Purpose: 8-feature research probability calculator with SHAP audit (not for clinical use)
+The published v1.2.0 record predates the final R2-alignment commits and must not be described as the exact archive of the reviewed branch. The post-review merge commit will be archived as the next immutable Zenodo version.
 
-## GitHub
+## Reproduction scope
 
-- Repository: https://github.com/linzixuan45/hypoferremia-icu-mortality
-- Release tag: `v1.0.0` (recommended)
+The repository provides the active Round 2 workflow from an authorized, user-prepared modelling workbook: input validation, cohort construction, patient-separated splitting, training-set-only KNN imputation and standardization, candidate-model fitting, locked soft-voting and post hoc reduced-model evaluation, calibration analyses, figure generation, and reviewer-requested supplementary audits. It also includes non-patient aggregate reference outputs, an input schema, frozen dependencies, a model card, citation metadata, and research-interface source.
 
-## Zenodo (DOI-assigning archive)
+The repository does not provide a complete raw-clinical-database-to-modelling-table extraction pipeline. Optional SQL examples are provided for credentialed investigators but do not replace the protected data-preparation process.
 
-- Concept DOI: **Pending** (assign after GitHub release and Zenodo integration)
-- Version DOI: **Pending**
+## Privacy boundary
 
-## What is deposited
+The public release excludes:
 
-The archived repository includes:
+- raw or derived patient-level records;
+- identifiers and cohort-ID lists;
+- row-level outcomes and individual prediction probabilities;
+- institution-held Chinese validation data;
+- fitted imputers, scalers, and model objects.
 
-- Analysis pipeline (`scripts/`)
-- MIMIC SQL extraction scripts (`sql/`)
-- Inference code (`inference.py`)
-- Released 8-feature model bundle (`model_weights/8_features_model.pkl`)
-- Model card and data dictionary (`MODEL_CARD.md`, `docs/data_dictionary.md`)
-- Methods documentation (`docs/FE1_spec.md`, `docs/data_flow_cohorts.md`)
-- Locked reference metrics (`reference/manifest.json`)
+The fitted KNN imputer retains its training-feature matrix. For that reason, the previously tracked 8-feature pickle is removed and must not be included in GitHub or Zenodo. Credentialed investigators can reconstruct fitted objects locally from authorized data.
 
-Raw patient-level data, cohort ID lists, and summary result tables are **not** redistributed because MIMIC and local validation data are access-restricted.
-
-## Manuscript text (paste into Methods or Code Availability)
+## Manuscript-ready wording
 
 ```text
-An HTTPS research demonstration calculator for the 8-feature model is available at https://fe.mixaihub.top (not for clinical use). The underlying code and released research model bundle are available at https://github.com/linzixuan45/hypoferremia-icu-mortality and will be archived with a DOI at Zenodo upon release. The repository includes the analysis pipeline, SQL extraction scripts, inference code, model card, and data dictionary. Raw patient-level data are not redistributed because access to MIMIC and local validation data is restricted.
+Analysis code operating on authorized prepared modelling tables and non-patient aggregate Round 2 outputs is available at https://github.com/linzixuan45/hypoferremia-icu-mortality. Zenodo v1.2.0 is archived at https://doi.org/10.5281/zenodo.21761430. Because that immutable record corresponds to GitHub commit 0e49490 and predates the final Round 2 alignment commits, the reviewed merge commit will be deposited as the next Zenodo version and its version DOI will be inserted before final resubmission. The repository provides input validation, cohort construction, patient-separated splitting, training-set-only preprocessing, model fitting, evaluation, figure generation, and supplementary-audit workflows. It excludes patient-level records, identifiers, outcomes, individual probabilities, cohort-ID lists, and fitted preprocessing or model objects that retain training-row information.
 ```
-
-## Zenodo release checklist
-
-1. Push `Project_low_Fe` to a public GitHub repository.
-2. In Zenodo, enable GitHub integration and select the repository.
-3. Create a GitHub release (e.g. `v1.0.0`).
-4. Confirm Zenodo generates a version DOI.
-5. Replace Zenodo placeholders in this file, `README.md`, and the manuscript.
-6. Add the Zenodo DOI to the point-by-point response letter.

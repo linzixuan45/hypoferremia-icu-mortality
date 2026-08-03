@@ -1,76 +1,49 @@
 # Hypoferremia 8-Feature Research Model — Model Card
 
-**NOT FOR CLINICAL USE.** Research demonstration and audit only.
+**Research use only. Not for clinical decision-making.**
 
-## Intended use
+## Status and intended use
 
-- Retrospective risk stratification among ICU patients with documented biochemical hypoferremia compatible with functional iron restriction (serum iron < 60 µg/dL)
-- Model audit / SHAP exploration in research settings
-- **Not** for real-time clinical decision support, treatment modification, surveillance escalation, or patient-facing use
+The 8-feature soft-voting model is a post hoc, implementation-oriented derivative developed after review of development-data feature importance and SHAP results. It was not prespecified, does not replace the locked 18-predictor benchmark, and has not demonstrated non-inferiority, superiority, clinical utility, or universal transportability.
 
-## Model
+Permitted purpose: retrospective research audit and independently specified future validation. Prohibited purpose: diagnosis, triage, treatment selection, surveillance escalation, patient-facing risk communication, or autonomous clinical decision support.
 
-- 8-feature soft-voting ensemble (XGBoost + Random Forest + Logistic Regression)
-- Trained on MIMIC-IV development cohort with t₀-proxy FE1 definition (`train_models.py`)
-- Primary locked soft-voting ensemble uses balanced class weights where supported; random undersampling is sensitivity-only (Supp S9)
-- KNN imputation (k=5) fit on MIMIC-IV training data only; applied without refitting to external cohorts
+## Analysis frame
+
+- Population: ICU admissions with serum iron <60 µg/dL and ICU length of stay ≥48 h.
+- Outcome: death in hospital within 28 days of hospital admission.
+- Predictor window: `_1st` is the first ICU-stay value; `_min`, `_max`, and `_mean` summarize the full ICU stay.
+- Timing limitation: the model is retrospective whole-stay risk stratification, not admission-time or real-time prediction.
+- Preprocessing: KNNImputer with `n_neighbors=5`, fitted only in MIMIC-IV training data, followed by a training-set-fitted StandardScaler. Both are applied unchanged to non-training cohorts.
+
+## Ensemble configuration
+
+- Logistic regression: `max_iter=2000`, `class_weight='balanced'`, `random_state=42`.
+- Random forest: `n_estimators=200`, `max_depth=6`, `class_weight='balanced'`, `random_state=42`.
+- XGBoost: `n_estimators=120`, `max_depth=4`, `learning_rate=0.08`, `eval_metric='logloss'`, `random_state=42`.
+- Combination: unweighted soft voting.
 
 ## Input features
 
-| Feature | Description |
-|---------|-------------|
-| `platelet_mean` | Platelet mean to t₀ |
-| `wbc_min` | WBC minimum to t₀ |
-| `bun_min` | BUN minimum to t₀ (mg/dL) |
-| `pco2_max` | PaCO₂ maximum to t₀ (mmHg) |
-| `creatinine_min` | Creatinine minimum to t₀ (mg/dL) |
-| `is_noninvasive_ventilator` | Non-invasive ventilation before t₀ (`1` = documented use; `0` = no documented use) |
-| `spo2_min` | SpO₂ minimum to t₀ (%) |
-| `platelet_1st` | First platelet to t₀ |
+`platelet_mean`, `wbc_min`, `bun_min`, `pco2_max`, `creatinine_min`, `is_noninvasive_ventilator`, `spo2_min`, and `platelet_1st`.
 
-Chinese exploratory cohorts (F3/NH): laboratory values are harmonized to mg/dL at load time (creatinine ÷88.4; BUN ×2.801) before locked-model evaluation.
+Creatinine and BUN use mg/dL. The NIV feature represents documented use, not physiological ventilatory status; missingness and documentation practices may differ substantially across datasets.
 
-## Performance summary (8-feature reduced model)
+## Performance
 
-| Cohort | n | Events | AUROC (95% CI) |
-|--------|---|--------|----------------|
-| MIMIC-IV internal test | 269 | 40 | 0.796 (0.718–0.874) |
-| MIMIC-III external/temporal | 1,046 | 171 | 0.733 (0.692–0.775) |
-| Third Xiangya (F3) exploratory | 101 | 26 | 0.810 (0.713–0.908) |
-| Nanhua (NH) exploratory | 98 | 37 | 0.898 (0.835–0.961) |
+| Cohort | n (events) | AUROC (95% CI) |
+|---|---:|---:|
+| MIMIC-IV internal test | 269 (40) | 0.796 (0.716–0.871) |
+| Corrected MIMIC-III temporal sensitivity | 799 (140) | 0.715 (0.669–0.761) |
+| Third Xiangya exploratory | 101 (26) | 0.810 (0.703–0.901) |
+| The First Affiliated Hospital of University of South China (USC-FAH), exploratory | 98 (37) | 0.898 (0.827–0.956) |
 
-## Development and evaluation cohorts
+These discrimination estimates do not establish calibration or clinical value. Probability miscalibration, small event counts, cross-system missingness, and dataset-specific documentation require independent prospective validation and local recalibration.
 
-| Cohort | Role |
-|--------|------|
-| MIMIC-IV | Development (80% train / 20% internal test) |
-| MIMIC-III | Non-training same-institution external/temporal evaluation (n ≈ 1,046) |
-| Third Xiangya (F3) | Exploratory geographic evaluation |
-| Nanhua (NH) | Exploratory geographic evaluation |
+## Interpretability boundary
 
-The LASSO panel retained 20 candidate predictors; the locked benchmark modeling matrix uses **18 variables** after prespecified consolidation (Methods).
+SHAP analyses describe the XGBoost base learner's fitted mortality output. They do not exactly decompose the soft-voting probability, identify causal mechanisms, or show that intervening on a feature would change mortality.
 
-## Known limitations
+## Distribution boundary
 
-- Locked retrospective t₀-proxy definition; residual temporal-leakage risk remains for aggregate min/max/mean predictors without uniform chart-time anchoring
-- Serum iron alone does not identify absolute iron deficiency; ferritin/transferrin saturation not uniformly available
-- Chinese cohorts (F3/NH) are exploratory geographic evaluations and were not re-anchored to the MIMIC t₀ definition
-- Cross-site KNN imputation may anchor external cohorts toward the MIMIC-IV training distribution
-- APACHE II / SAPS II benchmarks require full MIMIC SQL export
-- Model probabilities require local prevalence context and recalibration outside derivation settings
-
-## Research demonstration calculator
-
-| Channel | Capability |
-|---------|------------|
-| **Local CLI** (`python inference.py`) | 28-day mortality **probability only** — `--demo`, `--json`, or `--csv` |
-| **Local web** (`./start.sh` or `python webui.py`) | Probability + **SHAP audit** (research use only) |
-| **Web calculator** (https://fe.mixaihub.top) | Same as local web demo (production deployment) |
-
-SHAP explanations require `requirements-web.txt` (Gradio + SHAP). The base `requirements.txt` covers CLI inference only.
-
-## Citation
-
-Xie L, Zhang C, et al. *Scientific Reports* — Machine-learning model for mortality risk stratification in ICU patients with functional hypoferremia.
-
-See [CITATION.bib](CITATION.bib) and [CODE_AVAILABILITY.md](CODE_AVAILABILITY.md).
+The public repository does not distribute the fitted model bundle because the fitted KNN imputer retains a patient-level training-feature matrix. Authorized investigators may reconstruct fitted objects locally from protected data. The hosted interface is a research demonstration and is not evidence of clinical deployment readiness.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Train 20/8-feature soft-voting ensembles (FE1); write preds + tables."""
+"""Train the locked 18-predictor and reduced 8-feature ensembles."""
 from __future__ import annotations
 
 import json
@@ -14,7 +14,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy import stats
 from sklearn.calibration import calibration_curve
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn.impute import KNNImputer
@@ -47,6 +46,7 @@ from external_cohort_data import (
     load_corrected_f3_feature_table,
     load_corrected_nh_feature_table,
 )
+from metric_intervals import auroc_ci_for_cohort, delong_ci
 
 OUT = ROOT / "result" / "analysis"
 PREDS = OUT / "preds"
@@ -55,40 +55,12 @@ FIGURES = OUT / "figures"
 COHORT = OUT / "cohorts"
 DATA_PATH = ROOT / "data" / "mimic_dataset.xlsx"
 RANDOM_STATE = 42
-LABEL = "outcome_28d_t0"
+LABEL = "outcome_28d_admission"
 LOS_ICU_MIN_DAYS = 2.0
 
 
-def delong_ci(y_true, y_score, alpha=0.05):
-    y_true = np.asarray(y_true, dtype=int)
-    y_score = np.asarray(y_score, dtype=float)
-    pos, neg = y_score[y_true == 1], y_score[y_true == 0]
-    m, n = len(pos), len(neg)
-    if m < 5 or n < 5:
-        return np.nan, np.nan, np.nan
-    all_s = np.concatenate([pos, neg])
-    j = np.argsort(all_s)
-    z = all_s[j]
-    rank = np.zeros(m + n)
-    i = 0
-    while i < m + n:
-        k = i
-        while k < m + n - 1 and z[k + 1] == z[k]:
-            k += 1
-        for t in range(i, k + 1):
-            rank[t] = 0.5 * (i + k) + 1
-        i = k + 1
-    rank_out = np.empty(m + n)
-    rank_out[j] = rank
-    auc = (np.sum(rank_out[:m]) - m * (m + 1) / 2) / (m * n)
-    v10 = np.array([(np.sum(neg < pos[i]) + 0.5 * np.sum(neg == pos[i])) / n for i in range(m)])
-    v01 = np.array([(np.sum(pos > neg[j]) + 0.5 * np.sum(pos == neg[j])) / m for j in range(n)])
-    se = np.sqrt((np.var(v10, ddof=1) if m > 1 else 0) / m + (np.var(v01, ddof=1) if n > 1 else 0) / n)
-    zv = stats.norm.ppf(1 - alpha / 2)
-    return auc, max(0.0, auc - zv * se), min(1.0, auc + zv * se)
-
-
 def _binarize_vent(df: pd.DataFrame) -> pd.DataFrame:
+    """Encode documented NIV use before KNN; blank/undocumented entries are 0."""
     out = df.copy()
     if "is_noninvasive_ventilator" in out.columns:
         out["is_noninvasive_ventilator"] = (
@@ -170,7 +142,7 @@ def youden_threshold(y_true, y_prob):
 
 
 def load_cohort_frames(t0_source: str = "excel_proxy") -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """MIMIC-IV train/test + MIMIC-III external, aligned with cohort ID lists."""
+    """MIMIC-IV train/test plus corrected MIMIC-III temporal sensitivity cohort."""
     m4_raw, m3_raw = load_raw()
     m3_clean, m4_clean = clean_raw(m3_raw, m4_raw)
     m3 = attach_outcomes(m3_raw, m3_clean, t0_source)
@@ -239,7 +211,7 @@ def train_and_predict(features: list[str], tag: str):
 
     def pack(y, prob, name):
         pred = (prob >= thresh).astype(int)
-        auc, lo, hi = delong_ci(y, prob)
+        auc, lo, hi, ci_method = auroc_ci_for_cohort(y, prob, name)
         return {
             "model_name": "Ensemble_Voting",
             "cohort": name,
@@ -248,6 +220,7 @@ def train_and_predict(features: list[str], tag: str):
             "auroc": auc,
             "auroc_ci_lo": lo,
             "auroc_ci_hi": hi,
+            "auroc_ci_method": ci_method,
             "youden_threshold": thresh,
             "pred_prob": prob.tolist(),
             "pred": pred.tolist(),
@@ -272,8 +245,8 @@ def train_and_predict(features: list[str], tag: str):
         )
 
     results = {
-        "test": pack(y_test, test_prob, "mimic4_internal_test"),
-        "external": pack(y_ext, ext_prob, "mimic3_external"),
+        "test": pack(y_test, test_prob, "MIMIC-IV internal test"),
+        "external": pack(y_ext, ext_prob, "MIMIC-III temporal sensitivity"),
     }
     for k, v in results.items():
         with open(PREDS / f"{tag}_{k}_preds.pkl", "wb") as f:
@@ -296,7 +269,7 @@ def write_table23(res20, res8):
     for feat_tag, res in [("20-feature", res20), ("8-feature", res8)]:
         for split, label in [
             ("test", "MIMIC-IV internal test"),
-            ("external", "MIMIC-III external"),
+            ("external", "MIMIC-III temporal sensitivity"),
         ]:
             d = res[split]
             rows.append(
@@ -337,7 +310,7 @@ def write_table_s10_8f_four_cohorts(res8: dict, ext_rows: list[dict]) -> None:
     rows = []
     for split, label in [
         ("test", "MIMIC-IV internal test"),
-        ("external", "MIMIC-III external"),
+        ("external", "MIMIC-III temporal sensitivity"),
     ]:
         d = res8[split]
         rows.append(
@@ -432,7 +405,7 @@ def plot_figure5(y_test, prob_test, y_ext, prob_ext, out_path):
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
     for ax, y, p, title in [
         (axes[0], y_test, prob_test, "MIMIC-IV internal test"),
-        (axes[1], y_ext, prob_ext, "MIMIC-III external"),
+        (axes[1], y_ext, prob_ext, "MIMIC-III temporal sensitivity"),
     ]:
         prob_true, prob_pred = calibration_curve(y, p, n_bins=8, strategy="quantile")
         ax.plot([0, 1], [0, 1], "k--", lw=1)
@@ -470,7 +443,9 @@ def main():
 
         for tag, df in [("F3", f3), ("NH", nh)]:
             y, prob, n, ev = infer_external(model8, imp8, sc8, f8, df)
-            auc, lo, hi = delong_ci(y, prob)
+            auc, lo, hi, ci_method = auroc_ci_for_cohort(
+                y, prob, f"{tag} exploratory geographic cohort"
+            )
             ext_rows.append(
                 {
                     "Cohort": tag,
@@ -479,6 +454,7 @@ def main():
                     "AUROC": auc,
                     "CI_lo": lo,
                     "CI_hi": hi,
+                    "CI_method": ci_method,
                 }
             )
             with open(PREDS / f"8_features_{tag}_preds.pkl", "wb") as f:
@@ -496,7 +472,7 @@ def main():
                 )
             all_cal.append((tag, y, prob))
     else:
-        print("Skipping F3/NH: data/external/ cohort workbook not found (MIMIC-only path)")
+        print("Skipping F3/USC-FAH (legacy key NH): data/external/ cohort workbook not found (MIMIC-only path)")
 
     pd.DataFrame(ext_rows).to_csv(TABLES / "external_f3_nh.csv", index=False)
     write_table_s10_8f_four_cohorts(res8, ext_rows)
@@ -504,7 +480,7 @@ def main():
     all_cal.extend(
         [
             ("MIMIC-IV test 8f", np.array(res8["test"]["lable"]), np.array(res8["test"]["pred_prob"])),
-            ("MIMIC-III external 8f", np.array(res8["external"]["lable"]), np.array(res8["external"]["pred_prob"])),
+            ("MIMIC-III temporal sensitivity 8f", np.array(res8["external"]["lable"]), np.array(res8["external"]["pred_prob"])),
         ]
     )
     write_table6(all_cal)

@@ -1,27 +1,10 @@
-# Locked reference run
+# Aggregate Reference Outputs
 
-This directory holds **aggregate, non-patient-level** outputs from the FE1 locked analysis run (`fe1_v1_2026-06-18`).
+This directory contains non-patient aggregate values used to audit the Round 2 manuscript and local reproductions.
 
-Use it to verify that your local pipeline reproduction matches the published results.
+- `manifest.json`: current cohort and headline metric manifest.
+- `table2_3_performance.csv`: locked benchmark and post hoc reduced-model performance.
+- `r2/`: flow, calibration, missing-data, serum-iron, NIV-exclusion, observation-window, patient-unit, and synthetic-duration-proxy aggregate outputs.
+- `r2/figure8_reviewed_interface.png`: reviewed Figure 8 interface rendering for the synthetic/default demonstration record; SHA-256 and expected 22.4% output are locked in `manifest.json`.
 
-## Files
-
-| File | Purpose |
-|------|---------|
-| `manifest.json` | Locked cohort counts, AUROC metrics, FE1 version |
-| `table2_3_performance.csv` | Table 2/3 summary (AUROC + 95% CI) |
-
-## Compare your run
-
-After `python scripts/run_pipeline.py`:
-
-```bash
-python scripts/verify_reproduction.py
-```
-
-## Tolerance
-
-- AUROC metrics: ±0.005 vs `reference/manifest.json`
-- Cohort counts: exact match for `mimic3_external` (1,046) and train/test split sizes
-
-Patient-level cohort ID lists and prediction pickles remain under `result/analysis/` (local only, not redistributed).
+No row-level predictors, outcomes, probabilities, cohort identifiers, or fitted objects are included.

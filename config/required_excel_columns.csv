@@ -2,8 +2,8 @@ group,column,sheets,required,notes
 identifier,subject_id,"mimic3_low_fe;mimic4_low_fe",yes,
 identifier,icustay_id,mimic3_low_fe,yes,preferred join key for MIMIC-III
 outcome,hospital_expire_flag,"mimic3_low_fe;mimic4_low_fe",yes,in-hospital death indicator
-outcome,hosp_survival_days,"mimic3_low_fe;mimic4_low_fe",one_of,used to derive outcome_28d_t0
-outcome,icu_survival_days,"mimic3_low_fe;mimic4_low_fe",one_of,used to derive outcome_28d_t0
+outcome,hosp_survival_days,"mimic3_low_fe;mimic4_low_fe",one_of,used to derive 28-day in-hospital death from hospital admission
+outcome,icu_survival_days,"mimic3_low_fe;mimic4_low_fe",one_of,fallback survival-duration field for the admission-anchored endpoint
 cohort,admission_age,"mimic3_low_fe;mimic4_low_fe",yes,clipped to 18-100 years
 cohort,los_icu,"mimic3_low_fe;mimic4_low_fe",yes,primary analysis requires >= 2 days
 t0_proxy,iron_1st,"mimic3_low_fe;mimic4_low_fe",yes,admission-stratum proxy (< 60 ug/dL)

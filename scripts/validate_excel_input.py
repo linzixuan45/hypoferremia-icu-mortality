@@ -86,7 +86,10 @@ def validate_sheet(name: str, df: pd.DataFrame, *, strict: bool) -> dict:
     if missing_feat8:
         warnings.append(f"{name}: missing 8-feature columns: {missing_feat8}")
     if not has_outcome_time:
-        warnings.append(f"{name}: no hosp_survival_days or icu_survival_days (outcome_28d_t0 may be coarse)")
+        warnings.append(
+            f"{name}: no hosp_survival_days or icu_survival_days "
+            "(the 28-day in-hospital outcome from admission may be coarse)"
+        )
     if dup_ids:
         warnings.append(f"{name}: {int(dup_ids)} duplicate ID rows detected")
 

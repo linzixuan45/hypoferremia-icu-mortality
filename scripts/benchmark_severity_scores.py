@@ -92,7 +92,7 @@ def main():
 
     # ML rows from saved predictions
     for model, tag in [("20-feature ML", "20_features"), ("8-feature ML", "8_features")]:
-        for split, cohort in [("test", "MIMIC-IV internal test"), ("external", "MIMIC-III external")]:
+        for split, cohort in [("test", "MIMIC-IV internal test"), ("external", "MIMIC-III temporal sensitivity")]:
             y, prob, _ = load_preds(tag, split)
             auc, lo, hi = delong_ci(y, prob)
             brier, slope, intercept = calibration_metrics(y, prob)
@@ -120,8 +120,8 @@ def main():
         id_col_m4 = "subject_id" if "subject_id" in m4.columns else "icustay_id"
 
         for cohort_name, ids, raw, idc, outcome in [
-            ("MIMIC-IV internal test", test_ids, m4, id_col_m4, "outcome_28d_t0"),
-            ("MIMIC-III external", ext_ids, m3, id_col_m3, "outcome_28d_t0"),
+            ("MIMIC-IV internal test", test_ids, m4, id_col_m4, "outcome_28d_admission"),
+            ("MIMIC-III temporal sensitivity", ext_ids, m3, id_col_m3, "outcome_28d_admission"),
         ]:
             merged = raw.merge(ids[[idc, outcome]], left_on=idc, right_on=idc, how="inner")
             if "sofa_at_t0" in sev.columns:
@@ -188,9 +188,9 @@ def _sofa_scores_for_cohort(cohort_name: str):
     id_col_m4 = "subject_id" if "subject_id" in m4.columns else "icustay_id"
 
     if cohort_name == "MIMIC-IV internal test":
-        ids, raw, idc, outcome = test_ids, m4, id_col_m4, "outcome_28d_t0"
+        ids, raw, idc, outcome = test_ids, m4, id_col_m4, "outcome_28d_admission"
     else:
-        ids, raw, idc, outcome = ext_ids, m3, id_col_m3, "outcome_28d_t0"
+        ids, raw, idc, outcome = ext_ids, m3, id_col_m3, "outcome_28d_admission"
 
     merged = raw.merge(ids[[idc, outcome]], on=idc, how="inner")
     y = merged[outcome].astype(int).values
@@ -217,7 +217,7 @@ def write_table5_incremental():
     for ml_label, tag in [("8-feature", "8_features"), ("20-feature", "20_features")]:
         for cohort_name, split in [
             ("MIMIC-IV internal test", "test"),
-            ("MIMIC-III external", "external"),
+            ("MIMIC-III temporal sensitivity", "external"),
         ]:
             y_ml, prob_ml, _ = load_preds(tag, split)
             y_sofa, sofa = _sofa_scores_for_cohort(cohort_name)

@@ -41,7 +41,7 @@ def external_cohorts_available() -> bool:
 
 
 def _harmonize_chinese_labs(df: pd.DataFrame, cohort: str) -> pd.DataFrame:
-    """Convert F3/NH lab columns to MIMIC-aligned mg/dL before model input."""
+    """Convert F3/USC-FAH lab columns to MIMIC-aligned mg/dL before model input."""
     out = df.copy()
     if "creatinine_min" in out.columns:
         cr = pd.to_numeric(out["creatinine_min"], errors="coerce")
@@ -70,7 +70,7 @@ def _harmonize_chinese_labs(df: pd.DataFrame, cohort: str) -> pd.DataFrame:
 def load_f3_feature_table() -> pd.DataFrame:
     path = _resolve_ext_path()
     if path is None:
-        raise FileNotFoundError("External cohort workbook (F3/NH) not found under data/external/")
+        raise FileNotFoundError("External cohort workbook (F3/USC-FAH; legacy key NH) not found under data/external/")
     df = pd.read_excel(path, sheet_name=_F3_SHEET)
     if _LABEL_COL not in df.columns:
         raise ValueError(f"Sheet {_F3_SHEET!r} missing column {_LABEL_COL!r}")
@@ -84,7 +84,7 @@ def load_f3_feature_table() -> pd.DataFrame:
 def load_nh_feature_table() -> pd.DataFrame:
     path = _resolve_ext_path()
     if path is None:
-        raise FileNotFoundError("External cohort workbook (F3/NH) not found under data/external/")
+        raise FileNotFoundError("External cohort workbook (F3/USC-FAH; legacy key NH) not found under data/external/")
     df = pd.read_excel(path, sheet_name=_NH_SHEET)
     if _LABEL_COL not in df.columns:
         raise ValueError(f"Sheet {_NH_SHEET!r} missing column {_LABEL_COL!r}")
