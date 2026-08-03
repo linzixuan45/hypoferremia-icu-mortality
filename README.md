@@ -12,8 +12,8 @@ It does **not** redistribute raw or derived patient-level data, cohort-ID lists,
 
 - Repository: https://github.com/linzixuan45/hypoferremia-icu-mortality
 - Research demonstration: https://fe.mixaihub.top (not for clinical use)
-- Current reviewed public release: `v1.2.1`, DOI [10.5281/zenodo.21768779](https://doi.org/10.5281/zenodo.21768779), GitHub merge commit `b9beaac`
-- Metadata-cleanup release prepared in this tree: `v1.2.2`; its version-specific Zenodo DOI must be inserted before the release is tagged
+- Current reviewed public release: `v1.2.2`, DOI [10.5281/zenodo.21772246](https://doi.org/10.5281/zenodo.21772246), GitHub tagged merge commit `b9beaac`
+- Historical reviewed release: `v1.2.1`, DOI [10.5281/zenodo.21768779](https://doi.org/10.5281/zenodo.21768779)
 - Zenodo all-versions concept DOI: [10.5281/zenodo.21761212](https://doi.org/10.5281/zenodo.21761212)
 
 ## Scientific scope
@@ -110,7 +110,7 @@ The hosted interface illustrates input/output behaviour and XGBoost-component SH
 
 ## Citation and archive
 
-Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). The reviewed public Round 2 archive is GitHub release `v1.2.1` with version DOI [10.5281/zenodo.21768779](https://doi.org/10.5281/zenodo.21768779). This `v1.2.2` tree cleans the human-readable release metadata and Figure 8 deployment record without changing the reported analyses or aggregate results. Before tagging `v1.2.2`, insert its newly assigned immutable Zenodo version DOI in the citation and availability files; do not reuse the v1.2.1 DOI as the DOI for v1.2.2.
+Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). The reviewed public Round 2 archive is GitHub release `v1.2.2` with immutable version DOI [10.5281/zenodo.21772246](https://doi.org/10.5281/zenodo.21772246). The tagged archive maps to merge commit `b9beaac`. The documentation-only cleanup in this branch does not change cohort construction, preprocessing, fitted-model specifications, figures, or reported aggregate results.
 
 ## License
 

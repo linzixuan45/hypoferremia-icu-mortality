@@ -1,8 +1,10 @@
 cff-version: 1.2.0
-message: "Cite release v1.2.2 using its version-specific Zenodo DOI after assignment. Until that release is published, the reviewed v1.2.1 archive remains available at DOI 10.5281/zenodo.21768779."
+message: "If you use this software, please cite release v1.2.2 using its immutable Zenodo DOI 10.5281/zenodo.21772246."
 title: "Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Analysis Code and Aggregate Outputs"
 type: software
 version: 1.2.2
+doi: "10.5281/zenodo.21772246"
+url: "https://doi.org/10.5281/zenodo.21772246"
 license: MIT
 repository-code: "https://github.com/linzixuan45/hypoferremia-icu-mortality"
 authors:

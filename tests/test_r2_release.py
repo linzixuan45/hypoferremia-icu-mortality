@@ -22,7 +22,8 @@ def read(path: str) -> str:
 def test_release_identity_and_scope() -> None:
     text = read("README.md") + read("CODE_AVAILABILITY.md")
     assert "v1.2.2" in text
-    assert "10.5281/zenodo.21768779" in text
+    assert "10.5281/zenodo.21772246" in text
+    assert "INSERT_V1.2.2_VERSION_DOI" not in text
     assert "authorized" in text.lower()
     assert "raw-clinical-database-to-modelling-table" in text
     assert "fitted preprocessing" in text
@@ -179,7 +180,7 @@ def test_public_institution_name_and_release_archive_are_explicit() -> None:
     assert "Nanhua cohort" not in public
     archive = read("CODE_AVAILABILITY.md") + read("RELEASE_CHECKLIST.md")
     assert "b9beaac" in archive
-    assert "10.5281/zenodo.21768779" in archive
+    assert "10.5281/zenodo.21772246" in archive
     assert "v1.2.2" in archive
 
 

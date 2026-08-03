@@ -22,6 +22,11 @@
   ],
   "related_identifiers": [
     {
+      "identifier": "https://github.com/linzixuan45/hypoferremia-icu-mortality/releases/tag/v1.2.2",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
       "identifier": "10.5281/zenodo.21761212",
       "relation": "isVersionOf",
       "scheme": "doi"

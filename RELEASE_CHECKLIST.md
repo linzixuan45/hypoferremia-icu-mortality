@@ -12,12 +12,12 @@
 
 ## GitHub and Zenodo
 
-- [ ] Merge the reviewed v1.2.2 cleanup pull request into `main`.
-- [ ] Reserve or obtain the immutable Zenodo version DOI for `v1.2.2`.
-- [ ] Insert that DOI in `README.md`, `CODE_AVAILABILITY.md`, `CITATION.cff`, `CITATION.bib`, `JOURNAL_COMPLIANCE_SNIPPETS.md`, and the submission documents before tagging.
-- [ ] Create GitHub release `v1.2.2` from that exact DOI-bearing merge commit; do not move the published v1.2.1 tag.
-- [ ] Archive release `v1.2.2` as the next version under Zenodo concept DOI `10.5281/zenodo.21761212`.
-- [ ] Confirm that the Zenodo v1.2.2 archive contains no `[INSERT_V1.2.2_VERSION_DOI]` placeholder or stale pre-publication wording.
+- [x] GitHub release `v1.2.2` is public and its tag points to merge commit `b9beaac`.
+- [x] Immutable Zenodo DOI `10.5281/zenodo.21772246` has been assigned under concept DOI `10.5281/zenodo.21761212`.
+- [x] Insert the v1.2.2 DOI in `README.md`, `CODE_AVAILABILITY.md`, `CITATION.cff`, `CITATION.bib`, and `JOURNAL_COMPLIANCE_SNIPPETS.md`.
+- [ ] Correct the public Zenodo record's displayed `version` metadata from `1.2.1` to `1.2.2`; this metadata-only correction does not change the DOI.
+- [ ] Re-open the public Zenodo record and verify that the title, displayed version, filename, DOI, creator list, and concept DOI are mutually consistent.
+- [ ] Do not move or recreate the published GitHub tag; document any later metadata-only branch merge as post-release documentation maintenance.
 - [ ] Re-run all tests after DOI-only edits and confirm the archived tree remains data-free.
 
 ## Submission-only items
