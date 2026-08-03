@@ -21,8 +21,8 @@ def read(path: str) -> str:
 
 def test_release_identity_and_scope() -> None:
     text = read("README.md") + read("CODE_AVAILABILITY.md")
-    assert "v1.2.1" in text
-    assert "10.5281/zenodo.21761430" in text
+    assert "v1.2.2" in text
+    assert "10.5281/zenodo.21768779" in text
     assert "authorized" in text.lower()
     assert "raw-clinical-database-to-modelling-table" in text
     assert "fitted preprocessing" in text
@@ -178,9 +178,29 @@ def test_public_institution_name_and_release_archive_are_explicit() -> None:
     assert "USC-FAH" in public
     assert "Nanhua cohort" not in public
     archive = read("CODE_AVAILABILITY.md") + read("RELEASE_CHECKLIST.md")
-    assert "0e49490" in archive
-    assert "10.5281/zenodo.21761430" in archive
-    assert "v1.2.1" in archive
+    assert "b9beaac" in archive
+    assert "10.5281/zenodo.21768779" in archive
+    assert "v1.2.2" in archive
+
+
+def test_release_metadata_and_figure8_status_are_not_stale() -> None:
+    public_docs = "\n".join(
+        read(path)
+        for path in (
+            "README.md",
+            "CODE_AVAILABILITY.md",
+            "CITATION.cff",
+            "CITATION.bib",
+            "JOURNAL_COMPLIANCE_SNIPPETS.md",
+            "RELEASE_NOTES_v1.2.1.md",
+            "docs/FIGURE8_DEPLOYMENT_AUDIT.md",
+        )
+    )
+    assert "production deployment must be refreshed" not in public_docs
+    assert "Hosted output-card headings remained shorter" not in public_docs
+    assert "v1.2.1 after review and merge" not in public_docs
+    assert "deployment status: **verified**" in public_docs.lower()
+    assert json.loads(read(".zenodo.json"))["version"] == "1.2.2"
 
 
 def test_active_pipeline_does_not_generate_legacy_training_table1() -> None:

@@ -12,8 +12,9 @@ It does **not** redistribute raw or derived patient-level data, cohort-ID lists,
 
 - Repository: https://github.com/linzixuan45/hypoferremia-icu-mortality
 - Research demonstration: https://fe.mixaihub.top (not for clinical use)
-- Published prior snapshot: `v1.2.0`, DOI [10.5281/zenodo.21761430](https://doi.org/10.5281/zenodo.21761430), GitHub commit `0e49490`
-- Exact Round 2 release target after review and merge: `v1.2.1` under Zenodo concept DOI [10.5281/zenodo.21761212](https://doi.org/10.5281/zenodo.21761212)
+- Current reviewed public release: `v1.2.1`, DOI [10.5281/zenodo.21768779](https://doi.org/10.5281/zenodo.21768779), GitHub merge commit `b9beaac`
+- Metadata-cleanup release prepared in this tree: `v1.2.2`; its version-specific Zenodo DOI must be inserted before the release is tagged
+- Zenodo all-versions concept DOI: [10.5281/zenodo.21761212](https://doi.org/10.5281/zenodo.21761212)
 
 ## Scientific scope
 
@@ -105,11 +106,11 @@ See [reference/r2/README.md](reference/r2/README.md) for calibration, missing-da
 
 ## Research demonstration
 
-The hosted interface illustrates input/output behaviour and XGBoost-component SHAP explanations. It is not a medical device and is not intended for diagnosis, triage, treatment selection, or other clinical decisions. The reviewed source uses the case-level labels shown in manuscript Figure 8; the production deployment must be refreshed from this reviewed source after merge. Local interface and inference source are retained for audit, but a fitted bundle is deliberately not published. Authorized investigators may reconstruct it locally by running the workflow.
+The hosted interface illustrates input/output behaviour and XGBoost-component SHAP explanations. It is not a medical device and is not intended for diagnosis, triage, treatment selection, or other clinical decisions. On 3 August 2026, the production deployment was opened and executed with the default record: it returned a 28-day mortality probability of 22.4%, displayed the three manuscript-aligned case-level SHAP headings, and showed the research-only warning. Local interface and inference source are retained for audit, but a fitted bundle is deliberately not published. Authorized investigators may reconstruct it locally by running the workflow.
 
 ## Citation and archive
 
-Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). Zenodo v1.2.0 is a valid prior snapshot but is not the exact archive of this reviewed branch. After merge, create GitHub release `v1.2.1` from the merge commit, allow Zenodo to archive that exact release under concept DOI 10.5281/zenodo.21761212, and cite the new immutable version DOI in the final submission.
+Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). The reviewed public Round 2 archive is GitHub release `v1.2.1` with version DOI [10.5281/zenodo.21768779](https://doi.org/10.5281/zenodo.21768779). This `v1.2.2` tree cleans the human-readable release metadata and Figure 8 deployment record without changing the reported analyses or aggregate results. Before tagging `v1.2.2`, insert its newly assigned immutable Zenodo version DOI in the citation and availability files; do not reuse the v1.2.1 DOI as the DOI for v1.2.2.
 
 ## License
 

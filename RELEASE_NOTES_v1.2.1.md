@@ -1,6 +1,6 @@
-# Release v1.2.1 — final Round 2 alignment candidate
+# Release v1.2.1 — reviewed Round 2 alignment
 
-This release candidate is intended to be created from the reviewed merge commit. It must not move or replace the published v1.2.0 tag.
+This public release was created from merge commit `b9beaac` and archived by Zenodo at https://doi.org/10.5281/zenodo.21768779.
 
 ## Changes since v1.2.0
 
@@ -11,6 +11,9 @@ This release candidate is intended to be created from the reviewed merge commit.
 - aligns the Figure 8 source with case-level SHAP terminology and adds a deployment verification gate;
 - records the published v1.2.0 DOI as a prior snapshot rather than claiming that it contains later R2 commits.
 
-## Archive instructions
+## Archive record
 
-After review and merge, create tag and GitHub release `v1.2.1` from the merge commit. Archive that exact release as the next version under Zenodo concept DOI `10.5281/zenodo.21761212`, then insert the newly assigned version DOI in the manuscript and submission files.
+- GitHub release: https://github.com/linzixuan45/hypoferremia-icu-mortality/releases/tag/v1.2.1
+- Merge commit: `b9beaac`
+- Zenodo version DOI: https://doi.org/10.5281/zenodo.21768779
+- Zenodo concept DOI: https://doi.org/10.5281/zenodo.21761212

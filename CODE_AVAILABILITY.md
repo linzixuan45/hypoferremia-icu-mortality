@@ -3,12 +3,12 @@
 ## Repository and archive status
 
 - GitHub: https://github.com/linzixuan45/hypoferremia-icu-mortality
-- Published prior snapshot: `v1.2.0`, GitHub commit `0e49490`
-- Published version DOI: `10.5281/zenodo.21761430`
+- Current reviewed public release: `v1.2.1`, GitHub merge commit `b9beaac`
+- Current reviewed version DOI: `10.5281/zenodo.21768779`
 - Zenodo concept DOI: `10.5281/zenodo.21761212`
-- Exact reviewed release target after merge: `v1.2.1`
+- Metadata-cleanup release prepared in this tree: `v1.2.2`
 
-The published v1.2.0 record predates the final R2-alignment commits and must not be described as the exact archive of the reviewed branch. The post-review merge commit will be archived as the next immutable Zenodo version.
+GitHub release v1.2.1 and Zenodo DOI 10.5281/zenodo.21768779 archive the reviewed Round 2 scientific workflow and aggregate outputs at merge commit `b9beaac`. Version 1.2.2 is a documentation- and manifest-only cleanup that removes stale pre-publication wording from the archived source tree; it does not change the cohort definitions, fitted-model specifications, figures, or reported aggregate results. Its new immutable version DOI must be inserted before the v1.2.2 tag is created.
 
 ## Reproduction scope
 
@@ -28,8 +28,8 @@ The public release excludes:
 
 The fitted KNN imputer retains its training-feature matrix. For that reason, the previously tracked 8-feature pickle is removed and must not be included in GitHub or Zenodo. Credentialed investigators can reconstruct fitted objects locally from authorized data.
 
-## Manuscript-ready wording
+## Wording to finalize after the v1.2.2 DOI is assigned
 
 ```text
-Analysis code operating on authorized prepared modelling tables and non-patient aggregate Round 2 outputs is available at https://github.com/linzixuan45/hypoferremia-icu-mortality. Zenodo v1.2.0 is archived at https://doi.org/10.5281/zenodo.21761430. Because that immutable record corresponds to GitHub commit 0e49490 and predates the final Round 2 alignment commits, the reviewed merge commit will be deposited as the next Zenodo version and its version DOI will be inserted before final resubmission. The repository provides input validation, cohort construction, patient-separated splitting, training-set-only preprocessing, model fitting, evaluation, figure generation, and supplementary-audit workflows. It excludes patient-level records, identifiers, outcomes, individual probabilities, cohort-ID lists, and fitted preprocessing or model objects that retain training-row information.
+Analysis code operating on authorized prepared modelling tables and non-patient aggregate Round 2 outputs is available in GitHub release v1.2.2 (https://github.com/linzixuan45/hypoferremia-icu-mortality/releases/tag/v1.2.2). The corresponding DOI-bearing Zenodo archive is available at https://doi.org/[INSERT_V1.2.2_VERSION_DOI]. The repository provides input validation, cohort construction, patient-separated splitting, training-set-only preprocessing, model fitting, evaluation, figure generation, and supplementary-audit workflows. It excludes patient-level records, identifiers, outcomes, individual probabilities, cohort-ID lists, and fitted preprocessing or model objects that retain training-row information.
 ```
