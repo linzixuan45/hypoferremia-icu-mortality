@@ -1,8 +1,8 @@
 {
-  "status": "R3 reporting-correction candidate prepared for branch review; versioned release and new DOI pending",
+  "status": "R3 reporting corrections released as v1.3.1; version-specific DOI assigned at Zenodo deposition",
   "target_review_branch": "r3-reporting-corrections-20261023",
-  "publishing_action_flag_scope": "Local preparation of this audit, before the author-authorized separate-branch push; not a promise to withhold the review branch",
-  "new_release_version": null,
+  "publishing_action_flag_scope": "Release v1.3.1 preparation from the reviewed R3 branch; the GitHub release and Zenodo deposition complete publication",
+  "new_release_version": "1.3.1",
   "new_version_doi": null,
   "manuscript_title": "Retrospective mortality risk stratification in critically ill patients with documented hypoferremia",
   "current_main_integration_base": "12f0267414ae35ef775711db699da643307807ea",
@@ -30,7 +30,7 @@
     "previous_ci_lower": 0.7161722821965112,
     "previous_ci_upper": 0.8711261727911128,
     "previous_ci_method_label": "DeLong",
-    "verification_basis": "DeLong recomputation from the actual retained original internal-test probabilities; redacted aggregate evidence in docs/R3_AGGREGATE_PREDICTION_AUDIT.json; no patient-level data copied into this candidate"
+    "verification_basis": "DeLong recomputation from the actual retained original internal-test probabilities; redacted aggregate evidence in docs/R3_AGGREGATE_PREDICTION_AUDIT.json; no patient-level data copied into this release"
   },
   "non_internal_intervals_changed": true,
   "canonical_bootstrap_policy": {
@@ -70,7 +70,8 @@
   "patient_level_artifacts_included": false,
   "figure7b_axis_label": "AUROC (95% CI)",
   "new_figure7b_generator_executed": false,
-  "publishing_actions_performed": false,
+  "publishing_actions_performed": true,
+  "publication_status": "GitHub release v1.3.1 and its Zenodo deposition are the publication actions for this archive; the version-specific DOI is verified after deposition",
   "local_validation": {
     "python_compile_passed": true,
     "data_free_tests_passed": 26,
@@ -82,7 +83,7 @@
     "figure7b_source_preflight_warnings": 0,
     "figure7b_source_preflight_failures": 0,
     "figure7b_rendered_or_visually_verified": false,
-    "test_runtime_note": "Current-main integration tests ran in an existing isolated Python 3.12.14 environment with scikit-learn 1.8.0, NumPy 2.3.5 and SciPy 1.18.0; XGBoost was not installed or needed for these data-free checks. This is not a recreation of the original fully pinned training environment. The base runtime was not modified."
+    "test_runtime_note": "Release validation ran the data-free tests in a temporary Python 3.14 environment with NumPy 2.5.2, SciPy 1.18.1 and scikit-learn 1.9.1; the pinned scikit-learn 1.8.0 / XGBoost 3.2.0 training environment was not recreated. The original computation evidence remains as recorded in the R3 audits."
   },
-  "required_next_action": "Push the author-authorized separate review branch; after collaborator and author approval, publish a real patch release and verify its assigned version DOI before citing that new archive"
+  "required_next_action": "Verify the version-specific DOI assigned to v1.3.1, record it in CITATION.cff, CITATION.bib and the availability statements, then synchronize the manuscript citations"
 }

@@ -4,7 +4,7 @@
 
 Companion article: *Retrospective mortality risk stratification in critically ill patients with documented hypoferremia*.
 
-This R3 reporting-correction candidate is prepared for branch review and is based on computation archive v1.2.2 (DOI 10.5281/zenodo.21772246). Maintainer review, a new versioned release and a new archive DOI remain pending. It does not represent a new released model. Primary fitted models and stored predictions are unchanged. The existing NIV-exclusion sensitivity alone was refitted for verification and reproduced its pre-existing canonical aggregate output; this resolves inherited S11 reporting differences without a new modelling strategy.
+Version 1.3.1 is the R3 reporting-correction release, based on computation archive v1.2.2 (DOI 10.5281/zenodo.21772246). The version-specific DOI is assigned at Zenodo deposition. It does not represent a new released model. Primary fitted models and stored predictions are unchanged. The existing NIV-exclusion sensitivity alone was refitted for verification and reproduced its pre-existing canonical aggregate output; this resolves inherited S11 reporting differences without a new modelling strategy. The v1.2.2 and v1.3.0 records remain unchanged.
 
 ## Status and intended use
 

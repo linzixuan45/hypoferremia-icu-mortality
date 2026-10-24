@@ -1,6 +1,6 @@
 # R2 supplementary analysis summary
 
-This directory retains R2 computation outputs with local R3 confidence-interval synchronization documented in `docs/R3_CORRECTION_AUDIT.json`. The internal reduced-model DeLong CI is 0.7183612417056014–0.8742151775083723. Temporal and exploratory intervals use the unchanged canonical bootstrap module with 2,000 resamples and seed 42. MIMIC-III benchmark/reduced CIs are 0.659–0.752 and 0.669–0.763; Third Xiangya/USC-FAH CIs are 0.699–0.900 and 0.826–0.954. AUROCs, Brier scores, denominators and fitted predictions are unchanged. This corrected tree has not yet been published as a new patch archive.
+This directory retains R2 computation outputs with the R3 confidence-interval synchronization released as v1.3.1 and documented in `docs/R3_CORRECTION_AUDIT.json`. The internal reduced-model DeLong CI is 0.7183612417056014–0.8742151775083723. Temporal and exploratory intervals use the unchanged canonical bootstrap module with 2,000 resamples and seed 42. MIMIC-III benchmark/reduced CIs are 0.659–0.752 and 0.669–0.763; Third Xiangya/USC-FAH CIs are 0.699–0.900 and 0.826–0.954. AUROCs, Brier scores, denominators and fitted predictions are unchanged. The prior v1.2.2 archive remains immutable.
 
 ## Cohort accounting
 

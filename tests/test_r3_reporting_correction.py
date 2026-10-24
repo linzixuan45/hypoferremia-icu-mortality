@@ -66,14 +66,15 @@ def test_calibration_reference_intervals_match_redacted_prediction_audit() -> No
     assert audit["non_internal_ci_method"]["random_state"] == 42
 
 
-def test_candidate_does_not_claim_a_new_public_release() -> None:
+def test_release_records_v1_3_1_without_inventing_a_doi() -> None:
     audit = json.loads((ROOT / "docs/R3_CORRECTION_AUDIT.json").read_text(encoding="utf-8"))
     metadata = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))
-    assert audit["new_release_version"] is None
+    assert audit["new_release_version"] == "1.3.1"
     assert audit["new_version_doi"] is None
     assert audit["training_logic_changed"] is False
     assert audit["primary_model_training_performed"] is False
     assert audit["existing_NIV_sensitivity_verification"]["refitted_for_verification"] is True
     assert audit["source_archive"]["doi"] == "10.5281/zenodo.21772246"
-    assert "version" not in metadata
+    assert metadata["version"] == "1.3.1"
+    assert "awaiting" not in metadata["description"].lower()
     assert AXIS_LABEL == "AUROC (95% CI)"

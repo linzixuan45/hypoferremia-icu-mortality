@@ -1,7 +1,9 @@
 cff-version: 1.2.0
-message: "This R3 reporting-correction candidate is prepared for branch review and has no assigned release version or new DOI. DOI 10.5281/zenodo.21772246 identifies the prior v1.2.2 computation archive, listed under references, not this corrected review tree."
-title: "Retrospective mortality risk stratification in critically ill patients with documented hypoferremia analysis code and aggregate outputs"
+message: "Version 1.3.1 is the R3 reporting-correction release. Its version-specific Zenodo DOI is assigned at deposition; the concept DOI 10.5281/zenodo.21761212 resolves to all versions."
+title: "Retrospective mortality risk stratification in critically ill patients with documented hypoferremia: analysis code and aggregate outputs"
 type: software
+version: 1.3.1
+date-released: 2026-10-24
 license: MIT
 repository-code: "https://github.com/linzixuan45/hypoferremia-icu-mortality"
 authors:
@@ -22,6 +24,19 @@ preferred-citation:
   title: "Retrospective mortality risk stratification in critically ill patients with documented hypoferremia"
   journal: "Scientific Reports"
   year: 2026
+  authors:
+    - family-names: Xie
+      given-names: Liangpeng
+    - family-names: Zhang
+      given-names: Chang
+    - family-names: Sheng
+      given-names: Jiaowen
+    - family-names: Jiang
+      given-names: Linxuan
+    - family-names: Xiao
+      given-names: Mingxuan
+    - family-names: Xi
+      given-names: Yang
   notes: "Manuscript under revision; no article DOI has been assigned."
 references:
   - type: software
@@ -42,4 +57,4 @@ references:
         given-names: Mingxuan
       - family-names: Xi
         given-names: Yang
-    notes: "Prior published computation archive; does not include the R3 reporting corrections proposed for branch review."
+    notes: "Prior published computation archive; does not include the R3 reporting corrections released as v1.3.1."

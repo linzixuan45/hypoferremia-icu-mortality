@@ -1,6 +1,6 @@
 {
   "pipeline": "hypoferremia_mortality",
-  "status": "R2 computation reference with unpublished local R3 reporting correction",
+  "status": "R2 computation reference with R3 reporting correction released as v1.3.1",
   "reporting_correction_audit": "docs/R3_CORRECTION_AUDIT.json",
   "canonical_auroc_interval_policy": {
     "internal": "DeLong",
@@ -14,6 +14,11 @@
     "version": "1.2.2",
     "doi": "10.5281/zenodo.21772246",
     "archived_source_tree": "b9beaac"
+  },
+  "current_release": {
+    "version": "1.3.1",
+    "concept_doi": "10.5281/zenodo.21761212",
+    "version_doi_status": "assigned_at_zenodo_deposition"
   },
   "corrected_reduced_internal_test": {
     "n": 269,

@@ -6,7 +6,7 @@ Companion code for:
 
 > *Retrospective mortality risk stratification in critically ill patients with documented hypoferremia*
 
-**R3 reporting-correction review candidate; versioned release pending.** This tree is based on the published v1.2.2 computation archive. It corrects documentation, citation metadata and AUROC confidence-interval reporting using the unchanged canonical interval functions. Primary fitted models, predictions and cohort definitions are unchanged. An inherited manuscript discrepancy in the existing NIV-exclusion sensitivity was resolved by a bounded verification refit using the unchanged archived procedure and locked split. The review branch is `r3-reporting-corrections-20261023`; maintainer review, a new versioned release and a new immutable archive DOI remain pending.
+**Version 1.3.1 — R3 reporting corrections.** This release extends the published v1.2.2 computation archive. It corrects documentation, citation metadata and AUROC confidence-interval reporting using the unchanged canonical interval functions. Primary fitted models, predictions and cohort definitions are unchanged. An inherited manuscript discrepancy in the existing NIV-exclusion sensitivity was resolved by a bounded verification refit using the unchanged archived procedure and locked split. The v1.3.1 archive preserves the v1.2.2 and v1.3.0 records unchanged; its version-specific Zenodo DOI is assigned at deposition and recorded in the citation metadata after verification.
 
 This repository provides the active Round 2 analysis workflow from authorized, user-prepared modelling tables. It includes cohort construction, patient-separated splitting, training-set-only preprocessing, candidate-model fitting, locked soft-voting and post hoc reduced-model evaluation, calibration analyses, figure generation, and reviewer-requested supplementary audits.
 
@@ -14,11 +14,11 @@ It does **not** redistribute raw or derived patient-level data, cohort-ID lists,
 
 - Repository: https://github.com/linzixuan45/hypoferremia-icu-mortality
 - Research demonstration: https://fe.mixaihub.top (not for clinical use)
-- Published computation archive: `v1.2.2`, DOI [10.5281/zenodo.21772246](https://doi.org/10.5281/zenodo.21772246), archived source tree `b9beaac`
+- Published prior computation archive: `v1.2.2`, DOI [10.5281/zenodo.21772246](https://doi.org/10.5281/zenodo.21772246), archived source tree `b9beaac`
+- Current release: `v1.3.1` (R3 reporting corrections), archived under Zenodo concept DOI [10.5281/zenodo.21761212](https://doi.org/10.5281/zenodo.21761212); the version-specific DOI is recorded in `CITATION.cff` after deposition
 - Historical reviewed release: `v1.2.1`, DOI [10.5281/zenodo.21768779](https://doi.org/10.5281/zenodo.21768779)
-- Zenodo all-versions concept DOI: [10.5281/zenodo.21761212](https://doi.org/10.5281/zenodo.21761212)
-- Current reporting corrections: branch-review candidate, not a new versioned release. Preserve the existing v1.2.2 tag and DOI; cite a new immutable patch archive only after its actual release and deposition are verified.
-- Source archive SHA-256: `ff159c6722becf34c33180adf830e74392c1383db02d7345ba366e5be47734b5` (local archived copy verified; no fresh Zenodo download claimed).
+- Historical GitHub release without a Zenodo version DOI: `v1.3.0`, retained unchanged and not used for citation
+- v1.2.2 source ZIP SHA-256: `ff159c6722becf34c33180adf830e74392c1383db02d7345ba366e5be47734b5` (local archived copy verified; no fresh Zenodo download claimed).
 
 ## Scientific scope
 
@@ -88,7 +88,7 @@ pytest -q
 | `reference/r2/` | Non-patient aggregate Round 2 reference outputs |
 | `docs/R2_REPRODUCTION_SCOPE.md` | Reproduction claim and boundaries |
 | `MODEL_CARD.md` | Intended use, model status, and limitations |
-| `docs/R3_REPORTING_CORRECTION.md` | Local correction scope, evidence and publication steps |
+| `docs/R3_REPORTING_CORRECTION.md` | R3 release scope, evidence and publication record |
 | `scripts/plot_figure7b_auroc.py` | Aggregate-only Figure 7B panel source with neutral CI axis label |
 | `tests/` | Data-free integrity, parameter, and privacy tests |
 
@@ -116,13 +116,13 @@ The NIV-exclusion verification reproduced all four pre-existing canonical refere
 
 ## Research demonstration
 
-The hosted interface illustrates input/output behaviour and XGBoost-component SHAP explanations. It is not a medical device and is not intended for diagnosis, triage, treatment selection, or other clinical decisions. On 3 August 2026, the production deployment was opened and executed with the default record: it returned a 28-day mortality probability of 22.4%, displayed the three manuscript-aligned case-level SHAP headings, and showed the research-only warning. This records the historical verified deployment, not a new live check of this local R3 candidate. Local interface and inference source are retained for audit, but a fitted bundle is deliberately not published. Authorized investigators may reconstruct it locally by running the workflow.
+The hosted interface illustrates input/output behaviour and XGBoost-component SHAP explanations. It is not a medical device and is not intended for diagnosis, triage, treatment selection, or other clinical decisions. On 3 August 2026, the production deployment was opened and executed with the default record: it returned a 28-day mortality probability of 22.4%, displayed the three manuscript-aligned case-level SHAP headings, and showed the research-only warning. This records the historical verified deployment, not a new live check of this v1.3.1 release. Local interface and inference source are retained for audit, but a fitted bundle is deliberately not published. Authorized investigators may reconstruct it locally by running the workflow.
 
 ## Citation and archive
 
-Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). The version-specific DOI 10.5281/zenodo.21772246 identifies the prior v1.2.2 computation archive; it does not identify this corrected review tree. A new patch release and its assigned version DOI are required before claiming that the R3 reporting corrections are archived as that release. No replacement DOI or release version has been invented. Original embedded metadata are retained in `provenance/v1.2.2_embedded_metadata/` to distinguish the published record from its stale in-tree release wording.
+Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). Version 1.3.1 is the current R3 reporting-correction release; its version-specific Zenodo DOI is assigned at deposition and recorded in the citation files. DOI 10.5281/zenodo.21772246 identifies the prior v1.2.2 computation archive; it does not identify the R3 corrections. `v1.3.0` remains an unarchived historical GitHub release and should not be cited as the R3 archive.
 
-This integration starts from current-main commit `12f0267414ae35ef775711db699da643307807ea`, preserving its v1.2.2 metadata cleanup and historical Figure 8 deployment verification. The accurate v1.2.2 release metadata from that base are preserved in `provenance/v1.2.2_release_metadata/`. See `docs/R3_CURRENT_MAIN_INTEGRATION.json` for the integration scope and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for the author/maintainer review and archive steps. Pushing the review branch does not itself create a release or a new DOI. The manuscript files are outside this code update and remain unchanged at this step.
+This release integrates the reviewed R3 branch onto current-main commit `12f0267414ae35ef775711db699da643307807ea`, preserving its v1.2.2 metadata cleanup and historical Figure 8 deployment verification. The accurate v1.2.2 release metadata from that base are preserved in `provenance/v1.2.2_release_metadata/`. See `docs/R3_CURRENT_MAIN_INTEGRATION.json` for the integration scope and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for the release and archive record. The manuscript files are outside this code release and are updated separately after the version DOI is verified.
 
 ## License
 
