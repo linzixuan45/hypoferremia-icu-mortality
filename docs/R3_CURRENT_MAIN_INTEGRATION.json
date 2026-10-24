@@ -1,0 +1,32 @@
+{
+  "integration_date": "2026-10-23",
+  "status": "R3 branch-review candidate; versioned release and new DOI pending",
+  "state_scope": "Local preparation audit immediately before the author-authorized separate-branch push; action flags below describe this local preparation step only",
+  "target_review_branch": "r3-reporting-corrections-20261023",
+  "separate_branch_push_authorized": true,
+  "review_merge_release_and_new_DOI_pending": true,
+  "base_commit": "12f0267414ae35ef775711db699da643307807ea",
+  "base_commit_subject": "Record v1.2.2 DOI and archive metadata",
+  "previous_R3_candidate_sha256": "ff5e28c22864d2def885bf515c49efc5f66411b561234494f283b3995f0a5f29",
+  "published_R2_archive": {
+    "version": "1.2.2",
+    "doi": "10.5281/zenodo.21772246",
+    "tagged_archive_tree": "b9beaac",
+    "current_main_metadata_provenance": "provenance/v1.2.2_release_metadata",
+    "historical_source_ZIP_metadata_provenance": "provenance/v1.2.2_embedded_metadata"
+  },
+  "overlaps_reviewed": [
+    "README and CODE_AVAILABILITY retain true v1.2.2 DOI, historical v1.2.1 DOI and concept DOI while marking R3 unpublished",
+    "Current-main Figure 8 historical deployment verification is preserved without claiming a new live check",
+    "Current-main RELEASE_NOTES_v1.2.1.md and RELEASE_NOTES_v1.2.2.md are unchanged",
+    "reference/manifest.json retains the deployment verified status and date added on current main",
+    "Current-main metadata regression test is retained and updated to distinguish prior v1.2.2 metadata from the unversioned R3 candidate"
+  ],
+  "primary_computational_logic_modified": false,
+  "patient_level_artifacts_or_fitted_objects_added": false,
+  "new_release_version": null,
+  "new_version_doi": null,
+  "commits_created": false,
+  "remote_writes_performed": false,
+  "original_checkouts_modified": false
+}

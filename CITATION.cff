@@ -1,10 +1,7 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite release v1.2.2 using its immutable Zenodo DOI 10.5281/zenodo.21772246."
-title: "Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Analysis Code and Aggregate Outputs"
+message: "This R3 reporting-correction candidate is prepared for branch review and has no assigned release version or new DOI. DOI 10.5281/zenodo.21772246 identifies the prior v1.2.2 computation archive, listed under references, not this corrected review tree."
+title: "Retrospective mortality risk stratification in critically ill patients with documented hypoferremia analysis code and aggregate outputs"
 type: software
-version: 1.2.2
-doi: "10.5281/zenodo.21772246"
-url: "https://doi.org/10.5281/zenodo.21772246"
 license: MIT
 repository-code: "https://github.com/linzixuan45/hypoferremia-icu-mortality"
 authors:
@@ -22,6 +19,27 @@ authors:
     given-names: Yang
 preferred-citation:
   type: article
-  title: "Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Multi-Cohort Development and Retrospective Evaluation"
+  title: "Retrospective mortality risk stratification in critically ill patients with documented hypoferremia"
   journal: "Scientific Reports"
   year: 2026
+  notes: "Manuscript under revision; no article DOI has been assigned."
+references:
+  - type: software
+    title: "Mortality Risk Stratification Among Critically Ill Patients with Documented Hypoferremia: Analysis Code and Aggregate Outputs"
+    version: 1.2.2
+    doi: 10.5281/zenodo.21772246
+    year: 2026
+    authors:
+      - family-names: Xie
+        given-names: Liangpeng
+      - family-names: Zhang
+        given-names: Chang
+      - family-names: Sheng
+        given-names: Jiaowen
+      - family-names: Jiang
+        given-names: Linxuan
+      - family-names: Xiao
+        given-names: Mingxuan
+      - family-names: Xi
+        given-names: Yang
+    notes: "Prior published computation archive; does not include the R3 reporting corrections proposed for branch review."

@@ -1,5 +1,7 @@
 # R2 supplementary analysis summary
 
+This directory retains R2 computation outputs with local R3 confidence-interval synchronization documented in `docs/R3_CORRECTION_AUDIT.json`. The internal reduced-model DeLong CI is 0.7183612417056014–0.8742151775083723. Temporal and exploratory intervals use the unchanged canonical bootstrap module with 2,000 resamples and seed 42. MIMIC-III benchmark/reduced CIs are 0.659–0.752 and 0.669–0.763; Third Xiangya/USC-FAH CIs are 0.699–0.900 and 0.826–0.954. AUROCs, Brier scores, denominators and fitted predictions are unchanged. This corrected tree has not yet been published as a new patch archive.
+
 ## Cohort accounting
 
 The LOS-filtered screening set contained 1,568 records, but only 1,487 satisfied the fixed iron <60 micrograms/dL definition. The locked complete-case matrix contained 1,344 patients; 143 eligible patients were excluded because at least one locked predictor was missing.

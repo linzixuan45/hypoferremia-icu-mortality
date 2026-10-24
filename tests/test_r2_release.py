@@ -201,7 +201,12 @@ def test_release_metadata_and_figure8_status_are_not_stale() -> None:
     assert "Hosted output-card headings remained shorter" not in public_docs
     assert "v1.2.1 after review and merge" not in public_docs
     assert "deployment status: **verified**" in public_docs.lower()
-    assert json.loads(read(".zenodo.json"))["version"] == "1.2.2"
+    # R3 is a local, unpublished reporting correction, not release v1.2.2.
+    candidate = json.loads(read(".zenodo.json"))
+    assert "version" not in candidate
+    prior = json.loads(read("provenance/v1.2.2_release_metadata/.zenodo.json"))
+    assert prior["version"] == "1.2.2"
+    assert 'doi: "10.5281/zenodo.21772246"' in read("provenance/v1.2.2_release_metadata/CITATION.cff")
 
 
 def test_active_pipeline_does_not_generate_legacy_training_table1() -> None:

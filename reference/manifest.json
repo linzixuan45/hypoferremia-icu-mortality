@@ -1,6 +1,28 @@
 {
   "pipeline": "hypoferremia_mortality",
-  "status": "Round 2 aggregate reference manifest",
+  "status": "R2 computation reference with unpublished local R3 reporting correction",
+  "reporting_correction_audit": "docs/R3_CORRECTION_AUDIT.json",
+  "canonical_auroc_interval_policy": {
+    "internal": "DeLong",
+    "temporal_and_exploratory": "class-stratified percentile bootstrap",
+    "bootstrap_replicates": 2000,
+    "bootstrap_random_state": 42,
+    "module": "scripts/metric_intervals.py",
+    "analysis_logic_changed": false
+  },
+  "prior_computation_archive": {
+    "version": "1.2.2",
+    "doi": "10.5281/zenodo.21772246",
+    "archived_source_tree": "b9beaac"
+  },
+  "corrected_reduced_internal_test": {
+    "n": 269,
+    "events": 40,
+    "auroc": 0.7962882096069869,
+    "ci_method": "DeLong",
+    "ci_lower": 0.7183612417056014,
+    "ci_upper": 0.8742151775083723
+  },
   "current_R2_manifest": "reference/r2/r2_analysis_manifest.json",
   "random_state": 42,
   "minimum_icu_los_days": 2.0,

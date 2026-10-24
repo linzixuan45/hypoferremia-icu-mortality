@@ -1,0 +1,90 @@
+{
+  "audit_date": "2026-10-22",
+  "scope": "Read-only audit of retained original probabilities and inference with original fitted bundles; aggregates only, without protected file paths, identifiers or patient-level records",
+  "training_performed": false,
+  "patient_level_outputs_public": false,
+  "internal_ci_method": "DeLong normal-approximation interval using event/non-event placement contributions with half credit for tied scores; variance var(V10,ddof=1)/m + var(V01,ddof=1)/n; two-sided normal 0.975 quantile; bounds clipped to [0,1]",
+  "reduced_internal_test": {
+    "source_role": "retained original reduced-model internal-test labels and probabilities",
+    "source_sha256": "6ca29ffebb0c31b10d83eec37d28cabefb00167800ea221d6d26c2a972629476",
+    "n": 269,
+    "events": 40,
+    "AUROC": 0.7962882096069869,
+    "CI_lower": 0.7183612417056014,
+    "CI_upper": 0.8742151775083723,
+    "rounded_CI": "0.718–0.874",
+    "correction_required": true
+  },
+  "benchmark_internal_test": {
+    "source_role": "retained original locked-benchmark internal-test labels and probabilities",
+    "source_sha256": "1cb49345a30955b219d4643e2a1cd320f5db576ed46e2eea974127174349b958",
+    "n": 269,
+    "events": 40,
+    "AUROC": 0.8400655021834061,
+    "CI_lower": 0.7669531114774051,
+    "CI_upper": 0.9131778928894072,
+    "rounded_CI": "0.767–0.913",
+    "correction_required": false
+  },
+  "reduced_temporal_parent_cohort": {
+    "n": 799,
+    "events": 140,
+    "AUROC": 0.7154617385649252,
+    "Brier_score": 0.1339662497544761,
+    "point_estimate_reproduced": true,
+    "bundle_sha256": "9821b655c0c13010be024d428e16244fbc1f5e578ab7df3ef45d323ed773d8d0",
+    "CI_lower": 0.6693141664860177,
+    "CI_upper": 0.7625798016475178,
+    "rounded_CI": "0.669–0.763",
+    "source_role": "original fitted-bundle inference in original prepared-workbook order"
+  },
+  "benchmark_temporal_parent_cohort": {
+    "n": 799,
+    "events": 140,
+    "AUROC": 0.7045740299154564,
+    "Brier_score": 0.1410863213708644,
+    "bundle_sha256": "fa218aa52c83945b6f012c53cec153ff6e3a60605097a0a1498fe786cf32fad4",
+    "CI_lower": 0.6585654671580317,
+    "CI_upper": 0.7519553435941903,
+    "rounded_CI": "0.659–0.752",
+    "source_role": "original fitted-bundle inference in original prepared-workbook order"
+  },
+  "Third_Xiangya_reduced_exploratory": {
+    "n": 101,
+    "events": 26,
+    "AUROC": 0.8102564102564103,
+    "Brier_score": 0.14297222449255081,
+    "CI_lower": 0.6994615384615384,
+    "CI_upper": 0.9000128205128205,
+    "rounded_CI": "0.699–0.900",
+    "source_sha256": "0246a43b3e298edae0dcf7365a69dc488c32ca216e72f170d510d097e6942a40",
+    "source_role": "retained original exploratory labels and probabilities in original prediction order"
+  },
+  "USC_FAH_reduced_exploratory": {
+    "n": 98,
+    "events": 37,
+    "AUROC": 0.898094816127603,
+    "Brier_score": 0.1441667606288062,
+    "CI_lower": 0.8258639787328312,
+    "CI_upper": 0.953932210899424,
+    "rounded_CI": "0.826–0.954",
+    "source_sha256": "3e882db11c2aea1af2eefe1ca88c9f2f64fd0a639f50fe57838aeb469957a065",
+    "source_role": "retained original exploratory labels and probabilities in original prediction order"
+  },
+  "non_internal_ci_method": {
+    "module": "original archived scripts/metric_intervals.py executed unchanged",
+    "method": "class-stratified percentile bootstrap",
+    "replicates": 2000,
+    "random_state": 42,
+    "generator": "numpy.random.default_rng",
+    "implementation": "resample event and non-event row indices separately with replacement, concatenate events then non-events, calculate AUROC, take 0.025 and 0.975 quantiles",
+    "inference_environment": "scikit-learn 1.8.0; XGBoost 3.2.0",
+    "models_retrained": false,
+    "point_estimates_and_Brier_scores_unchanged": true
+  },
+  "limitations": [
+    "The older published finite-bootstrap resampling path is not reconstructed; the final reported intervals instead use the directly regenerated canonical 2000-resample seed-42 policy.",
+    "Older cached temporal benchmark predictions were not substituted for canonical original-bundle inference, which reproduces current AUROC and Brier scores exactly.",
+    "This stored-probability audit is not model retraining, a complete raw-database extraction or independent clinical validation."
+  ]
+}
