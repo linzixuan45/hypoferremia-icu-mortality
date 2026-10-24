@@ -1,9 +1,9 @@
 {
-  "status": "R3 reporting corrections released as v1.3.1; version-specific DOI assigned at Zenodo deposition",
+  "status": "R3 reporting corrections released as v1.3.1; archived at DOI 10.5281/zenodo.23608695",
   "target_review_branch": "r3-reporting-corrections-20261023",
   "publishing_action_flag_scope": "Release v1.3.1 preparation from the reviewed R3 branch; the GitHub release and Zenodo deposition complete publication",
   "new_release_version": "1.3.1",
-  "new_version_doi": null,
+  "new_version_doi": "10.5281/zenodo.23608695",
   "manuscript_title": "Retrospective mortality risk stratification in critically ill patients with documented hypoferremia",
   "current_main_integration_base": "12f0267414ae35ef775711db699da643307807ea",
   "current_main_integration_audit": "docs/R3_CURRENT_MAIN_INTEGRATION.json",
@@ -64,14 +64,17 @@
     "verified_canonical_internal_benchmark_AUROC_rounded": 0.814,
     "inherited_manuscript_internal_reduced_AUROC": 0.783,
     "verified_canonical_internal_reduced_AUROC_rounded": 0.785,
-    "verified_temporal_AUROCs_rounded": [0.727, 0.751],
+    "verified_temporal_AUROCs_rounded": [
+      0.727,
+      0.751
+    ],
     "aggregate_provenance": "docs/R3_NIV_SENSITIVITY_VERIFICATION.json"
   },
   "patient_level_artifacts_included": false,
   "figure7b_axis_label": "AUROC (95% CI)",
   "new_figure7b_generator_executed": false,
   "publishing_actions_performed": true,
-  "publication_status": "GitHub release v1.3.1 and its Zenodo deposition are the publication actions for this archive; the version-specific DOI is verified after deposition",
+  "publication_status": "GitHub release v1.3.1 was published and Zenodo archived it as a new version of concept DOI 10.5281/zenodo.21761212; the version DOI 10.5281/zenodo.23608695 is verified",
   "local_validation": {
     "python_compile_passed": true,
     "data_free_tests_passed": 26,
@@ -85,5 +88,5 @@
     "figure7b_rendered_or_visually_verified": false,
     "test_runtime_note": "Release validation ran the data-free tests in a temporary Python 3.14 environment with NumPy 2.5.2, SciPy 1.18.1 and scikit-learn 1.9.1; the pinned scikit-learn 1.8.0 / XGBoost 3.2.0 training environment was not recreated. The original computation evidence remains as recorded in the R3 audits."
   },
-  "required_next_action": "Verify the version-specific DOI assigned to v1.3.1, record it in CITATION.cff, CITATION.bib and the availability statements, then synchronize the manuscript citations"
+  "required_next_action": "Synchronize the manuscript version and DOI citations to v1.3.1 / 10.5281/zenodo.23608695 after the article revision is finalized"
 }

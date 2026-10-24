@@ -17,8 +17,8 @@
   },
   "current_release": {
     "version": "1.3.1",
-    "concept_doi": "10.5281/zenodo.21761212",
-    "version_doi_status": "assigned_at_zenodo_deposition"
+    "doi": "10.5281/zenodo.23608695",
+    "concept_doi": "10.5281/zenodo.21761212"
   },
   "corrected_reduced_internal_test": {
     "n": 269,
@@ -44,11 +44,11 @@
     "NH_exploratory": 98
   },
   "metrics": {
-    "benchmark_mimic4_internal_auroc": 0.840,
+    "benchmark_mimic4_internal_auroc": 0.84,
     "benchmark_mimic3_temporal_auroc": 0.705,
     "reduced_mimic4_internal_auroc": 0.796,
     "reduced_mimic3_temporal_auroc": 0.715,
-    "reduced_F3_auroc": 0.810,
+    "reduced_F3_auroc": 0.81,
     "reduced_NH_auroc": 0.898
   },
   "web_interface": {

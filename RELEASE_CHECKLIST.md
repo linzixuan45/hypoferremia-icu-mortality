@@ -2,7 +2,7 @@
 
 Published baseline: v1.2.2, DOI 10.5281/zenodo.21772246, archived source tree `b9beaac`. Historical v1.2.1 is DOI 10.5281/zenodo.21768779; historical v1.2.0 is DOI 10.5281/zenodo.21761430, commit `0e49490`. The unarchived GitHub release v1.3.0 is retained unchanged and is not used for citation.
 
-Current release: v1.3.1, based on main commit `12f0267414ae35ef775711db699da643307807ea` plus the reviewed R3 merge. Zenodo concept DOI: 10.5281/zenodo.21761212. The version-specific DOI is assigned at deposition and recorded after verification.
+Current release: v1.3.1, based on main commit `12f0267414ae35ef775711db699da643307807ea` plus the reviewed R3 merge. Zenodo version DOI: 10.5281/zenodo.23608695 (record 23608695), under concept DOI 10.5281/zenodo.21761212.
 
 ## Pre-release checks
 
@@ -24,13 +24,13 @@ The data-free tests check software/reporting consistency and privacy boundaries.
 
 - [x] Merge the reviewed PR #3 into `main` without rewriting or moving existing tags.
 - [x] Assign version `v1.3.1`; preserve v1.2.2, v1.2.1, v1.2.0 and v1.3.0 exactly as they are.
-- [ ] Create GitHub release `v1.3.1` from the release commit and allow Zenodo to archive it as a new version under concept DOI `10.5281/zenodo.21761212`.
-- [ ] Verify the newly assigned version DOI; do not assume it before Zenodo assigns it.
-- [ ] Record the verified DOI in `CITATION.cff`, `CITATION.bib`, `README.md`, `CODE_AVAILABILITY.md`, `JOURNAL_COMPLIANCE_SNIPPETS.md` and the R3 audit JSONs; keep the prior v1.2.2 DOI as the earlier computation archive.
+- [x] Create GitHub release `v1.3.1` from the release commit; Zenodo archived it as record 23608695 under concept DOI `10.5281/zenodo.21761212`.
+- [x] Verify the newly assigned version DOI `10.5281/zenodo.23608695`.
+- [x] Record the verified DOI in `CITATION.cff`, `CITATION.bib`, `README.md`, `CODE_AVAILABILITY.md`, `JOURNAL_COMPLIANCE_SNIPPETS.md` and the R3 audit JSONs; keep the prior v1.2.2 DOI as the earlier computation archive.
 - [ ] Re-run all tests after DOI-only edits, regenerate `SOURCE_SHA256_MANIFEST.tsv`, and confirm the archived tree remains data-free.
 - [ ] After the DOI is verified, update the manuscript, cover letter and point-by-point response to cite v1.3.1; do not insert a placeholder or guessed DOI.
 
-Version 1.3.1 is the first release containing the R3 corrections. The v1.2.2 DOI remains a historical computation reference; v1.3.0 remains an unarchived GitHub release.
+Version 1.3.1 is the first release containing the R3 corrections; it is archived at DOI 10.5281/zenodo.23608695. The v1.2.2 DOI remains a historical computation reference; v1.3.0 remains an unarchived GitHub release.
 
 ## Historical or separate tasks
 

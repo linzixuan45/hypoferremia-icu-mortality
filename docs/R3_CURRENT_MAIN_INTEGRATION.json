@@ -1,6 +1,6 @@
 {
   "integration_date": "2026-10-24",
-  "status": "R3 reporting corrections merged and released as v1.3.1",
+  "status": "R3 reporting corrections merged and archived as v1.3.1 (DOI 10.5281/zenodo.23608695)",
   "state_scope": "Release preparation after the author-authorized branch review and merge; flags describe this v1.3.1 release commit",
   "target_review_branch": "r3-reporting-corrections-20261023",
   "separate_branch_push_authorized": true,
@@ -24,10 +24,16 @@
   "primary_computational_logic_modified": false,
   "patient_level_artifacts_or_fitted_objects_added": false,
   "new_release_version": "1.3.1",
-  "new_version_doi": null,
+  "new_version_doi": "10.5281/zenodo.23608695",
   "commits_created": true,
   "remote_writes_performed": true,
   "original_checkouts_modified": false,
   "review_and_merge_completed": true,
-  "version_doi_pending": true
+  "version_doi_pending": false,
+  "zenodo_archive": {
+    "record_id": "23608695",
+    "doi": "10.5281/zenodo.23608695",
+    "concept_doi": "10.5281/zenodo.21761212",
+    "version": "1.3.1"
+  }
 }

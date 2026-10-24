@@ -4,7 +4,7 @@ Version 1.3.1 publishes the reviewed R3 reporting corrections for the retrospect
 
 - GitHub release: https://github.com/linzixuan45/hypoferremia-icu-mortality/releases/tag/v1.3.1
 - Zenodo concept DOI: https://doi.org/10.5281/zenodo.21761212
-- Zenodo version DOI: assigned at deposition and recorded after verification
+- Zenodo version DOI: https://doi.org/10.5281/zenodo.23608695 (record 23608695)
 - Prior computation archive: v1.2.2, DOI https://doi.org/10.5281/zenodo.21772246, source tree `b9beaac`
 - Historical unarchived GitHub release: v1.3.0, retained unchanged
 
@@ -20,4 +20,4 @@ Version 1.3.1 publishes the reviewed R3 reporting corrections for the retrospect
 
 Primary fitted models, predictions, AUROC point estimates and Brier scores are unchanged. Only the pre-existing NIV-exclusion sensitivity was refitted for verification, using its unchanged archived functions and locked split; all four rows reproduce the canonical CSV within 1e-10. Patient-level records, identifiers, row-level outcomes, individual probabilities, cohort-ID lists and fitted preprocessing/model objects are not redistributed. The data-free tests are not independent clinical validation.
 
-The manuscript is outside this code release. Its version and DOI citations are updated only after the v1.3.1 version DOI has been assigned and verified.
+The manuscript is outside this code release. Its version and DOI citations should now be synchronized to v1.3.1 / 10.5281/zenodo.23608695.

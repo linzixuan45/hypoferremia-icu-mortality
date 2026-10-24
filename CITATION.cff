@@ -1,9 +1,11 @@
 cff-version: 1.2.0
-message: "Version 1.3.1 is the R3 reporting-correction release. Its version-specific Zenodo DOI is assigned at deposition; the concept DOI 10.5281/zenodo.21761212 resolves to all versions."
+message: "Version 1.3.1 is the R3 reporting-correction release. Cite it using its immutable Zenodo DOI 10.5281/zenodo.23608695."
 title: "Retrospective mortality risk stratification in critically ill patients with documented hypoferremia: analysis code and aggregate outputs"
 type: software
 version: 1.3.1
 date-released: 2026-10-24
+doi: 10.5281/zenodo.23608695
+url: "https://doi.org/10.5281/zenodo.23608695"
 license: MIT
 repository-code: "https://github.com/linzixuan45/hypoferremia-icu-mortality"
 authors:

@@ -6,7 +6,7 @@ Companion code for:
 
 > *Retrospective mortality risk stratification in critically ill patients with documented hypoferremia*
 
-**Version 1.3.1 — R3 reporting corrections.** This release extends the published v1.2.2 computation archive. It corrects documentation, citation metadata and AUROC confidence-interval reporting using the unchanged canonical interval functions. Primary fitted models, predictions and cohort definitions are unchanged. An inherited manuscript discrepancy in the existing NIV-exclusion sensitivity was resolved by a bounded verification refit using the unchanged archived procedure and locked split. The v1.3.1 archive preserves the v1.2.2 and v1.3.0 records unchanged; its version-specific Zenodo DOI is assigned at deposition and recorded in the citation metadata after verification.
+**Version 1.3.1 — R3 reporting corrections.** This release extends the published v1.2.2 computation archive. It corrects documentation, citation metadata and AUROC confidence-interval reporting using the unchanged canonical interval functions. Primary fitted models, predictions and cohort definitions are unchanged. An inherited manuscript discrepancy in the existing NIV-exclusion sensitivity was resolved by a bounded verification refit using the unchanged archived procedure and locked split. The v1.3.1 archive preserves the v1.2.2 and v1.3.0 records unchanged; its immutable version DOI is [10.5281/zenodo.23608695](https://doi.org/10.5281/zenodo.23608695).
 
 This repository provides the active Round 2 analysis workflow from authorized, user-prepared modelling tables. It includes cohort construction, patient-separated splitting, training-set-only preprocessing, candidate-model fitting, locked soft-voting and post hoc reduced-model evaluation, calibration analyses, figure generation, and reviewer-requested supplementary audits.
 
@@ -15,7 +15,7 @@ It does **not** redistribute raw or derived patient-level data, cohort-ID lists,
 - Repository: https://github.com/linzixuan45/hypoferremia-icu-mortality
 - Research demonstration: https://fe.mixaihub.top (not for clinical use)
 - Published prior computation archive: `v1.2.2`, DOI [10.5281/zenodo.21772246](https://doi.org/10.5281/zenodo.21772246), archived source tree `b9beaac`
-- Current release: `v1.3.1` (R3 reporting corrections), archived under Zenodo concept DOI [10.5281/zenodo.21761212](https://doi.org/10.5281/zenodo.21761212); the version-specific DOI is recorded in `CITATION.cff` after deposition
+- Current release: `v1.3.1` (R3 reporting corrections), DOI [10.5281/zenodo.23608695](https://doi.org/10.5281/zenodo.23608695), under Zenodo concept DOI [10.5281/zenodo.21761212](https://doi.org/10.5281/zenodo.21761212)
 - Historical reviewed release: `v1.2.1`, DOI [10.5281/zenodo.21768779](https://doi.org/10.5281/zenodo.21768779)
 - Historical GitHub release without a Zenodo version DOI: `v1.3.0`, retained unchanged and not used for citation
 - v1.2.2 source ZIP SHA-256: `ff159c6722becf34c33180adf830e74392c1383db02d7345ba366e5be47734b5` (local archived copy verified; no fresh Zenodo download claimed).
@@ -120,7 +120,7 @@ The hosted interface illustrates input/output behaviour and XGBoost-component SH
 
 ## Citation and archive
 
-Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). Version 1.3.1 is the current R3 reporting-correction release; its version-specific Zenodo DOI is assigned at deposition and recorded in the citation files. DOI 10.5281/zenodo.21772246 identifies the prior v1.2.2 computation archive; it does not identify the R3 corrections. `v1.3.0` remains an unarchived historical GitHub release and should not be cited as the R3 archive.
+Use [CITATION.cff](CITATION.cff) or [CITATION.bib](CITATION.bib). Version 1.3.1 is the current R3 reporting-correction release with immutable Zenodo DOI [10.5281/zenodo.23608695](https://doi.org/10.5281/zenodo.23608695). DOI 10.5281/zenodo.21772246 identifies the prior v1.2.2 computation archive; it does not identify the R3 corrections. `v1.3.0` remains an unarchived historical GitHub release and should not be cited as the R3 archive.
 
 This release integrates the reviewed R3 branch onto current-main commit `12f0267414ae35ef775711db699da643307807ea`, preserving its v1.2.2 metadata cleanup and historical Figure 8 deployment verification. The accurate v1.2.2 release metadata from that base are preserved in `provenance/v1.2.2_release_metadata/`. See `docs/R3_CURRENT_MAIN_INTEGRATION.json` for the integration scope and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) for the release and archive record. The manuscript files are outside this code release and are updated separately after the version DOI is verified.
 
